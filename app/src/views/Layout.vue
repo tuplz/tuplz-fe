@@ -1,6 +1,6 @@
 <!--prettier-ignore-->
 <template>
-  <div />
+  <router-view />
 </template>
 
 <script lang="ts">
