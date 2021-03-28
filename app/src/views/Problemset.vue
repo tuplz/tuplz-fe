@@ -1,23 +1,26 @@
 <!--prettier-ignore-->
 <template>
   <a-table
-    :columns="columns" 
-    :data-source="data"
+    :columns="table.columns"
+    :data-source="table.data"
+    :pagination="{
+      showQuickJumper: true,
+      showSizeChanger: true,
+      pageSizeOptions: ['10', '20', '50', '100'],
+      defaultPageSize: 20,
+    }"
+    :scroll="{ x: 720 }"
+    :row-key="table.rowKey"
   >
-    <template #name="{ text }">
+    <template #id="{ text }">
       <a>{{ text }}</a>
-    </template>
-    <template #customTitle>
-      <span>
-        Problem ID
-      </span>
     </template>
     <template #tags="{ text: tags }">
       <span>
         <a-tag
           v-for="tag in tags"
           :key="tag"
-          :color="tag === 'loser' ? 'volcano' : tag.length > 5 ? 'geekblue' : 'green'"
+          :color="tagColor(tag)"
         >
           {{ tag.toUpperCase() }}
         </a-tag>
@@ -27,60 +30,89 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
-const columns = [
-  {
-    dataIndex: 'problemId',
-    key: 'problemId',
-    slots: { title: 'customTitle', customRender: 'name' },
-  },
-  {
-    title: 'Problem Name',
-    dataIndex: 'problemName',
-    key: 'problemName',
-  },
-  {
-    title: 'Tags',
-    key: 'tags',
-    dataIndex: 'tags',
-    slots: { customRender: 'tags' },
-  },
-  {
-    title: 'Update Time',
-    dataIndex: 'updateTime',
-    key: 'updateTime',
-  },
-];
+import { defineComponent, reactive } from 'vue';
+import { AxiosError } from 'axios';
+import { notification } from 'ant-design-vue';
 
-const data = [
-  {
-    problemId: '1001',
-    problemName: 'A + B problem',
-    tags: ['naive'],
-    updateTime: '2021-03-25 17:29:03'
-  },
-  {
-    problemId: '1002',
-    problemName: 'Hello World',
-    tags: ['not naive'],
-    updateTime: '2021-03-25 17:29:04'
-  },
-  {
-    problemId: '1003',
-    problemName: 'Good Bye',
-    tags: ['test'],
-    updateTime: '2021-03-25 17:29:05'
-  },
-];
+import { Problem, TagColorMap, GetProblemsResp } from '@/components/types';
+import { problemClient } from '@/api';
+
+const table = reactive({
+  columns: [
+    {
+      title: 'ID',
+      dataIndex: 'problemId',
+      width: '10%',
+      ellipsis: true,
+      slots: { customRender: 'id' },
+      sorter: (a: Problem, b: Problem) => a.problemId - b.problemId,
+    },
+    {
+      title: 'Problem Name',
+      dataIndex: 'problemName',
+      ellipsis: true,
+      sorter: (a: Problem, b: Problem) =>
+        a.problemName.localeCompare(b.problemName),
+    },
+    {
+      title: 'Tags',
+      dataIndex: 'tags',
+      width: '25%',
+      slots: { customRender: 'tags' },
+    },
+    {
+      title: 'Update Time',
+      dataIndex: 'updateTime',
+      align: 'right',
+      width: '25%',
+      ellipsis: true,
+      sorter: (a: Problem, b: Problem) =>
+        a.updateTime.localeCompare(b.updateTime),
+    },
+  ],
+  rowKey: 'problemId',
+  data: [] as Problem[],
+});
+
+const defaultTagColors: TagColorMap = reactive({
+  naive: 'blue',
+  easy: 'green',
+  normal: 'orange',
+  hard: 'red',
+});
 
 export default defineComponent({
-  components: {
-  },
   setup() {
-    return {
-      data,
-      columns,
+    const openNotification = (type: string, description: string) => {
+      notification[type]({
+        message: type.toUpperCase(),
+        description,
+      });
     };
+
+    const refresh = () => {
+      problemClient
+        .getProblems()
+        .then((resp: GetProblemsResp) => {
+          table.data = resp.problems;
+        })
+        .catch((err: AxiosError) => {
+          openNotification('error', `Failed to load problems, error: ${err}`);
+        });
+    };
+
+    const tagColor = (tag: string): string =>
+      tag in defaultTagColors ? defaultTagColors[tag] : 'purple';
+
+    return {
+      table,
+      openNotification,
+      refresh,
+      tagColor,
+    };
+  },
+  created() {
+    this.refresh();
   },
 });
 </script>

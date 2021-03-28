@@ -1,7 +1,6 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
 
 const Root = () => import(/* webpackChunkName: "root" */ '@/views/Layout.vue');
-
 const Problemset = () =>
   import(/* webpackChunkName: "problemset" */ '@/views/Problemset.vue');
 
@@ -9,6 +8,9 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
     component: Root,
+    redirect: {
+      name: 'Problemset',
+    },
     children: [
       {
         path: 'problemset',
