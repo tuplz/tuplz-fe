@@ -1,6 +1,9 @@
 export default interface Problem {
-  problemId: number;
-  problemName: string;
+  id: number;
+  like: number;
+  dislike: number;
+  visit: number;
   tags: string[];
-  updateTime: string;
+  updTime: string;
+  content: {title: string, description: string, inputFormat: string, outputFormat: string};
 }

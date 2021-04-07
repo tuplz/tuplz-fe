@@ -3,11 +3,28 @@ import { createApp } from 'vue';
 import App from './App.vue';
 import router from './router';
 
-import { BackTop, Divider, Layout, Table, Tag } from 'ant-design-vue';
+import {
+  Avatar,
+  BackTop,
+  Card,
+  Comment,
+  Divider,
+  Layout,
+  Table,
+  Tag,
+} from 'ant-design-vue';
 
 const app = createApp(App);
 app.use(router);
 
-app.use(BackTop).use(Divider).use(Layout).use(Table).use(Tag);
+app
+  .use(Avatar)
+  .use(BackTop)
+  .use(Card)
+  .use(Comment)
+  .use(Divider)
+  .use(Layout)
+  .use(Table)
+  .use(Tag);
 
 app.mount('#app');
