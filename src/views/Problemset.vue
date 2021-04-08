@@ -1,4 +1,3 @@
-<!--prettier-ignore-->
 <template>
   <a-table
     :columns="table.columns"
