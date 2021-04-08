@@ -1,10 +1,13 @@
 <template>
   <a-layout style="min-height: 100vh">
     <a-layout-header style="padding-left: 24px">
-      <div class="title">
+      <router-link
+        class="title"
+        :to="{ name: 'Problemset' }"
+      >
         <BulbFilled id="logo" />
         <span>{{ title }}</span>
-      </div>
+      </router-link>
     </a-layout-header>
     <a-layout style="padding: 24px 24px 0">
       <a-layout-content style="padding: 24px; min-height: 280px">
