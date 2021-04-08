@@ -122,9 +122,25 @@ export default defineComponent({
         },
         {
           title: 'Tags',
-          dataIndex: 'tags',
+          dataIndex: 'content.tags',
           width: '25%',
           slots: { customRender: 'tags' },
+        },
+        {
+          title: 'Like',
+          dataIndex: 'like',
+          width: '10%',
+          ellipsis: true,
+          slots: { customRender: 'like' },
+          sorter: (a: Problem, b: Problem) => a.like - b.like,
+        },
+        {
+          title: 'Dislike',
+          dataIndex: 'dislike',
+          width: '10%',
+          ellipsis: true,
+          slots: { customRender: 'dislike' },
+          sorter: (a: Problem, b: Problem) => a.dislike - b.dislike,
         },
         {
           title: 'Update Time',
