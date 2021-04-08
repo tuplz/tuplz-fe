@@ -1,13 +1,29 @@
 <template>
   <a-layout style="min-height: 100vh">
     <a-layout-header style="padding-left: 24px">
-      <router-link
-        class="title"
-        :to="{ name: 'Problemset' }"
+      <a-row
+        type="flex"
+        justify="space-between"
       >
-        <BulbFilled id="logo" />
-        <span>{{ title }}</span>
-      </router-link>
+        <router-link
+          class="title"
+          :to="{ name: 'Problemset' }"
+        >
+          <BulbFilled id="logo" />
+          <span>{{ title }}</span>
+        </router-link>
+        <a-button
+          id="login-btn"
+          type="primary"
+          shape="round"
+          style="margin: 16px 0"
+        >
+          <template #icon>
+            <LoginOutlined />
+            Login
+          </template>
+        </a-button>
+      </a-row>
     </a-layout-header>
     <a-layout style="padding: 24px 24px 0">
       <a-layout-content style="padding: 24px; min-height: 280px">
@@ -30,12 +46,13 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 
-import { BulbFilled, HeartFilled } from '@ant-design/icons-vue';
+import { BulbFilled, HeartFilled, LoginOutlined } from '@ant-design/icons-vue';
 
 export default defineComponent({
   components: {
     BulbFilled,
     HeartFilled,
+    LoginOutlined,
   },
   setup() {
     const title = 'Teach Us Please!';

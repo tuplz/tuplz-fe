@@ -13,6 +13,7 @@ import {
   Form,
   Input,
   Layout,
+  Row,
   Table,
   Tag,
   Typography,
@@ -31,6 +32,7 @@ app
   .use(Form)
   .use(Input)
   .use(Layout)
+  .use(Row)
   .use(Table)
   .use(Tag)
   .use(Typography);
