@@ -1,22 +1,21 @@
-import { GetRecommendResp } from '@/components/types/responses';
-import { API_URL } from '@/utils/config';
+import { GetRecommendsResp } from '@/components/types/responses';
+import { getRecommendApiUrl, getRecommendsApiUrl } from '@/utils/config';
 import axios, { AxiosError, AxiosResponse } from 'axios';
 
-const recommendApiUrl = API_URL + "/recommend"
 // FIXME: remove mock data
-const getRecommendations = (): Promise<GetRecommendResp> =>
+const getRecommendations = (): Promise<GetRecommendsResp> =>
   new Promise((resolve, reject) => {
     // resolve(mockGetProblemsResp);
     axios
-      .post(recommendApiUrl, {
+      .post(getRecommendsApiUrl, {
         params: {
-          ProblemId: "1001",
-          ProblemContent: "",
+          ProblemId: '1001',
+          ProblemContent: '',
           MaxLength: 1000,
-          UserId: "root",
-          UserKey: "root",
-          operation: ""
-        }
+          UserId: 'root',
+          UserKey: 'root',
+          operation: '',
+        },
       })
       .then((resp: AxiosResponse) => {
         resolve(resp.data);
@@ -28,15 +27,15 @@ const getRecommendationContent = (): Promise<GetRecommendResp> =>
   new Promise((resolve, reject) => {
     // resolve(mockGetProblemsResp);
     axios
-      .post(recommendApiUrl, {
+      .post(getRecommendApiUrl, {
         params: {
-          ProblemId: "1001",
-          ProblemContent: "",
+          ProblemId: '1001',
+          ProblemContent: '',
           MaxLength: 1000,
-          UserId: "root",
-          UserKey: "root",
-          operation: ""
-        }
+          UserId: 'root',
+          UserKey: 'root',
+          operation: '',
+        },
       })
       .then((resp: AxiosResponse) => {
         resolve(resp.data);

@@ -1,46 +1,33 @@
-import { GetProblemsResp, GetProblemContentResp } from '@/components/types';
+import { GetProblemsResp, GetProblemResp } from '@/components/types';
 import { mock } from 'mockjs';
 
-export const mockGetProblemsResp: GetProblemsResp = mock({
-  'prob|1-500': [
-    {
-      'problemId|1-2000': 1,
-      problemName: '@title(1, 6)',
-      'tags|1': [
-        ['naive'],
-        ['easy'],
-        ['normal'],
-        ['hard'],
-        ['unknown'],
-        ['foo'],
-        ['bar'],
-      ],
-      updateTime: '@datetime',
-    },
+const mockProblemTemplate = {
+  'id|1-10000': 1,
+  'like|1-10000': 1,
+  'dislike|1-10000': 1,
+  'visit|1-10000': 1,
+  'tags|1': [
+    ['naive'],
+    ['easy'],
+    ['normal'],
+    ['hard'],
+    ['@word'],
+    ['easy', '@word'],
+    ['normal', '@word', '@word'],
   ],
+  updTime: '@datetime',
+  content: {
+    title: '@title(1, 6)',
+    description: '@paragraph',
+    inputFormat: '@sentence',
+    outputFormat: '@sentence',
+  },
+};
+
+export const mockGetProblemsResp: GetProblemsResp = mock({
+  'prob|1-500': [mockProblemTemplate],
 });
 
-export const mockGetProblemContentResp: GetProblemContentResp = mock({
-  'prob': 
-    {
-      id:'1001',
-      content: {
-        title: '@title(1, 6)',
-        'tags|1': [
-          ['naive'],
-          ['easy'],
-          ['normal'],
-          ['hard'],
-          ['unknown'],
-          ['foo'],
-          ['bar'],
-        ],
-        description: 'Hello World!',
-        inputFormat: 'input format',
-        outputFormat: 'output format',
-        sample: 'sample',
-        con : 'cons and limits'
-      },
-      updateTime: '@datetime',
-    },
+export const mockGetProblemResp: GetProblemResp = mock({
+  prob: mockProblemTemplate,
 });

@@ -1,8 +1,9 @@
-export const { BASE_URL, NODE_ENV } = process.env;
-export const problemsApiUrl = "/api/prob"
-export const GetProblemsApiUrl = problemsApiUrl + "/findIdGt"
-export const GetProblemContentApiUrl = problemsApiUrl + "/findId"
+export const { API_URL, BASE_URL, NODE_ENV } = process.env;
 
-export const recmdsApiUrl = "/api/prob"
-export const GetRecmdsApiUrl = recmdsApiUrl + "/findIdGt"
-export const GetRecmdContentApiUrl = recmdsApiUrl + "/findId"
+export const problemsApiUrl = `${API_URL}/prob`;
+export const getProblemsApiUrl = `${problemsApiUrl}/findIdGt`;
+export const getProblemApiUrl = `${problemsApiUrl}/findId`;
+
+export const recommendsApiUrl = `${API_URL}/recommend`;
+export const getRecommendsApiUrl = `${recommendsApiUrl}/findIdGt`;
+export const getRecommendApiUrl = `${recommendsApiUrl}/findIdGt`;

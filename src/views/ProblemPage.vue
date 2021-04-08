@@ -3,31 +3,45 @@
     :title="info.data.id"
     style="width: 1500px; margin: 0 auto; margin-top: 2cm"
   >
-    <h1>{{ info.data.content.title }}</h1>
-    <h2>Description</h2>
-    <p>{{ info.data.content.description }}</p>
-    <h2>Input Format</h2>
-    <p>{{ info.data.content.inputFormat }}</p>
-    <h2>Output Format</h2>
-    <p>{{ info.data.content.outputFormat }}</p>
-    <h2>Sample</h2>
-    <p>{{ info.data.content.sample }}</p>
-    <h2>Constraints and Limitations</h2>
-    <p>{{ info.data.content.con }}</p>
+    <a-typography>
+      <a-typography-title>
+        {{ info.data.content.title }}
+      </a-typography-title>
+      <a-typography-title :level="2">
+        Description
+      </a-typography-title>
+      <a-typography-paragraph>
+        {{ info.data.content.description }}
+      </a-typography-paragraph>
+      <a-typography-title :level="2">
+        Input Format
+      </a-typography-title>
+      <a-typography-paragraph code>
+        {{ info.data.content.inputFormat }}
+      </a-typography-paragraph>
+      <a-typography-title :level="2">
+        Output Format
+      </a-typography-title>
+      <a-typography-paragraph code>
+        {{ info.data.content.outputFormat }}
+      </a-typography-paragraph>
+    </a-typography>
   </a-card>
 </template>
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
+import { useRoute } from 'vue-router';
 import { AxiosError } from 'axios';
 import { notification } from 'ant-design-vue';
 
-import { GetProblemContentResp, Problem } from '@/components/types';
+import { GetProblemReq, GetProblemResp, Problem } from '@/components/types';
 import { problemClient } from '@/api';
-import { useRoute } from  'vue-router';
 
 export default defineComponent({
   setup() {
+    const route = useRoute();
+
     const info = ref({
       data: {
         id: 0,
@@ -45,23 +59,28 @@ export default defineComponent({
       } as Problem,
     });
 
-    const openNotification = (type: string, description: string) => {
+    const openNotification = (type: string, description: string): void => {
       notification[type]({
         message: type.toUpperCase(),
         description,
       });
     };
 
-    const route = useRoute();
-
-    const refresh = () => {
+    const refresh = (): void => {
       problemClient
-        .getProblemContent(route.params.id)
-        .then((resp: GetProblemContentResp) => {
+        .getProblem({
+          id: route.params.id,
+          userId: 'root',
+          userKey: 'root',
+        } as GetProblemReq)
+        .then((resp: GetProblemResp) => {
           info.value.data = resp.prob;
         })
         .catch((err: AxiosError) => {
-          openNotification('error', `Failed to load problems, error: ${err}`);
+          openNotification(
+            'error',
+            `Failed to load problems, error: ${err.message}`
+          );
         });
     };
 
@@ -71,19 +90,9 @@ export default defineComponent({
       refresh,
     };
   },
-  data() {
-    return {
-      problemId: this.$route.params.id
-    }
-  },
   created() {
-    console.log('params: ' + this.$route.params.id);
+    console.log(`params: ${this.$route.params.id}`);
     this.refresh();
-  },
-  methods: {
-    gotoProblemPages(id: string) {
-      console.log('jump to problem #' + id + '...');
-    },
   },
 });
 </script>

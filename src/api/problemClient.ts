@@ -1,38 +1,34 @@
-import { GetProblemsResp, GetProblemContentResp } from '@/components/types';
-import { GetProblemsApiUrl, GetProblemContentApiUrl } from '@/utils/config';
-import { mockGetProblemContentResp } from '@/api/mock/problems';
+import {
+  GetProblemsResp,
+  GetProblemReq,
+  GetProblemResp,
+} from '@/components/types';
+import { getProblemsApiUrl } from '@/utils/config';
+import { mockGetProblemResp } from '@/api/mock/problems';
 import axios, { AxiosError, AxiosResponse } from 'axios';
 
 // FIXME: remove mock data
 const getProblems = (): Promise<GetProblemsResp> =>
   new Promise((resolve, reject) => {
     axios
-      .post(GetProblemsApiUrl, {
-        "Id": "1",
-        "MaxLength": 10,
-        "UserId": "root",
-        "UserKey": "root"
-      })
-      .then((resp: AxiosResponse) => {
+      .get<void, AxiosResponse<GetProblemsResp>>(getProblemsApiUrl)
+      .then((resp: AxiosResponse<GetProblemsResp>) => {
         resolve(resp.data);
       })
       .catch((err: AxiosError) => reject(err));
   });
 
-const getProblemContent = (id: string | string[]): Promise<GetProblemContentResp> =>
-  new Promise((resolve, reject) => {
-    resolve(mockGetProblemContentResp);
-    console.log("mocking..")
-    console.log(id)
-    console.log(mockGetProblemContentResp)
+const getProblem = (req: GetProblemReq): Promise<GetProblemResp> =>
+  new Promise((resolve, _reject) => {
+    resolve(mockGetProblemResp);
+    console.log('mocking...');
+    console.log(req);
+    console.log(mockGetProblemResp);
     // axios
-    //   .post(GetProblemContentApiUrl, {          
-    //     "Id": id,
-    //     "MaxLength": 10,
-    //     "UserId": "root",
-    //     "UserKey": "root"
+    //   .get<GetProblemReq, AxiosResponse<GetProblemResp>>(getProblemApiUrl, {
+    //     params: req,
     //   })
-    //   .then((resp: AxiosResponse) => {
+    //   .then((resp: AxiosResponse<GetProblemResp>) => {
     //     resolve(resp.data);
     //   })
     //   .catch((err: AxiosError) => reject(err));
@@ -40,7 +36,7 @@ const getProblemContent = (id: string | string[]): Promise<GetProblemContentResp
 
 const problemClient = {
   getProblems,
-  getProblemContent,
+  getProblem,
 };
 
 export default problemClient;

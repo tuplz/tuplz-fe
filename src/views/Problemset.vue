@@ -12,7 +12,14 @@
     :row-key="table.rowKey"
   >
     <template #id="{ text }">
-      <a @click="gotoProblemPages(text)">{{ text }}</a>
+      <router-link
+        :to="{
+          name: 'ProblemPage',
+          params: text,
+        }"
+      >
+        {{ text }}
+      </router-link>
     </template>
     <template #tags="{ text: tags }">
       <span>
@@ -50,7 +57,6 @@ const table = reactive({
       title: 'Problem Name',
       dataIndex: 'content.title',
       ellipsis: true,
-      slots: {customRender: 'content.title' },
       sorter: (a: Problem, b: Problem) =>
         a.content.title.localeCompare(b.content.title),
     },
@@ -66,8 +72,7 @@ const table = reactive({
       align: 'right',
       width: '25%',
       ellipsis: true,
-      sorter: (a: Problem, b: Problem) =>
-        a.updTime.localeCompare(b.updTime),
+      sorter: (a: Problem, b: Problem) => a.updTime.localeCompare(b.updTime),
     },
   ],
   rowKey: 'problemId',
@@ -95,10 +100,13 @@ export default defineComponent({
         .getProblems()
         .then((resp: GetProblemsResp) => {
           table.data = resp.prob;
-          console.log(table.data)
+          console.log(table.data);
         })
         .catch((err: AxiosError) => {
-          openNotification('error', `Failed to load problems, error: ${err}`);
+          openNotification(
+            'error',
+            `Failed to load problems, error: ${err.message}`
+          );
         });
     };
 
@@ -109,17 +117,11 @@ export default defineComponent({
       table,
       openNotification,
       refresh,
-      tagColor
+      tagColor,
     };
   },
   created() {
     this.refresh();
   },
-  methods: { 
-    gotoProblemPages(id: string) {
-      console.log("jump to problem #" + id + "...")
-      // this.$route.path.replace('','/problemset/problem/' + id)
-    }
-  }
 });
 </script>

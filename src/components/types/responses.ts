@@ -1,14 +1,13 @@
-import { Problem } from '.';
-import Recommend from './recommend';
+import { Problem, Recommend } from '.';
 
 export interface GetProblemsResp {
   prob: Problem[];
 }
 
-export interface GetProblemContentResp {
+export interface GetProblemResp {
   prob: Problem;
 }
 
-export interface GetRecommendResp {
+export interface GetRecommendsResp {
   recommends: Recommend[];
 }

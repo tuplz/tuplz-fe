@@ -12,6 +12,7 @@ import {
   Layout,
   Table,
   Tag,
+  Typography,
 } from 'ant-design-vue';
 
 const app = createApp(App);
@@ -25,6 +26,7 @@ app
   .use(Divider)
   .use(Layout)
   .use(Table)
-  .use(Tag);
+  .use(Tag)
+  .use(Typography);
 
 app.mount('#app');
