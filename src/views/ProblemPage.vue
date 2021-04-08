@@ -1,32 +1,62 @@
 <template>
-  <a-card
-    :title="info.data.id"
-    style="width: 1500px; margin: 0 auto; margin-top: 2cm"
-  >
+  <a-card>
     <a-typography>
       <a-typography-title>
-        {{ info.data.content.title }}
+        {{ problemInfo.data.content.title }}
       </a-typography-title>
       <a-typography-title :level="2">
         Description
       </a-typography-title>
       <a-typography-paragraph>
-        {{ info.data.content.description }}
+        {{ problemInfo.data.content.description }}
       </a-typography-paragraph>
       <a-typography-title :level="2">
         Input Format
       </a-typography-title>
       <a-typography-paragraph code>
-        {{ info.data.content.inputFormat }}
+        {{ problemInfo.data.content.inputFormat }}
       </a-typography-paragraph>
       <a-typography-title :level="2">
         Output Format
       </a-typography-title>
       <a-typography-paragraph code>
-        {{ info.data.content.outputFormat }}
+        {{ problemInfo.data.content.outputFormat }}
+      </a-typography-paragraph>
+      <a-typography-title :level="2">
+        Sample
+      </a-typography-title>
+      <a-typography-paragraph>
+        {{ problemInfo.data.content.sample }}
+      </a-typography-paragraph>
+      <a-typography-title :level="2">
+        Constraints and Limitations
+      </a-typography-title>
+      <a-typography-paragraph>
+        {{ problemInfo.data.content.constraints }}
       </a-typography-paragraph>
     </a-typography>
   </a-card>
+  <a-comment
+    v-for="(item, index) in recommendsInfo.data"
+    :key="index"
+  >
+    <template #actions>
+      <span key="comment-nested-reply-to">
+        {{ item.message }}
+      </span>
+    </template>
+    <template #author>
+      <a>
+        {{ item.userId }}
+      </a>
+    </template>
+    <template #avatar>
+      <a-avatar
+        src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
+        alt="Han Solo"
+      />
+    </template>
+  </a-comment>
 </template>
 
 <script lang="ts">
@@ -35,28 +65,40 @@ import { useRoute } from 'vue-router';
 import { AxiosError } from 'axios';
 import { notification } from 'ant-design-vue';
 
-import { GetProblemReq, GetProblemResp, Problem } from '@/components/types';
-import { problemClient } from '@/api';
+import {
+  GetProblemReq,
+  GetProblemResp,
+  GetRecommendsResp,
+  Problem,
+  Recommend,
+} from '@/components/types';
+import { problemClient, recommendClient } from '@/api';
 
 export default defineComponent({
   setup() {
     const route = useRoute();
 
-    const info = ref({
+    const problemInfo = ref({
       data: {
         id: 0,
         like: 0,
         dislike: 0,
         visit: 0,
-        tags: [] as string[],
-        updTime: '',
+        updateTime: '',
         content: {
           title: '',
+          tags: [] as string[],
           description: '',
           inputFormat: '',
           outputFormat: '',
+          sample: '',
+          constraints: '',
         },
       } as Problem,
+    });
+
+    const recommendsInfo = ref({
+      data: [] as Recommend[],
     });
 
     const openNotification = (type: string, description: string): void => {
@@ -66,15 +108,15 @@ export default defineComponent({
       });
     };
 
-    const refresh = (): void => {
+    const getProblem = (): void => {
       problemClient
         .getProblem({
-          id: route.params.id,
-          userId: 'root',
+          id: parseInt(route.params.id as string),
+          userId: 1,
           userKey: 'root',
         } as GetProblemReq)
         .then((resp: GetProblemResp) => {
-          info.value.data = resp.prob;
+          problemInfo.value.data = resp.problem;
         })
         .catch((err: AxiosError) => {
           openNotification(
@@ -84,8 +126,29 @@ export default defineComponent({
         });
     };
 
+    const getRecommendation = (): void => {
+      recommendClient
+        .getRecommendations()
+        .then((resp: GetRecommendsResp) => {
+          recommendsInfo.value.data = resp.recommends;
+          console.log(recommendsInfo.value.data);
+        })
+        .catch((err: AxiosError) => {
+          openNotification(
+            'error',
+            `Failed to load problems, error: ${err.message}`
+          );
+        });
+    };
+
+    const refresh = (): void => {
+      getProblem();
+      getRecommendation();
+    };
+
     return {
-      info,
+      problemInfo,
+      recommendsInfo,
       openNotification,
       refresh,
     };

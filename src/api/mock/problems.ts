@@ -15,19 +15,21 @@ const mockProblemTemplate = {
     ['easy', '@word'],
     ['normal', '@word', '@word'],
   ],
-  updTime: '@datetime',
+  updateTime: '@datetime',
   content: {
     title: '@title(1, 6)',
     description: '@paragraph',
     inputFormat: '@sentence',
     outputFormat: '@sentence',
+    sample: '@paragraph',
+    constraints: '@paragraph',
   },
 };
 
 export const mockGetProblemsResp: GetProblemsResp = mock({
-  'prob|1-500': [mockProblemTemplate],
+  'problems|1-500': [mockProblemTemplate],
 });
 
 export const mockGetProblemResp: GetProblemResp = mock({
-  prob: mockProblemTemplate,
+  problem: mockProblemTemplate,
 });

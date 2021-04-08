@@ -2,13 +2,14 @@ export default interface Problem {
   id: number;
   like: number;
   dislike: number;
-  visit: number;
-  tags: string[];
-  updTime: string;
+  updateTime: string;
   content: {
     title: string;
+    tags: string[];
     description: string;
     inputFormat: string;
     outputFormat: string;
+    sample: string;
+    constraints: string;
   };
 }

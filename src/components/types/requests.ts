@@ -1,6 +1,6 @@
 export interface GetProblemReq {
-  id: string;
+  id: number;
   maxLength?: number;
-  userId: string;
+  userId: number;
   userKey: string;
 }

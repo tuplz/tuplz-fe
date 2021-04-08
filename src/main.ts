@@ -6,9 +6,12 @@ import router from './router';
 import {
   Avatar,
   BackTop,
+  Button,
   Card,
   Comment,
   Divider,
+  Form,
+  Input,
   Layout,
   Table,
   Tag,
@@ -21,9 +24,12 @@ app.use(router);
 app
   .use(Avatar)
   .use(BackTop)
+  .use(Button)
   .use(Card)
   .use(Comment)
   .use(Divider)
+  .use(Form)
+  .use(Input)
   .use(Layout)
   .use(Table)
   .use(Tag)

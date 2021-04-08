@@ -1,13 +1,17 @@
 import { Problem, Recommend } from '.';
 
 export interface GetProblemsResp {
-  prob: Problem[];
+  problems: Problem[];
 }
 
 export interface GetProblemResp {
-  prob: Problem;
+  problem: Problem;
 }
 
 export interface GetRecommendsResp {
   recommends: Recommend[];
+}
+
+export interface GetRecommendResp {
+  recommend: Recommend;
 }
