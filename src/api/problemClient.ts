@@ -19,14 +19,15 @@ const getProblems = (): Promise<GetProblemsResp> =>
       .catch((err: AxiosError) => reject(err));
   });
 
-const getProblemContent = (): Promise<GetProblemContentResp> =>
+const getProblemContent = (id: string | string[]): Promise<GetProblemContentResp> =>
   new Promise((resolve, reject) => {
     resolve(mockGetProblemContentResp);
     console.log("mocking..")
+    console.log(id)
     console.log(mockGetProblemContentResp)
     // axios
     //   .post(GetProblemContentApiUrl, {          
-    //     "Id": "1",
+    //     "Id": id,
     //     "MaxLength": 10,
     //     "UserId": "root",
     //     "UserKey": "root"

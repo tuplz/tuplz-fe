@@ -5,5 +5,10 @@ export default interface Problem {
   visit: number;
   tags: string[];
   updTime: string;
-  content: {title: string, description: string, inputFormat: string, outputFormat: string};
+  content: {
+    title: string;
+    description: string;
+    inputFormat: string;
+    outputFormat: string;
+  };
 }
