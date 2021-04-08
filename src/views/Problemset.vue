@@ -2,6 +2,7 @@
   <a-table
     :columns="table.columns"
     :data-source="table.data"
+    :scroll="{ x: 1000 }"
     :pagination="{
       showQuickJumper: true,
       showSizeChanger: true,
@@ -14,7 +15,7 @@
       <router-link
         :to="{
           name: 'ProblemPage',
-          params: text,
+          params: { id: text },
         }"
       >
         {{ text }}
@@ -39,18 +40,18 @@
     @finishFailed="handleFinishFailed"
   >
     <a-form-item
-      required
-      has-feedback
       label="Recommend URL"
       name="recommendUrl"
+      required
+      has-feedback
     >
       <a-input v-model:value="recommendForm.recommendUrl" />
     </a-form-item>
     <a-form-item
-      required
-      has-feedback
       label="Recommend Reason"
       name="recommendReason"
+      required
+      has-feedback
     >
       <a-textarea
         v-model:value="recommendForm.recommendReason"
@@ -75,15 +76,17 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, ref, UnwrapRef } from 'vue';
+import { defineComponent, reactive } from 'vue';
 import { AxiosError } from 'axios';
 import { notification } from 'ant-design-vue';
 
 import {
   Problem,
-  RecommendFormState,
   TagColorMap,
+  GetProblemsReq,
   GetProblemsResp,
+  UploadRecommendReq,
+  UploadRecommendResp,
 } from '@/components/types';
 import { problemClient, recommendClient } from '@/api';
 
@@ -108,7 +111,7 @@ export default defineComponent({
         {
           title: 'ID',
           dataIndex: 'id',
-          width: '10%',
+          width: 100,
           ellipsis: true,
           slots: { customRender: 'id' },
           sorter: (a: Problem, b: Problem) => a.id - b.id,
@@ -116,37 +119,36 @@ export default defineComponent({
         {
           title: 'Problem Name',
           dataIndex: 'content.title',
+          width: '25%',
           ellipsis: true,
           sorter: (a: Problem, b: Problem) =>
             a.content.title.localeCompare(b.content.title),
         },
         {
           title: 'Tags',
-          dataIndex: 'content.tags',
-          width: '25%',
+          dataIndex: 'tags',
+          ellipsis: true,
           slots: { customRender: 'tags' },
         },
         {
           title: 'Like',
           dataIndex: 'like',
-          width: '10%',
-          ellipsis: true,
-          slots: { customRender: 'like' },
+          width: 100,
+          align: 'center',
           sorter: (a: Problem, b: Problem) => a.like - b.like,
         },
         {
           title: 'Dislike',
           dataIndex: 'dislike',
-          width: '10%',
-          ellipsis: true,
-          slots: { customRender: 'dislike' },
+          width: 100,
+          align: 'center',
           sorter: (a: Problem, b: Problem) => a.dislike - b.dislike,
         },
         {
           title: 'Update Time',
           dataIndex: 'updateTime',
           align: 'right',
-          width: '25%',
+          width: 200,
           ellipsis: true,
           sorter: (a: Problem, b: Problem) =>
             a.updateTime.localeCompare(b.updateTime),
@@ -156,9 +158,16 @@ export default defineComponent({
       data: [] as Problem[],
     });
 
-    const refresh = () => {
+    const tagColor = (tag: string): string =>
+      tag in defaultTagColors ? defaultTagColors[tag] : 'purple';
+
+    const getProblems = (): void => {
       problemClient
-        .getProblems()
+        .getProblems({
+          maxLength: 50,
+          userId: 1,
+          userKey: 'root',
+        } as GetProblemsReq)
         .then((resp: GetProblemsResp) => {
           table.data = resp.problems;
           console.log(table.data);
@@ -171,44 +180,56 @@ export default defineComponent({
         });
     };
 
-    const tagColor = (tag: string): string =>
-      tag in defaultTagColors ? defaultTagColors[tag] : 'purple';
+    const refresh = (): void => {
+      getProblems();
+    };
 
-    const form = ref();
-
-    const recommendForm: UnwrapRef<RecommendFormState> = reactive({
+    const recommendForm = reactive({
       recommendUrl: '',
       recommendReason: '',
     });
-
-    const handleFinish = () => {
-      recommendClient
-        .uploadRecommendation({
-          recommendUrl: recommendForm.recommendUrl,
-          recommendReason: recommendForm.recommendReason,
-        })
-        .then((resp: void) => {
-          console.log(resp);
-        })
-        .catch((err: AxiosError) => {
-          openNotification('error', `Failed to load problems, error: ${err}`);
-        });
-    };
 
     const layout = {
       labelCol: { span: 6 },
       wrapperCol: { span: 15 },
     };
 
+    const uploadRecommend = (): void => {
+      recommendClient
+        .uploadRecommend(recommendForm as UploadRecommendReq)
+        .then((resp: UploadRecommendResp) => {
+          console.log(resp);
+        })
+        .catch((err: AxiosError) => {
+          openNotification(
+            'error',
+            `Failed to load problems, error: ${err.message}`
+          );
+        });
+    };
+
+    const resetForm = (): void => {
+      console.log('Form reset.');
+    };
+
+    const handleFinish = (): void => {
+      uploadRecommend();
+    };
+
+    const handleFinishFailed = (): void => {
+      console.log('Cancelled.');
+    };
+
     return {
-      table,
       openNotification,
-      refresh,
+      table,
       tagColor,
+      refresh,
       recommendForm,
-      form,
-      handleFinish,
       layout,
+      resetForm,
+      handleFinish,
+      handleFinishFailed,
     };
   },
   created() {
@@ -217,8 +238,4 @@ export default defineComponent({
 });
 </script>
 
-<style lang="scss" scoped>
-.ant-col {
-  width: 1000;
-}
-</style>
+<style lang="scss" scoped></style>

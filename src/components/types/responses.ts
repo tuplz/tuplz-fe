@@ -1,17 +1,23 @@
 import { Problem, Recommend } from '.';
 
-export interface GetProblemsResp {
+interface Status {
+  status: string;
+}
+
+export interface GetProblemsResp extends Status {
   problems: Problem[];
 }
 
-export interface GetProblemResp {
+export interface GetProblemResp extends Status {
   problem: Problem;
 }
 
-export interface GetRecommendsResp {
+export interface GetRecommendsResp extends Status {
   recommends: Recommend[];
 }
 
-export interface GetRecommendResp {
+export interface GetRecommendResp extends Status {
   recommend: Recommend;
 }
+
+export type UploadRecommendResp = GetRecommendResp;

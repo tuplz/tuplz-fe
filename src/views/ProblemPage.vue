@@ -1,5 +1,5 @@
 <template>
-  <a-card>
+  <a-card :title="`Problem #${problemInfo.data.id}`">
     <a-typography>
       <a-typography-title>
         {{ problemInfo.data.content.title }}
@@ -37,11 +37,11 @@
     </a-typography>
   </a-card>
   <a-comment
-    v-for="(item, index) in recommendsInfo.data"
-    :key="index"
+    v-for="item in recommendsInfo.data"
+    :key="item.recommendId"
   >
     <template #actions>
-      <span key="comment-nested-reply-to">
+      <span>
         {{ item.message }}
       </span>
     </template>
@@ -121,14 +121,14 @@ export default defineComponent({
         .catch((err: AxiosError) => {
           openNotification(
             'error',
-            `Failed to load problems, error: ${err.message}`
+            `Failed to load problem, error: ${err.message}`
           );
         });
     };
 
     const getRecommendation = (): void => {
       recommendClient
-        .getRecommendations()
+        .getRecommends()
         .then((resp: GetRecommendsResp) => {
           recommendsInfo.value.data = resp.recommends;
           console.log(recommendsInfo.value.data);
@@ -136,7 +136,7 @@ export default defineComponent({
         .catch((err: AxiosError) => {
           openNotification(
             'error',
-            `Failed to load problems, error: ${err.message}`
+            `Failed to load recommendations, error: ${err.message}`
           );
         });
     };
@@ -154,7 +154,7 @@ export default defineComponent({
     };
   },
   created() {
-    console.log(`params: ${this.$route.params.id}`);
+    console.log(`problemId: ${this.$route.params.id}`);
     this.refresh();
   },
 });

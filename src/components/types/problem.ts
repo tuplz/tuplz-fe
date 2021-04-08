@@ -1,4 +1,4 @@
-export default interface Problem {
+export interface Problem {
   id: number;
   like: number;
   dislike: number;

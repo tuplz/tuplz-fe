@@ -1,22 +1,50 @@
-import { RecommendFormState, GetRecommendsResp, GetRecommendResp } from '@/components/types';
-import { mockGetRecommendsResp } from '@/api/mock/recommends';
+import {
+  GetRecommendsResp,
+  UploadRecommendReq,
+  UploadRecommendResp,
+} from '@/components/types';
+import axios, { AxiosError, AxiosResponse } from 'axios';
+import { recommendsApiUrl } from '@/utils/config';
+import {
+  mockGetRecommendsResp,
+  mockUploadRecommendResp,
+} from '@/api/mock/recommends';
 
 // FIXME: remove mock data
-const getRecommendations = (): Promise<GetRecommendsResp> =>
+const getRecommends = (): Promise<GetRecommendsResp> =>
   new Promise((resolve, _reject) => {
-    resolve(mockGetRecommendsResp);
+    axios
+      .get<void, AxiosResponse<GetRecommendsResp>>(recommendsApiUrl)
+      .then((resp: AxiosResponse<GetRecommendsResp>) => {
+        resolve(resp.data);
+      })
+      .catch((_err: AxiosError) => {
+        resolve(mockGetRecommendsResp);
+        // reject(err);
+      });
   });
 
-const uploadRecommendation = (
-  data: RecommendFormState
-): Promise<void> =>
-  new Promise((_resolve, _reject) => {
-    console.log(data);
+const uploadRecommend = (
+  req: UploadRecommendReq
+): Promise<UploadRecommendResp> =>
+  new Promise((resolve, _reject) => {
+    axios
+      .post<UploadRecommendReq, AxiosResponse<UploadRecommendResp>>(
+        recommendsApiUrl,
+        req
+      )
+      .then((resp: AxiosResponse<UploadRecommendResp>) => {
+        resolve(resp.data);
+      })
+      .catch((_err: AxiosError) => {
+        resolve(mockUploadRecommendResp);
+        // reject(err);
+      });
   });
 
 const recommendClient = {
-  getRecommendations,
-  uploadRecommendation,
+  getRecommends,
+  uploadRecommend,
 };
 
 export default recommendClient;

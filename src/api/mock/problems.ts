@@ -27,9 +27,11 @@ const mockProblemTemplate = {
 };
 
 export const mockGetProblemsResp: GetProblemsResp = mock({
+  status: 'success',
   'problems|1-500': [mockProblemTemplate],
 });
 
 export const mockGetProblemResp: GetProblemResp = mock({
+  status: 'success',
   problem: mockProblemTemplate,
 });

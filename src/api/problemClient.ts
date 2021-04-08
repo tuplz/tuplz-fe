@@ -1,37 +1,43 @@
 import {
+  GetProblemsReq,
   GetProblemsResp,
   GetProblemReq,
   GetProblemResp,
 } from '@/components/types';
-import { getProblemsApiUrl } from '@/utils/config';
-import { mockGetProblemResp } from '@/api/mock/problems';
 import axios, { AxiosError, AxiosResponse } from 'axios';
+import { problemsApiUrl } from '@/utils/config';
+import { mockGetProblemsResp, mockGetProblemResp } from '@/api/mock/problems';
 
 // FIXME: remove mock data
-const getProblems = (): Promise<GetProblemsResp> =>
-  new Promise((resolve, reject) => {
+const getProblems = (req: GetProblemsReq): Promise<GetProblemsResp> =>
+  new Promise((resolve, _reject) => {
     axios
-      .get<void, AxiosResponse<GetProblemsResp>>(getProblemsApiUrl)
+      .get<void, AxiosResponse<GetProblemsResp>>(problemsApiUrl, {
+        params: req,
+      })
       .then((resp: AxiosResponse<GetProblemsResp>) => {
         resolve(resp.data);
       })
-      .catch((err: AxiosError) => reject(err));
+      .catch((_err: AxiosError) => {
+        resolve(mockGetProblemsResp);
+        // reject(err);
+      });
   });
 
+// FIXME: remove mock data
 const getProblem = (req: GetProblemReq): Promise<GetProblemResp> =>
   new Promise((resolve, _reject) => {
-    resolve(mockGetProblemResp);
-    console.log('mocking...');
-    console.log(req);
-    console.log(mockGetProblemResp);
-    // axios
-    //   .get<GetProblemReq, AxiosResponse<GetProblemResp>>(getProblemApiUrl, {
-    //     params: req,
-    //   })
-    //   .then((resp: AxiosResponse<GetProblemResp>) => {
-    //     resolve(resp.data);
-    //   })
-    //   .catch((err: AxiosError) => reject(err));
+    axios
+      .get<GetProblemReq, AxiosResponse<GetProblemResp>>(problemsApiUrl, {
+        params: req,
+      })
+      .then((resp: AxiosResponse<GetProblemResp>) => {
+        resolve(resp.data);
+      })
+      .catch((_err: AxiosError) => {
+        resolve(mockGetProblemResp);
+        // reject(err);
+      });
   });
 
 const problemClient = {
