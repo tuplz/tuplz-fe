@@ -91,13 +91,6 @@ import {
 } from '@/components/types';
 import { problemClient, recommendClient } from '@/api';
 
-const defaultTagColors: TagColorMap = reactive({
-  naive: 'blue',
-  easy: 'green',
-  normal: 'orange',
-  hard: 'red',
-});
-
 export default defineComponent({
   setup() {
     const openNotification = (type: string, description: string) => {
@@ -157,6 +150,13 @@ export default defineComponent({
       ],
       rowKey: 'id',
       data: [] as Problem[],
+    });
+
+    const defaultTagColors: TagColorMap = reactive({
+      naive: 'blue',
+      easy: 'green',
+      normal: 'orange',
+      hard: 'red',
     });
 
     const tagColor = (tag: string): string =>
