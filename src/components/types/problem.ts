@@ -1,15 +1,33 @@
+export interface ProblemIOSamples{
+  input: string;
+  output: string;
+  explanation: string;
+  misc: string;
+}
+
 export interface Problem {
   id: number;
   like: number;
   dislike: number;
   updateTime: string;
   content: {
+    id:string;
     title: string;
-    tags: string[];
+    type: string;
     description: string;
-    inputFormat: string;
-    outputFormat: string;
-    sample: string;
-    constraints: string;
+    sample: ProblemIOSamples[];
+    tags: string[];
+    rules: {
+      runtime: string;
+      memory: string;
+      stack: string;
+      source: string;
+    },
+    meta: {
+      created: string;
+      updated: string;
+      checked: string;
+    },
+    misc: string;
   };
 }

@@ -11,28 +11,51 @@
         {{ problemInfo.data.content.description }}
       </a-typography-paragraph>
       <a-typography-title :level="2">
-        Input Format
+        Sample Input & Output
       </a-typography-title>
-      <a-typography-paragraph code>
-        {{ problemInfo.data.content.inputFormat }}
-      </a-typography-paragraph>
-      <a-typography-title :level="2">
-        Output Format
-      </a-typography-title>
-      <a-typography-paragraph code>
-        {{ problemInfo.data.content.outputFormat }}
-      </a-typography-paragraph>
-      <a-typography-title :level="2">
-        Sample
-      </a-typography-title>
-      <a-typography-paragraph>
-        {{ problemInfo.data.content.sample }}
-      </a-typography-paragraph>
+      <div
+        v-for="(sample, index) in problemInfo.data.content.sample"
+        :key="index"
+      >
+        <a-typography-title :level="3">
+          Sample Input {{ index }}
+        </a-typography-title>
+        <a-typography-paragraph>
+          {{ sample.input }}
+        </a-typography-paragraph>
+        <a-typography-title :level="3">
+          Sample Output {{ index }}
+        </a-typography-title>
+        <a-typography-paragraph>
+          {{ sample.output }}
+        </a-typography-paragraph>
+        <a-typography-title :level="3">
+          Explanation
+        </a-typography-title>
+        <a-typography-paragraph>
+          {{ sample.explanation }}
+        </a-typography-paragraph>
+        <a-typography-title :level="3">
+          Others
+        </a-typography-title>
+        <a-typography-paragraph>
+          {{ sample.misc }}
+        </a-typography-paragraph>
+      </div>
       <a-typography-title :level="2">
         Constraints and Limitations
       </a-typography-title>
       <a-typography-paragraph>
-        {{ problemInfo.data.content.constraints }}
+        Time Limit: {{ problemInfo.data.content.rules.runtime }}
+        Memory Limit: {{ problemInfo.data.content.rules.memory }}
+        Stack Limit: {{ problemInfo.data.content.rules.stack }}
+        Source: {{ problemInfo.data.content.rules.source }}
+      </a-typography-paragraph>
+      <a-typography-title :level="2">
+        Others
+      </a-typography-title>
+      <a-typography-paragraph>
+        {{ problemInfo.data.content.misc }}
       </a-typography-paragraph>
     </a-typography>
   </a-card>
@@ -70,6 +93,7 @@ import {
   GetProblemResp,
   GetRecommendsResp,
   Problem,
+  ProblemIOSamples,
   Recommend,
 } from '@/components/types';
 import { problemClient, recommendClient } from '@/api';
@@ -86,14 +110,25 @@ export default defineComponent({
         visit: 0,
         updateTime: '',
         content: {
+          id: '',
           title: '',
-          tags: [] as string[],
+          type: '',
           description: '',
-          inputFormat: '',
-          outputFormat: '',
-          sample: '',
-          constraints: '',
-        },
+          sample: [] as ProblemIOSamples[],
+          tags: [] as string[],
+          rules: {
+            runtime: '',
+            memory: '',
+            stack: '',
+            source: '',
+          },
+          meta: {
+            created: '',
+            updated: '',
+            checked: '',
+          },
+          misc: ''
+        }
       } as Problem,
     });
 
