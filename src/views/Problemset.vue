@@ -36,6 +36,7 @@
   <a-form
     ref="form"
     :model="recommendForm"
+    v-bind="layout"
     @finish="handleFinish"
     @finishFailed="handleFinishFailed"
   >
