@@ -3,6 +3,8 @@ import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
 const Root = () => import(/* webpackChunkName: "root" */ '@/views/Layout.vue');
 const Problemset = () =>
   import(/* webpackChunkName: "problemset" */ '@/views/Problemset.vue');
+const ProblemPage = () =>
+  import(/* webpackChunkName: "problemPage" */ '@/views/ProblemPage.vue');
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -16,6 +18,11 @@ const routes: Array<RouteRecordRaw> = [
         path: 'problemset',
         name: 'Problemset',
         component: Problemset,
+      },
+      {
+        path: 'problemset/problem/:id',
+        name: 'ProblemPage',
+        component: ProblemPage,
       },
       {
         path: ':pathMatch(.*)*',
