@@ -131,7 +131,6 @@ export default defineComponent({
         .getRecommends()
         .then((resp: GetRecommendsResp) => {
           recommendsInfo.value.data = resp.recommends;
-          console.log(recommendsInfo.value.data);
         })
         .catch((err: AxiosError) => {
           openNotification(
@@ -154,7 +153,6 @@ export default defineComponent({
     };
   },
   created() {
-    console.log(`problemId: ${this.$route.params.id}`);
     this.refresh();
   },
 });

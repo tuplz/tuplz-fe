@@ -38,7 +38,6 @@
     :model="recommendForm"
     v-bind="layout"
     @finish="handleFinish"
-    @finishFailed="handleFinishFailed"
   >
     <a-form-item
       label="Recommend URL"
@@ -77,7 +76,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive } from 'vue';
+import { defineComponent, reactive, ref } from 'vue';
 import { AxiosError } from 'axios';
 import { notification } from 'ant-design-vue';
 
@@ -93,6 +92,8 @@ import { problemClient, recommendClient } from '@/api';
 
 export default defineComponent({
   setup() {
+    const form = ref();
+
     const openNotification = (type: string, description: string) => {
       notification[type]({
         message: type.toUpperCase(),
@@ -172,7 +173,6 @@ export default defineComponent({
         } as GetProblemsReq)
         .then((resp: GetProblemsResp) => {
           table.data = resp.problems;
-          console.log(table.data);
         })
         .catch((err: AxiosError) => {
           openNotification(
@@ -211,18 +211,15 @@ export default defineComponent({
     };
 
     const resetForm = (): void => {
-      console.log('Form reset.');
+      form.value.resetFields();
     };
 
     const handleFinish = (): void => {
       uploadRecommend();
     };
 
-    const handleFinishFailed = (): void => {
-      console.log('Cancelled.');
-    };
-
     return {
+      form,
       openNotification,
       table,
       tagColor,
@@ -231,7 +228,6 @@ export default defineComponent({
       layout,
       resetForm,
       handleFinish,
-      handleFinishFailed,
     };
   },
   created() {

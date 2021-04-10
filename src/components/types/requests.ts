@@ -1,10 +1,10 @@
 import { RecommendForm, UserToken } from '.';
 
-export interface GetProblemsReq extends UserToken {
+export interface GetProblemsReq {
   maxLength: number;
 }
 
-export interface GetProblemReq extends UserToken {
+export interface GetProblemReq {
   id: number;
 }
 
