@@ -16,6 +16,7 @@ import {
   Layout,
   Modal,
   Row,
+  Space,
   Table,
   Tag,
   Typography,
@@ -37,6 +38,7 @@ app
   .use(Layout)
   .use(Modal)
   .use(Row)
+  .use(Space)
   .use(Table)
   .use(Tag)
   .use(Typography);

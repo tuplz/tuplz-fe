@@ -2,7 +2,13 @@ import { createStore, Store, useStore as baseUseStore } from 'vuex';
 import { InjectionKey } from '@vue/runtime-core';
 import axios, { AxiosError } from 'axios';
 
-import { State, UserLoginReq, UserLoginResp } from '@/components/types';
+import {
+  State,
+  UserLoginReq,
+  UserLoginResp,
+  UserRegisterReq,
+  UserRegisterResp,
+} from '@/components/types';
 import { userClient } from '@/api';
 
 export const key: InjectionKey<Store<State>> = Symbol();
@@ -35,9 +41,33 @@ export const store: Store<State> = createStore<State>({
     },
   },
   actions: {
-    login({ commit }, req: UserLoginReq): Promise<UserLoginResp> {
-      commit('authRequest');
+    register({ commit }, req: UserRegisterReq): Promise<UserRegisterResp> {
       return new Promise((resolve, reject) => {
+        commit('authRequest');
+        userClient
+          .userRegister(req)
+          .then((resp: UserRegisterResp) => {
+            if (resp.status === 'success') {
+              const id = resp.id;
+              // FIXME: require a JSON Web Token (JWT) instead of id
+              const token = id.toString();
+              localStorage.setItem('token', token);
+              axios.defaults.headers.common['Authorization'] = token;
+              commit('authSuccess', { token, id });
+              resolve(resp);
+            }
+          })
+          .catch((err: AxiosError) => {
+            commit('authError');
+            localStorage.removeItem('token');
+            reject(err);
+          });
+      });
+    },
+
+    login({ commit }, req: UserLoginReq): Promise<UserLoginResp> {
+      return new Promise((resolve, reject) => {
+        commit('authRequest');
         userClient
           .userLogin(req)
           .then((resp: UserLoginResp) => {
@@ -58,6 +88,7 @@ export const store: Store<State> = createStore<State>({
           });
       });
     },
+
     logout({ commit }): Promise<void> {
       return new Promise((resolve, _reject) => {
         commit('logout');

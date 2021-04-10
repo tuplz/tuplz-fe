@@ -23,17 +23,27 @@
             Logout
           </template>
         </a-button>
-        <a-button
-          v-else
-          type="primary"
-          shape="round"
-          @click="openModal"
-        >
-          <template #icon>
-            <LoginOutlined />
-            Login
-          </template>
-        </a-button>
+        <a-space v-else>
+          <a-button
+            shape="round"
+            @click="openSignUpModal"
+          >
+            <template #icon>
+              <ImportOutlined />
+              Sign up
+            </template>
+          </a-button>
+          <a-button
+            type="primary"
+            shape="round"
+            @click="openLoginModal"
+          >
+            <template #icon>
+              <LoginOutlined />
+              Login
+            </template>
+          </a-button>
+        </a-space>
       </a-row>
 
       <a-modal
@@ -42,8 +52,8 @@
         :confirm-loading="modal.loading"
         width="400px"
         :closable="false"
-        ok-text="Login"
-        @ok="onLoginClick"
+        :ok-text="modal.title"
+        @ok="submitForm"
         @cancel="closeModal"
       >
         <a-form
@@ -64,13 +74,25 @@
             </a-input>
           </a-form-item>
           <a-form-item name="password">
-            <a-input
+            <a-input-password
               v-model:value="modal.data.password"
-              type="password"
               placeholder="Password"
             >
               <template #prefix>
                 <LockOutlined class="modal-icon" />
+              </template>
+            </a-input-password>
+          </a-form-item>
+          <a-form-item
+            v-if="modal.signUpMode"
+            name="email"
+          >
+            <a-input
+              v-model:value="modal.data.email"
+              placeholder="E-mail"
+            >
+              <template #prefix>
+                <MailOutlined class="modal-icon" />
               </template>
             </a-input>
           </a-form-item>
@@ -105,23 +127,31 @@ import { AxiosError } from 'axios';
 import {
   BulbFilled,
   HeartFilled,
+  ImportOutlined,
   LockOutlined,
   LoginOutlined,
   LogoutOutlined,
+  MailOutlined,
   UserOutlined,
 } from '@ant-design/icons-vue';
 import { ValidateErrorEntity } from 'ant-design-vue/lib/form/interface';
 import { notification } from 'ant-design-vue';
 
-import { UserLoginReq, UserLoginResp } from '@/components/types';
+import {
+  UserLoginReq,
+  UserLoginResp,
+  UserRegisterResp,
+} from '@/components/types';
 
 export default defineComponent({
   components: {
     BulbFilled,
     HeartFilled,
+    ImportOutlined,
     LockOutlined,
     LoginOutlined,
     LogoutOutlined,
+    MailOutlined,
     UserOutlined,
   },
   setup() {
@@ -131,7 +161,7 @@ export default defineComponent({
 
     const form = ref();
 
-    const formRules = {
+    const loginFormRules = {
       username: [
         {
           required: true,
@@ -148,15 +178,29 @@ export default defineComponent({
       ],
     };
 
+    const registerFormRules = {
+      ...loginFormRules,
+      email: [
+        {
+          required: true,
+          message: 'Please input E-mail',
+          trigger: 'blur',
+        },
+      ],
+    };
+
     const modal = reactive({
       visible: false,
       loading: false,
       title: 'Login',
+      signUpMode: false,
       data: {
         username: '',
         password: '',
-      } as UserLoginReq,
-      rules: formRules,
+        email: '',
+      },
+      callback: Function() as () => void,
+      rules: {},
       layout: {
         wrapperCol: {
           span: 20,
@@ -176,8 +220,20 @@ export default defineComponent({
       form.value.resetFields();
     };
 
-    const openModal = (): void => {
+    const openSignUpModal = (): void => {
       modal.visible = true;
+      modal.title = 'Sign up';
+      modal.signUpMode = true;
+      modal.callback = register;
+      modal.rules = registerFormRules;
+    };
+
+    const openLoginModal = (): void => {
+      modal.visible = true;
+      modal.title = 'Login';
+      modal.signUpMode = false;
+      modal.callback = login;
+      modal.rules = loginFormRules;
     };
 
     const closeModal = (): void => {
@@ -186,17 +242,35 @@ export default defineComponent({
       resetForm();
     };
 
-    const onLoginClick = (): void => {
+    const submitForm = (): void => {
       modal.loading = true;
       form.value
         .validate()
         .then((): void => {
-          login();
+          modal.callback();
         })
         .catch((_error: ValidateErrorEntity<UserLoginReq>): void => {
           openNotification(
             'warn',
             'Please make sure all fields are filled in correctly.'
+          );
+        })
+        .finally((): void => {
+          modal.loading = false;
+        });
+    };
+
+    const register = (): void => {
+      store
+        .dispatch('register', modal.data)
+        .then((resp: UserRegisterResp): void => {
+          console.log('Registered.', resp);
+          closeModal();
+        })
+        .catch((err: AxiosError): void => {
+          openNotification(
+            'error',
+            `Failed to register, error: ${err.message}`
           );
         })
         .finally((): void => {
@@ -230,9 +304,11 @@ export default defineComponent({
       form,
       modal,
       resetForm,
-      openModal,
+      openSignUpModal,
+      openLoginModal,
       closeModal,
-      onLoginClick,
+      submitForm,
+      register,
       login,
       logout,
     };
