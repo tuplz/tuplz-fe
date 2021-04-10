@@ -52,7 +52,9 @@ export const store: Store<State> = createStore<State>({
               // FIXME: require a JSON Web Token (JWT) instead of id
               const token = id.toString();
               localStorage.setItem('token', token);
-              axios.defaults.headers.common['Authorization'] = token;
+              axios.defaults.headers.common[
+                'Authorization'
+              ] = `Bearer ${token}`;
               commit('authSuccess', { token, id });
               resolve(resp);
             }
