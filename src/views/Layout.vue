@@ -12,10 +12,21 @@
           <BulbFilled id="logo" />
           <span>{{ title }}</span>
         </router-link>
+
         <a-button
+          v-if="isLoggedIn"
+          shape="round"
+          @click="logout"
+        >
+          <template #icon>
+            <LogoutOutlined />
+            Logout
+          </template>
+        </a-button>
+        <a-button
+          v-else
           type="primary"
           shape="round"
-          style="margin: 16px 0"
           @click="openModal"
         >
           <template #icon>
@@ -88,19 +99,21 @@
 
 <script lang="ts">
 import { defineComponent, reactive, ref } from 'vue';
+import { mapGetters } from 'vuex';
+import { useStore } from '@/store';
 import { AxiosError } from 'axios';
 import {
   BulbFilled,
   HeartFilled,
   LockOutlined,
   LoginOutlined,
+  LogoutOutlined,
   UserOutlined,
 } from '@ant-design/icons-vue';
 import { ValidateErrorEntity } from 'ant-design-vue/lib/form/interface';
 import { notification } from 'ant-design-vue';
 
 import { UserLoginReq, UserLoginResp } from '@/components/types';
-import { userClient } from '@/api';
 
 export default defineComponent({
   components: {
@@ -108,9 +121,12 @@ export default defineComponent({
     HeartFilled,
     LockOutlined,
     LoginOutlined,
+    LogoutOutlined,
     UserOutlined,
   },
   setup() {
+    const store = useStore();
+
     const title = 'Teach Us Please!';
 
     const form = ref();
@@ -170,23 +186,6 @@ export default defineComponent({
       resetForm();
     };
 
-    const login = (): void => {
-      userClient
-        .userLogin(modal.data)
-        .then((resp: UserLoginResp) => {
-          if (resp.status === 'success') {
-            closeModal();
-            // TODO: operations after user logged in
-          }
-        })
-        .catch((err: AxiosError) => {
-          openNotification('error', `Failed to login, error: ${err.message}`);
-        })
-        .finally((): void => {
-          modal.loading = false;
-        });
-    };
-
     const onLoginClick = (): void => {
       modal.loading = true;
       form.value
@@ -205,6 +204,27 @@ export default defineComponent({
         });
     };
 
+    const login = (): void => {
+      store
+        .dispatch('login', modal.data)
+        .then((resp: UserLoginResp): void => {
+          console.log('Logged in.', resp);
+          closeModal();
+        })
+        .catch((err: AxiosError): void => {
+          openNotification('error', `Failed to login, error: ${err.message}`);
+        })
+        .finally((): void => {
+          modal.loading = false;
+        });
+    };
+
+    const logout = (): void => {
+      store.dispatch('logout').then((): void => {
+        console.log('Logged out.');
+      });
+    };
+
     return {
       title,
       form,
@@ -213,7 +233,12 @@ export default defineComponent({
       openModal,
       closeModal,
       onLoginClick,
+      login,
+      logout,
     };
+  },
+  computed: {
+    ...mapGetters(['isLoggedIn']),
   },
 });
 </script>
@@ -235,6 +260,10 @@ export default defineComponent({
       font-size: 24px;
       vertical-align: top;
     }
+  }
+
+  .ant-btn {
+    margin: 16px 0;
   }
 }
 
