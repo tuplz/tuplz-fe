@@ -164,6 +164,7 @@ export default defineComponent({
 
     const getProblems = (): void => {
       problemClient
+        // TODO: remove mock data
         .getProblems({
           maxLength: 50,
           userId: 1,
@@ -188,7 +189,7 @@ export default defineComponent({
     const recommendForm = reactive({
       recommendUrl: '',
       recommendReason: '',
-    });
+    } as UploadRecommendReq);
 
     const layout = {
       labelCol: { span: 6 },
@@ -197,7 +198,7 @@ export default defineComponent({
 
     const uploadRecommend = (): void => {
       recommendClient
-        .uploadRecommend(recommendForm as UploadRecommendReq)
+        .uploadRecommend(recommendForm)
         .then((resp: UploadRecommendResp) => {
           console.log(resp);
         })

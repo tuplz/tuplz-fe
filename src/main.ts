@@ -13,6 +13,7 @@ import {
   Form,
   Input,
   Layout,
+  Modal,
   Row,
   Table,
   Tag,
@@ -32,6 +33,7 @@ app
   .use(Form)
   .use(Input)
   .use(Layout)
+  .use(Modal)
   .use(Row)
   .use(Table)
   .use(Tag)

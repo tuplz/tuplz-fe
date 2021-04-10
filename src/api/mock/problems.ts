@@ -2,10 +2,10 @@ import { GetProblemsResp, GetProblemResp } from '@/components/types';
 import { mock } from 'mockjs';
 
 const mockProblemTemplate = {
-  'id|1-10000': 1,
-  'like|1-10000': 1,
-  'dislike|1-10000': 1,
-  'visit|1-10000': 1,
+  id: '@integer(1, 10000)',
+  like: '@integer(1, 10000)',
+  dislike: '@integer(1, 10000)',
+  visit: '@integer(1, 10000)',
   'tags|1': [
     ['naive'],
     ['easy'],

@@ -6,7 +6,7 @@ export interface Recommend {
   updateTime: string;
 }
 
-export interface RecommendFormState {
+export interface RecommendForm {
   recommendUrl: string;
   recommendReason: string;
 }

@@ -6,7 +6,7 @@ import {
 } from '@/components/types';
 import axios, { AxiosError, AxiosResponse } from 'axios';
 import { problemsApiUrl } from '@/utils/config';
-import { mockGetProblemsResp, mockGetProblemResp } from '@/api/mock/problems';
+import { mockGetProblemsResp, mockGetProblemResp } from '@/api/mock';
 
 // FIXME: remove mock data
 const getProblems = (req: GetProblemsReq): Promise<GetProblemsResp> =>
