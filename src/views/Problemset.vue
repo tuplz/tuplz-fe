@@ -146,7 +146,7 @@ export default defineComponent({
           width: 200,
           ellipsis: true,
           sorter: (a: Problem, b: Problem) =>
-            a.updateTime.localeCompare(b.updateTime),
+            a.updTime.localeCompare(b.updTime),
         },
       ],
       rowKey: 'id',

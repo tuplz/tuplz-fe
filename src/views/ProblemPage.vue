@@ -4,41 +4,17 @@
       <a-typography-title>
         {{ problemInfo.data.content.title }}
       </a-typography-title>
-      <a-typography-title :level="2">
-        Description
-      </a-typography-title>
-      <a-typography-paragraph>
-        {{ problemInfo.data.content.description }}
-      </a-typography-paragraph>
-      <a-typography-title :level="2">
-        Sample Input & Output
-      </a-typography-title>
       <div
-        v-for="(sample, index) in problemInfo.data.content.sample"
+        v-for="(sample, index) in problemInfo.data.content.sections"
         :key="index"
       >
         <a-typography-title :level="3">
-          Sample Input {{ index }}
+          {{ sample.misc }}
         </a-typography-title>
         <a-typography-paragraph>
-          {{ sample.input }}
+          {{ sample.content }}
         </a-typography-paragraph>
-        <a-typography-title :level="3">
-          Sample Output {{ index }}
-        </a-typography-title>
-        <a-typography-paragraph>
-          {{ sample.output }}
-        </a-typography-paragraph>
-        <a-typography-title :level="3">
-          Explanation
-        </a-typography-title>
-        <a-typography-paragraph>
-          {{ sample.explanation }}
-        </a-typography-paragraph>
-        <a-typography-title :level="3">
-          Others
-        </a-typography-title>
-        <a-typography-paragraph>
+        <a-typography-paragraph v-if="sample.misc.length>0">
           {{ sample.misc }}
         </a-typography-paragraph>
       </div>
@@ -46,16 +22,10 @@
         Constraints and Limitations
       </a-typography-title>
       <a-typography-paragraph>
-        Time Limit: {{ problemInfo.data.content.rules.runtime }}
-        Memory Limit: {{ problemInfo.data.content.rules.memory }}
-        Stack Limit: {{ problemInfo.data.content.rules.stack }}
-        Source: {{ problemInfo.data.content.rules.source }}
-      </a-typography-paragraph>
-      <a-typography-title :level="2">
-        Others
-      </a-typography-title>
-      <a-typography-paragraph>
-        {{ problemInfo.data.content.misc }}
+        Time Limit: {{ problemInfo.data.content.Rules.runtime }} <br>
+        Memory Limit: {{ problemInfo.data.content.Rules.memory }} <br>
+        Stack Limit: {{ problemInfo.data.content.Rules.stack }} <br>
+        Source: {{ problemInfo.data.content.Rules.source }} <br>
       </a-typography-paragraph>
     </a-typography>
   </a-card>
@@ -93,7 +63,7 @@ import {
   GetProblemResp,
   GetRecommendsResp,
   Problem,
-  ProblemIOSamples,
+  ProblemSections,
   Recommend,
 } from '@/components/types';
 import { problemClient, recommendClient } from '@/api';
@@ -108,26 +78,19 @@ export default defineComponent({
         like: 0,
         dislike: 0,
         visit: 0,
-        updateTime: '',
+        updTime: '',
         content: {
           id: '',
           title: '',
           type: '',
-          description: '',
-          sample: [] as ProblemIOSamples[],
+          sections: [] as ProblemSections[],
           tags: [] as string[],
-          rules: {
+          Rules: {
             runtime: '',
             memory: '',
             stack: '',
             source: '',
           },
-          meta: {
-            created: '',
-            updated: '',
-            checked: '',
-          },
-          misc: ''
         }
       } as Problem,
     });
@@ -152,6 +115,7 @@ export default defineComponent({
         } as GetProblemReq)
         .then((resp: GetProblemResp) => {
           problemInfo.value.data = resp.prob;
+          console.log(resp.prob);
         })
         .catch((err: AxiosError) => {
           openNotification(
