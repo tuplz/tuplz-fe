@@ -49,8 +49,7 @@ export const store: Store<State> = createStore<State>({
           .then((resp: UserRegisterResp) => {
             if (resp.status === 'success') {
               const id = resp.id;
-              // FIXME: require a JSON Web Token (JWT) instead of id
-              const token = id.toString();
+              const token = resp.key;
               localStorage.setItem('token', token);
               axios.defaults.headers.common[
                 'Authorization'
@@ -75,8 +74,7 @@ export const store: Store<State> = createStore<State>({
           .then((resp: UserLoginResp) => {
             if (resp.status === 'success') {
               const id = resp.id;
-              // FIXME: require a JSON Web Token (JWT) instead of id
-              const token = id.toString();
+              const token = resp.key;
               localStorage.setItem('token', token);
               axios.defaults.headers.common['Authorization'] = token;
               commit('authSuccess', { token, id });

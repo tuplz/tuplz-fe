@@ -26,6 +26,7 @@ export type UploadRecommendResp = GetRecommendResp;
 
 export interface UserLoginResp extends Status {
   id: string;
+  key: string;
 }
 
 export type UserRegisterResp = UserLoginResp;
