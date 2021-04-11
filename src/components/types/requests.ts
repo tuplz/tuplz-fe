@@ -1,4 +1,4 @@
-import { RecommendForm, UserToken } from '.';
+import { RecommendForm } from '.';
 
 export interface GetProblemsReq {
   maxLength: number;
@@ -8,7 +8,7 @@ export interface GetProblemReq {
   id: number;
 }
 
-export interface UploadRecommendReq extends RecommendForm, UserToken {}
+export type UploadRecommendReq = RecommendForm;
 
 export interface UserLoginReq {
   username: string;

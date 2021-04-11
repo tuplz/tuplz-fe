@@ -349,4 +349,11 @@ export default defineComponent({
     color: rgba(0, 0, 0, 0.25);
   }
 }
+
+.ant-form {
+  .modal-icon {
+    margin-right: 6px;
+    color: rgba(0, 0, 0, 0.25);
+  }
+}
 </style>

@@ -1,39 +1,57 @@
+<!-- eslint-disable vue/no-v-html -->
 <template>
   <a-card :title="`Problem #${problemInfo.data.id}`">
     <a-typography>
       <a-typography-title>
         {{ problemInfo.data.content.title }}
       </a-typography-title>
-      <a-typography-title :level="2">
-        Description
-      </a-typography-title>
-      <a-typography-paragraph>
-        {{ problemInfo.data.content.description }}
-      </a-typography-paragraph>
-      <a-typography-title :level="2">
-        Input Format
-      </a-typography-title>
-      <a-typography-paragraph code>
-        {{ problemInfo.data.content.inputFormat }}
-      </a-typography-paragraph>
-      <a-typography-title :level="2">
-        Output Format
-      </a-typography-title>
-      <a-typography-paragraph code>
-        {{ problemInfo.data.content.outputFormat }}
-      </a-typography-paragraph>
-      <a-typography-title :level="2">
-        Sample
-      </a-typography-title>
-      <a-typography-paragraph>
-        {{ problemInfo.data.content.sample }}
-      </a-typography-paragraph>
-      <a-typography-title :level="2">
-        Constraints and Limitations
-      </a-typography-title>
-      <a-typography-paragraph>
-        {{ problemInfo.data.content.constraints }}
-      </a-typography-paragraph>
+      <div
+        v-for="section in problemInfo.data.content.sections"
+        :key="section.title"
+      >
+        <a-typography-title :level="2">
+          <span v-html="section.title" />
+        </a-typography-title>
+        <a-typography-paragraph>
+          <span v-html="section.content" />
+        </a-typography-paragraph>
+        <a-typography-paragraph v-if="section.misc.length > 0">
+          <span v-html="section.misc" />
+        </a-typography-paragraph>
+      </div>
+      <div>
+        <a-typography-title :level="2">
+          Constraints and Limitations
+        </a-typography-title>
+        <a-typography-paragraph>
+          <a-space direction="vertical">
+            <span>
+              Time Limit:
+              <a-typography-text code>
+                {{ problemInfo.data.content.rules.runtime }}
+              </a-typography-text>
+            </span>
+            <span>
+              Memory Limit:
+              <a-typography-text code>
+                {{ problemInfo.data.content.rules.memory }}
+              </a-typography-text>
+            </span>
+            <span>
+              Stack Limit:
+              <a-typography-text code>
+                {{ problemInfo.data.content.rules.stack }}
+              </a-typography-text>
+            </span>
+            <span>
+              Source:
+              <a-typography-text code>
+                {{ problemInfo.data.content.rules.source }}
+              </a-typography-text>
+            </span>
+          </a-space>
+        </a-typography-paragraph>
+      </div>
     </a-typography>
   </a-card>
   <a-comment
@@ -46,9 +64,9 @@
       </span>
     </template>
     <template #author>
-      <a>
+      <span>
         {{ item.userId }}
-      </a>
+      </span>
     </template>
     <template #avatar>
       <a-avatar
@@ -60,7 +78,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
+import { defineComponent, reactive } from 'vue';
 import { useRoute } from 'vue-router';
 import { AxiosError } from 'axios';
 import { notification } from 'ant-design-vue';
@@ -78,26 +96,35 @@ export default defineComponent({
   setup() {
     const route = useRoute();
 
-    const problemInfo = ref({
+    const problemInfo = reactive({
       data: {
         id: 0,
         like: 0,
         dislike: 0,
         visit: 0,
-        updateTime: '',
         content: {
           title: '',
-          tags: [] as string[],
-          description: '',
-          inputFormat: '',
-          outputFormat: '',
-          sample: '',
-          constraints: '',
+          type: '',
+          sections: [],
+          samples: [],
+          tags: [],
+          rules: {
+            runtime: 0,
+            memory: 0,
+            stack: 0,
+            source: 0,
+          },
+          meta: {
+            created: '',
+            updated: '',
+            checked: '',
+          },
+          misc: '',
         },
       } as Problem,
     });
 
-    const recommendsInfo = ref({
+    const recommendsInfo = reactive({
       data: [] as Recommend[],
     });
 
@@ -108,15 +135,22 @@ export default defineComponent({
       });
     };
 
+    const getProblemId = (): number => {
+      if (Array.isArray(route.params.id)) {
+        console.log('Invalid route for parsing Problem ID.');
+        return parseInt(route.params.id[0]);
+      }
+      return parseInt(route.params.id);
+    };
+
     const getProblem = (): void => {
       problemClient
         .getProblem({
-          id: parseInt(route.params.id as string),
-          userId: 1,
-          userKey: 'root',
+          id: getProblemId(),
         } as GetProblemReq)
         .then((resp: GetProblemResp) => {
-          problemInfo.value.data = resp.problem;
+          problemInfo.data = resp.problem;
+          console.log(resp.problem);
         })
         .catch((err: AxiosError) => {
           openNotification(
@@ -130,7 +164,7 @@ export default defineComponent({
       recommendClient
         .getRecommends()
         .then((resp: GetRecommendsResp) => {
-          recommendsInfo.value.data = resp.recommends;
+          recommendsInfo.data = resp.recommends;
         })
         .catch((err: AxiosError) => {
           openNotification(
