@@ -151,7 +151,7 @@ export default defineComponent({
           userKey: 'root',
         } as GetProblemReq)
         .then((resp: GetProblemResp) => {
-          problemInfo.value.data = resp.problem;
+          problemInfo.value.data = resp.prob;
         })
         .catch((err: AxiosError) => {
           openNotification(

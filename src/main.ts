@@ -9,9 +9,11 @@ import {
   BackTop,
   Button,
   Card,
+  Col,
   Comment,
   Divider,
   Form,
+  Icon,
   Input,
   Layout,
   Modal,
@@ -31,9 +33,11 @@ app
   .use(BackTop)
   .use(Button)
   .use(Card)
+  .use(Col)
   .use(Comment)
   .use(Divider)
   .use(Form)
+  .use(Icon)
   .use(Input)
   .use(Layout)
   .use(Modal)

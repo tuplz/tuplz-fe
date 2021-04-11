@@ -167,7 +167,7 @@ export default defineComponent({
       problemClient
         // TODO: remove mock data
         .getProblems({
-          maxLength: 50,
+          maxLength: 10000,
           userId: 1,
           userKey: 'root',
         } as GetProblemsReq)

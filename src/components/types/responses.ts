@@ -5,11 +5,11 @@ interface Status {
 }
 
 export interface GetProblemsResp extends Status {
-  problems: Problem[];
+  prob: Problem[];
 }
 
 export interface GetProblemResp extends Status {
-  problem: Problem;
+  prob: Problem;
 }
 
 export interface GetRecommendsResp extends Status {
