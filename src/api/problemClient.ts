@@ -13,8 +13,9 @@ const getProblems = (req: GetProblemsReq): Promise<GetProblemsResp> =>
   new Promise((resolve, _reject) => {
     axios
       .post<void, AxiosResponse<GetProblemsResp>>(problemsApiUrl + '/find/idGt', {
-        "UserId": req.userId,
-        "UserKey": req.userKey,
+        "Id": 1,
+        "UserId": "root",
+        "UserKey": "root",
         "MaxLength": req.maxLength
       })
       .then((resp: AxiosResponse<GetProblemsResp>) => {
