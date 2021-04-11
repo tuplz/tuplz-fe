@@ -1,5 +1,5 @@
 export interface Recommend {
-  userId: number;
+  userId: string;
   problemId: number;
   recommendId: number;
   message: string;
@@ -7,6 +7,6 @@ export interface Recommend {
 }
 
 export interface RecommendForm {
-  recommendId?: number;
+  problemId?: number;
   recommendReason: string;
 }

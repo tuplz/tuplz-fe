@@ -6,7 +6,7 @@ import {
 import { mock } from 'mockjs';
 
 const mockRecommendTemplate = {
-  userId: '@integer(1, 10000)',
+  userId: '@guid',
   problemId: '@integer(1, 10000)',
   recommendId: '@integer(1, 10000)',
   message: '@paragraph',

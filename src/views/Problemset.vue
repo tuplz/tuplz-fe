@@ -42,12 +42,12 @@
     @finish="handleFinish"
   >
     <a-form-item
-      label="Recommend ID"
-      name="recommendId"
+      label="Problem ID"
+      name="problemId"
       required
       has-feedback
     >
-      <a-input v-model:value="recommendForm.recommendId" />
+      <a-input v-model:value="recommendForm.problemId" />
     </a-form-item>
     <a-form-item
       label="Recommend Reason"
@@ -199,7 +199,7 @@ export default defineComponent({
     };
 
     const recommendForm = reactive({
-      recommendId: undefined,
+      problemId: undefined,
       recommendReason: '',
     } as RecommendForm);
 

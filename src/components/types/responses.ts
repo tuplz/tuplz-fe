@@ -25,7 +25,7 @@ export type GetProblemRecommendsResp = GetRecommendsResp;
 export type UploadRecommendResp = GetRecommendResp;
 
 export interface UserLoginResp extends Status {
-  id: number;
+  id: string;
 }
 
 export type UserRegisterResp = UserLoginResp;
