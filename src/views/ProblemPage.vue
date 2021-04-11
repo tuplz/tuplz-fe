@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/no-v-html -->
 <template>
   <a-card :title="`Problem #${problemInfo.data.id}`">
     <a-typography>
@@ -5,27 +6,43 @@
         {{ problemInfo.data.content.title }}
       </a-typography-title>
       <div
-        v-for="(sample, index) in problemInfo.data.content.sections"
-        :key="index"
+        v-for="section in problemInfo.data.content.sections"
+        :key="section.title"
       >
-        <a-typography-title :level="3">
-          <div v-html="sample.title" />
+        <a-typography-title :level="2">
+          <span v-html="section.title" />
         </a-typography-title>
         <a-typography-paragraph>
-          <div v-html="sample.content" />
+          <span v-html="section.content" />
         </a-typography-paragraph>
-        <a-typography-paragraph v-if="sample.misc.length>0">
-          <div v-html="sample.misc" />
+        <a-typography-paragraph v-if="section.misc.length > 0">
+          <span v-html="section.misc" />
         </a-typography-paragraph>
       </div>
       <a-typography-title :level="2">
         Constraints and Limitations
       </a-typography-title>
       <a-typography-paragraph>
-        Time Limit: {{ problemInfo.data.content.Rules.runtime }} <br>
-        Memory Limit: {{ problemInfo.data.content.Rules.memory }} <br>
-        Stack Limit: {{ problemInfo.data.content.Rules.stack }} <br>
-        Source: {{ problemInfo.data.content.Rules.source }} <br>
+        Time Limit:
+        <code>
+          {{ problemInfo.data.content.rules.runtime }}
+        </code>
+        <br>
+        Memory Limit:
+        <code>
+          {{ problemInfo.data.content.rules.memory }}
+        </code>
+        <br>
+        Stack Limit:
+        <code>
+          {{ problemInfo.data.content.rules.stack }}
+        </code>
+        <br>
+        Source:
+        <code>
+          {{ problemInfo.data.content.rules.source }}
+        </code>
+        <br>
       </a-typography-paragraph>
     </a-typography>
   </a-card>
@@ -53,7 +70,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
+import { defineComponent, reactive } from 'vue';
 import { useRoute } from 'vue-router';
 import { AxiosError } from 'axios';
 import { notification } from 'ant-design-vue';
@@ -63,7 +80,6 @@ import {
   GetProblemResp,
   GetRecommendsResp,
   Problem,
-  ProblemSections,
   Recommend,
 } from '@/components/types';
 import { problemClient, recommendClient } from '@/api';
@@ -72,30 +88,35 @@ export default defineComponent({
   setup() {
     const route = useRoute();
 
-    const problemInfo = ref({
+    const problemInfo = reactive({
       data: {
         id: 0,
         like: 0,
         dislike: 0,
         visit: 0,
-        updTime: '',
         content: {
-          id: '',
           title: '',
           type: '',
-          sections: [] as ProblemSections[],
-          tags: [] as string[],
-          Rules: {
-            runtime: '',
-            memory: '',
-            stack: '',
-            source: '',
+          sections: [],
+          samples: [],
+          tags: [],
+          rules: {
+            runtime: 0,
+            memory: 0,
+            stack: 0,
+            source: 0,
           },
-        }
+          meta: {
+            created: '',
+            updated: '',
+            checked: '',
+          },
+          misc: '',
+        },
       } as Problem,
     });
 
-    const recommendsInfo = ref({
+    const recommendsInfo = reactive({
       data: [] as Recommend[],
     });
 
@@ -106,16 +127,22 @@ export default defineComponent({
       });
     };
 
+    const getProblemId = (): number => {
+      if (Array.isArray(route.params.id)) {
+        console.log('Invalid route for parsing Problem ID.');
+        return parseInt(route.params.id[0]);
+      }
+      return parseInt(route.params.id);
+    };
+
     const getProblem = (): void => {
       problemClient
         .getProblem({
-          id: parseInt(route.params.id as string),
-          userId: 1,
-          userKey: 'root',
+          id: getProblemId(),
         } as GetProblemReq)
         .then((resp: GetProblemResp) => {
-          problemInfo.value.data = resp.prob;
-          console.log(resp.prob);
+          problemInfo.data = resp.problem;
+          console.log(resp.problem);
         })
         .catch((err: AxiosError) => {
           openNotification(
@@ -129,7 +156,7 @@ export default defineComponent({
       recommendClient
         .getRecommends()
         .then((resp: GetRecommendsResp) => {
-          recommendsInfo.value.data = resp.recommends;
+          recommendsInfo.data = resp.recommends;
         })
         .catch((err: AxiosError) => {
           openNotification(

@@ -6,48 +6,43 @@ const mockProblemTemplate = {
   like: '@integer(1, 10000)',
   dislike: '@integer(1, 10000)',
   visit: '@integer(1, 10000)',
-  'tags|1': [
-    ['naive'],
-    ['easy'],
-    ['normal'],
-    ['hard'],
-    ['@word'],
-    ['easy', '@word'],
-    ['normal', '@word', '@word'],
-  ],
-  updateTime: '@datetime',
   content: {
-    id: '@title(1, 6)',
     title: '@title(1, 6)',
     type: '@title(1, 6)',
-    description: '@paragraph',
-    'sample|1-3': [{
-      input: '@title(1, 6)',
-      output: '@title(1, 6)',
-      explanation: '@title(1, 6)',
-      misc: '@title(1, 6)',
-    }],
+    'sections|1-3': [
+      {
+        title: '@title(1, 6)',
+        content: '@paragraph',
+        misc: '@sentence',
+      },
+    ],
     'tags|1': [
-      ['naive'],
-      ['easy'],
-      ['normal'],
-      ['hard'],
-      ['@word'],
+      ['naive', '@word'],
       ['easy', '@word'],
-      ['normal', '@word', '@word'],
+      ['normal', '@word'],
+      ['hard', '@word'],
+      ['@word', '@word'],
+    ],
+    'sample|1-3': [
+      {
+        input: '@sentence',
+        output: '@sentence',
+        explanation: '@paragraph',
+        misc: '@sentence',
+      },
     ],
     rules: {
-      'runtime|1-1000': 1,
-      'memory|1-1000': 1,
-      'stack|1-1000': 1,
-      'source|1-1000': 1,
+      runtime: '@integer(1000000000, 10000000000)',
+      memory: '@integer(100000000, 1000000000)',
+      stack: '@integer(100000000, 1000000000)',
+      source: '@integer(10000, 100000)',
     },
     meta: {
       created: '@datetime',
       updated: '@datetime',
       checked: '@datetime',
     },
-    misc: '@title(1, 6)'
+    misc: '@sentence',
   },
 };
 

@@ -1,6 +1,14 @@
-export interface ProblemSections{
+interface ProblemSection {
   title: string;
   content: string;
+  misc: string;
+}
+
+interface ProblemSample {
+  title: string;
+  input: string;
+  output: string;
+  explanation: string;
   misc: string;
 }
 
@@ -8,19 +16,24 @@ export interface Problem {
   id: number;
   like: number;
   dislike: number;
-  updTime: string;
   visit: number;
   content: {
-    id:string;
     title: string;
     type: string;
-    sections: ProblemSections[];
+    sections: ProblemSection[];
+    samples: ProblemSample[];
     tags: string[];
-    Rules: {
-      runtime: string;
-      memory: string;
-      stack: string;
-      source: string;
-    },
+    rules: {
+      runtime: number;
+      memory: number;
+      stack: number;
+      source: number;
+    };
+    meta: {
+      created: string;
+      updated: string;
+      checked: string;
+    };
+    misc: string;
   };
 }

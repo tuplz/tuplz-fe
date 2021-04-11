@@ -12,11 +12,8 @@ import { mockGetProblemsResp, mockGetProblemResp } from '@/api/mock';
 const getProblems = (req: GetProblemsReq): Promise<GetProblemsResp> =>
   new Promise((resolve, _reject) => {
     axios
-      .post<void, AxiosResponse<GetProblemsResp>>(problemsApiUrl + '/find/idGt', {
-        "Id": 1,
-        "UserId": "root",
-        "UserKey": "root",
-        "MaxLength": req.maxLength
+      .get<void, AxiosResponse<GetProblemsResp>>(problemsApiUrl, {
+        params: req,
       })
       .then((resp: AxiosResponse<GetProblemsResp>) => {
         resolve(resp.data);

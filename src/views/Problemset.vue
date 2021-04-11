@@ -121,7 +121,7 @@ export default defineComponent({
         },
         {
           title: 'Tags',
-          dataIndex: 'tags',
+          dataIndex: 'content.tags',
           ellipsis: true,
           slots: { customRender: 'tags' },
         },
@@ -148,12 +148,12 @@ export default defineComponent({
         },
         {
           title: 'Update Time',
-          dataIndex: 'updateTime',
+          dataIndex: 'content.meta.updated',
           align: 'right',
           width: 200,
           ellipsis: true,
           sorter: (a: Problem, b: Problem) =>
-            a.updTime.localeCompare(b.updTime),
+            a.content.meta.updated.localeCompare(b.content.meta.updated),
         },
       ],
       rowKey: 'id',
@@ -172,11 +172,8 @@ export default defineComponent({
 
     const getProblems = (): void => {
       problemClient
-        // TODO: remove mock data
         .getProblems({
           maxLength: 10000,
-          userId: 1,
-          userKey: 'root',
         } as GetProblemsReq)
         .then((resp: GetProblemsResp) => {
           table.data = resp.problems;
@@ -205,14 +202,14 @@ export default defineComponent({
 
     const uploadRecommend = (): void => {
       recommendClient
-        .uploadRecommend(recommendForm)
+        .uploadRecommend(recommendForm as UploadRecommendReq)
         .then((resp: UploadRecommendResp) => {
           console.log(resp);
         })
         .catch((err: AxiosError) => {
           openNotification(
             'error',
-            `Failed to load problems, error: ${err.message}`
+            `Failed to upload recommendation, error: ${err.message}`
           );
         });
     };
