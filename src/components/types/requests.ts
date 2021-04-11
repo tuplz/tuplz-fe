@@ -10,7 +10,7 @@ export interface GetProblemReq {
 
 export type GetProblemRecommendsReq = GetProblemReq;
 
-export type UploadRecommendReq = RecommendForm;
+export type UploadRecommendReq = Required<RecommendForm>;
 
 export interface UserLoginReq {
   username: string;

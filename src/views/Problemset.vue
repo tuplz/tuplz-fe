@@ -42,12 +42,12 @@
     @finish="handleFinish"
   >
     <a-form-item
-      label="Recommend URL"
-      name="recommendUrl"
+      label="Recommend ID"
+      name="recommendId"
       required
       has-feedback
     >
-      <a-input v-model:value="recommendForm.recommendUrl" />
+      <a-input v-model:value="recommendForm.recommendId" />
     </a-form-item>
     <a-form-item
       label="Recommend Reason"
@@ -85,6 +85,7 @@ import { notification } from 'ant-design-vue';
 import {
   Problem,
   TagColorMap,
+  RecommendForm,
   GetProblemsReq,
   GetProblemsResp,
   UploadRecommendReq,
@@ -198,9 +199,9 @@ export default defineComponent({
     };
 
     const recommendForm = reactive({
-      recommendUrl: '',
+      recommendId: undefined,
       recommendReason: '',
-    } as UploadRecommendReq);
+    } as RecommendForm);
 
     const layout = {
       labelCol: { span: 6 },
