@@ -19,31 +19,39 @@
           <span v-html="section.misc" />
         </a-typography-paragraph>
       </div>
-      <a-typography-title :level="2">
-        Constraints and Limitations
-      </a-typography-title>
-      <a-typography-paragraph>
-        Time Limit:
-        <code>
-          {{ problemInfo.data.content.rules.runtime }}
-        </code>
-        <br>
-        Memory Limit:
-        <code>
-          {{ problemInfo.data.content.rules.memory }}
-        </code>
-        <br>
-        Stack Limit:
-        <code>
-          {{ problemInfo.data.content.rules.stack }}
-        </code>
-        <br>
-        Source:
-        <code>
-          {{ problemInfo.data.content.rules.source }}
-        </code>
-        <br>
-      </a-typography-paragraph>
+      <div>
+        <a-typography-title :level="2">
+          Constraints and Limitations
+        </a-typography-title>
+        <a-typography-paragraph>
+          <a-space direction="vertical">
+            <span>
+              Time Limit:
+              <a-typography-text code>
+                {{ problemInfo.data.content.rules.runtime }}
+              </a-typography-text>
+            </span>
+            <span>
+              Memory Limit:
+              <a-typography-text code>
+                {{ problemInfo.data.content.rules.memory }}
+              </a-typography-text>
+            </span>
+            <span>
+              Stack Limit:
+              <a-typography-text code>
+                {{ problemInfo.data.content.rules.stack }}
+              </a-typography-text>
+            </span>
+            <span>
+              Source:
+              <a-typography-text code>
+                {{ problemInfo.data.content.rules.source }}
+              </a-typography-text>
+            </span>
+          </a-space>
+        </a-typography-paragraph>
+      </div>
     </a-typography>
   </a-card>
   <a-comment
@@ -56,9 +64,9 @@
       </span>
     </template>
     <template #author>
-      <a>
+      <span>
         {{ item.userId }}
-      </a>
+      </span>
     </template>
     <template #avatar>
       <a-avatar
