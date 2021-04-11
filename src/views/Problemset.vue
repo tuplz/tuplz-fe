@@ -9,6 +9,7 @@
       pageSizeOptions: ['10', '20', '50', '100'],
       defaultPageSize: 20,
     }"
+    :loading="table.loading"
     :row-key="table.rowKey"
   >
     <template #id="{ text }">
@@ -37,6 +38,7 @@
     ref="form"
     :model="recommendForm"
     v-bind="layout"
+    style="margin-top: 24px"
     @finish="handleFinish"
   >
     <a-form-item
@@ -158,6 +160,7 @@ export default defineComponent({
       ],
       rowKey: 'id',
       data: [] as Problem[],
+      loading: false,
     });
 
     const defaultTagColors: TagColorMap = reactive({
@@ -171,18 +174,22 @@ export default defineComponent({
       tag in defaultTagColors ? defaultTagColors[tag] : 'purple';
 
     const getProblems = (): void => {
+      table.loading = true;
       problemClient
         .getProblems({
           maxLength: 10000,
         } as GetProblemsReq)
-        .then((resp: GetProblemsResp) => {
+        .then((resp: GetProblemsResp): void => {
           table.data = resp.problems;
         })
-        .catch((err: AxiosError) => {
+        .catch((err: AxiosError): void => {
           openNotification(
             'error',
             `Failed to load problems, error: ${err.message}`
           );
+        })
+        .finally((): void => {
+          table.loading = false;
         });
     };
 
@@ -203,10 +210,10 @@ export default defineComponent({
     const uploadRecommend = (): void => {
       recommendClient
         .uploadRecommend(recommendForm as UploadRecommendReq)
-        .then((resp: UploadRecommendResp) => {
+        .then((resp: UploadRecommendResp): void => {
           console.log(resp);
         })
-        .catch((err: AxiosError) => {
+        .catch((err: AxiosError): void => {
           openNotification(
             'error',
             `Failed to upload recommendation, error: ${err.message}`

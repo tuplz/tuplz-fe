@@ -84,9 +84,10 @@ import { AxiosError } from 'axios';
 import { notification } from 'ant-design-vue';
 
 import {
+  GetProblemRecommendsReq,
+  GetProblemRecommendsResp,
   GetProblemReq,
   GetProblemResp,
-  GetRecommendsResp,
   Problem,
   Recommend,
 } from '@/components/types';
@@ -160,10 +161,12 @@ export default defineComponent({
         });
     };
 
-    const getRecommendation = (): void => {
+    const getRecommends = (): void => {
       recommendClient
-        .getRecommends()
-        .then((resp: GetRecommendsResp) => {
+        .getProblemRecommends({
+          id: getProblemId(),
+        } as GetProblemRecommendsReq)
+        .then((resp: GetProblemRecommendsResp) => {
           recommendsInfo.data = resp.recommends;
         })
         .catch((err: AxiosError) => {
@@ -176,7 +179,7 @@ export default defineComponent({
 
     const refresh = (): void => {
       getProblem();
-      getRecommendation();
+      getRecommends();
     };
 
     return {

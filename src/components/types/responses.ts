@@ -20,6 +20,8 @@ export interface GetRecommendResp extends Status {
   recommend: Recommend;
 }
 
+export type GetProblemRecommendsResp = GetRecommendsResp;
+
 export type UploadRecommendResp = GetRecommendResp;
 
 export interface UserLoginResp extends Status {

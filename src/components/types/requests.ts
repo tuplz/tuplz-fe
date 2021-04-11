@@ -8,6 +8,8 @@ export interface GetProblemReq {
   id: number;
 }
 
+export type GetProblemRecommendsReq = GetProblemReq;
+
 export type UploadRecommendReq = RecommendForm;
 
 export interface UserLoginReq {
