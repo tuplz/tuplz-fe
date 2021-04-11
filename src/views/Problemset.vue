@@ -126,6 +126,13 @@ export default defineComponent({
           slots: { customRender: 'tags' },
         },
         {
+          title: 'Visit',
+          dataIndex: 'visit',
+          width: 100,
+          align: 'center',
+          sorter: (a: Problem, b: Problem) => a.visit - b.visit,
+        },
+        {
           title: 'Like',
           dataIndex: 'like',
           width: 100,

@@ -9,6 +9,7 @@ export interface Problem {
   like: number;
   dislike: number;
   updTime: string;
+  visit: number;
   content: {
     id:string;
     title: string;
