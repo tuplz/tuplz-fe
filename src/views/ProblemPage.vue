@@ -146,6 +146,7 @@ export default defineComponent({
     const getProblem = (): void => {
       problemClient
         .getProblem({
+          userId: localStorage.getItem("token") == null ? "" : localStorage.getItem("token"),
           id: getProblemId(),
         } as GetProblemReq)
         .then((resp: GetProblemResp) => {
@@ -162,7 +163,9 @@ export default defineComponent({
 
     const getRecommendation = (): void => {
       recommendClient
-        .getRecommends()
+        .getRecommends({
+          userId: localStorage.getItem("token") == null ? "" : localStorage.getItem("token"),
+        })
         .then((resp: GetRecommendsResp) => {
           recommendsInfo.data = resp.recommends;
         })

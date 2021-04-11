@@ -1,11 +1,17 @@
 import { RecommendForm } from '.';
 
 export interface GetProblemsReq {
+  userId: string;
   maxLength: number;
 }
 
 export interface GetProblemReq {
+  userId: string;
   id: number;
+}
+
+export interface GetRecommendsReq {
+  userId: string | null;
 }
 
 export type UploadRecommendReq = RecommendForm;
