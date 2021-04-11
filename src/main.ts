@@ -2,6 +2,7 @@ import { createApp } from 'vue';
 
 import App from './App.vue';
 import router from './router';
+import { store, key } from './store';
 
 import {
   Avatar,
@@ -13,13 +14,17 @@ import {
   Form,
   Input,
   Layout,
+  Modal,
+  Row,
+  Space,
   Table,
   Tag,
   Typography,
 } from 'ant-design-vue';
 
 const app = createApp(App);
-app.use(router);
+
+app.use(router).use(store, key);
 
 app
   .use(Avatar)
@@ -31,6 +36,9 @@ app
   .use(Form)
   .use(Input)
   .use(Layout)
+  .use(Modal)
+  .use(Row)
+  .use(Space)
   .use(Table)
   .use(Tag)
   .use(Typography);

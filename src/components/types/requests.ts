@@ -1,13 +1,20 @@
-import { RecommendFormState, UserLoginToken } from '.';
+import { RecommendForm, UserToken } from '.';
 
-export interface GetProblemsReq extends UserLoginToken {
+export interface GetProblemsReq {
   maxLength: number;
 }
 
-export interface GetProblemReq extends UserLoginToken {
+export interface GetProblemReq {
   id: number;
 }
 
-export interface UploadRecommendReq
-  extends RecommendFormState,
-    UserLoginToken {}
+export interface UploadRecommendReq extends RecommendForm, UserToken {}
+
+export interface UserLoginReq {
+  username: string;
+  password: string;
+}
+
+export interface UserRegisterReq extends UserLoginReq {
+  email: string;
+}

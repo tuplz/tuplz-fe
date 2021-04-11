@@ -21,3 +21,9 @@ export interface GetRecommendResp extends Status {
 }
 
 export type UploadRecommendResp = GetRecommendResp;
+
+export interface UserLoginResp extends Status {
+  id: number;
+}
+
+export type UserRegisterResp = UserLoginResp;

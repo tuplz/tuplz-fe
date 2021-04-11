@@ -5,10 +5,7 @@ import {
 } from '@/components/types';
 import axios, { AxiosError, AxiosResponse } from 'axios';
 import { recommendsApiUrl } from '@/utils/config';
-import {
-  mockGetRecommendsResp,
-  mockUploadRecommendResp,
-} from '@/api/mock/recommends';
+import { mockGetRecommendsResp, mockUploadRecommendResp } from '@/api/mock';
 
 // FIXME: remove mock data
 const getRecommends = (): Promise<GetRecommendsResp> =>

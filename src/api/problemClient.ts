@@ -6,7 +6,7 @@ import {
 } from '@/components/types';
 import axios, { AxiosError, AxiosResponse } from 'axios';
 import { problemsApiUrl } from '@/utils/config';
-import { mockGetProblemsResp, mockGetProblemResp } from '@/api/mock/problems';
+import { mockGetProblemsResp, mockGetProblemResp } from '@/api/mock';
 
 // FIXME: remove mock data
 const getProblems = (req: GetProblemsReq): Promise<GetProblemsResp> =>
@@ -28,9 +28,7 @@ const getProblems = (req: GetProblemsReq): Promise<GetProblemsResp> =>
 const getProblem = (req: GetProblemReq): Promise<GetProblemResp> =>
   new Promise((resolve, _reject) => {
     axios
-      .get<GetProblemReq, AxiosResponse<GetProblemResp>>(problemsApiUrl, {
-        params: req,
-      })
+      .get<void, AxiosResponse<GetProblemResp>>(`${problemsApiUrl}/${req.id}`)
       .then((resp: AxiosResponse<GetProblemResp>) => {
         resolve(resp.data);
       })
