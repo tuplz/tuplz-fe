@@ -9,13 +9,13 @@
         :key="index"
       >
         <a-typography-title :level="3">
-          {{ sample.misc }}
+          <div v-html="sample.title" />
         </a-typography-title>
         <a-typography-paragraph>
-          {{ sample.content }}
+          <div v-html="sample.content" />
         </a-typography-paragraph>
         <a-typography-paragraph v-if="sample.misc.length>0">
-          {{ sample.misc }}
+          <div v-html="sample.misc" />
         </a-typography-paragraph>
       </div>
       <a-typography-title :level="2">
