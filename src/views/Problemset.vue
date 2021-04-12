@@ -238,6 +238,7 @@ export default defineComponent({
 
     const handleFinish = (): void => {
       uploadRecommend();
+      resetForm();
     };
 
     return {

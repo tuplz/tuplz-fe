@@ -1,6 +1,9 @@
 <!-- eslint-disable vue/no-v-html -->
 <template>
-  <a-card :title="`Problem #${problemInfo.data.id}`">
+  <a-card
+    :title="`Problem #${problemInfo.data.id}`"
+    :loading="problemInfo.loading"
+  >
     <a-typography>
       <a-typography-title>
         {{ problemInfo.data.content.title }}
@@ -57,6 +60,7 @@
   <a-comment
     v-for="item in recommendsInfo.data"
     :key="item.recommendId"
+    :loading="recommendsInfo.loading"
   >
     <template #actions>
       <span>
@@ -125,10 +129,12 @@ export default defineComponent({
           misc: '',
         },
       } as Problem,
+      loading: true
     });
 
     const recommendsInfo = reactive({
       data: [] as Recommend[],
+      loading: true
     });
 
     const openNotification = (type: string, description: string): void => {
@@ -162,6 +168,7 @@ export default defineComponent({
             `Failed to load problem, error: ${err.message}`
           );
         });
+      problemInfo.loading = false
     };
 
     const getRecommends = (): void => {
@@ -179,6 +186,7 @@ export default defineComponent({
             `Failed to load recommendations, error: ${err.message}`
           );
         });
+      recommendsInfo.loading = false;
     };
 
     const refresh = (): void => {
