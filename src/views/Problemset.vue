@@ -173,7 +173,7 @@ export default defineComponent({
     const getProblems = (): void => {
       problemClient
         .getProblems({
-          userId: localStorage.getItem("token") == null ? "" : localStorage.getItem("token"),
+          userId: localStorage.getItem("token") || "",
           maxLength: 10000,
         } as GetProblemsReq)
         .then((resp: GetProblemsResp) => {
@@ -192,7 +192,7 @@ export default defineComponent({
     };
 
     const recommendForm = reactive({
-      userId: localStorage.getItem("token") == null ? "" : localStorage.getItem("token"),
+      userId: localStorage.getItem("token") || "",
       recommendUrl: '',
       recommendReason: '',
     } as UploadRecommendReq);

@@ -146,7 +146,7 @@ export default defineComponent({
     const getProblem = (): void => {
       problemClient
         .getProblem({
-          userId: localStorage.getItem("token") == null ? "" : localStorage.getItem("token"),
+          userId: localStorage.getItem("token") || "",
           id: getProblemId(),
         } as GetProblemReq)
         .then((resp: GetProblemResp) => {
@@ -164,8 +164,7 @@ export default defineComponent({
     const getRecommendation = (): void => {
       recommendClient
         .getRecommends({
-          userId: ' ',
-          //localStorage.getItem("token") == null ? " " : localStorage.getItem("token"),
+          userId: localStorage.getItem("token") || "",
           problemId: getProblemId(),
         })
         .then((resp: GetRecommendsResp) => {
