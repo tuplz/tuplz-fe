@@ -164,7 +164,9 @@ export default defineComponent({
     const getRecommendation = (): void => {
       recommendClient
         .getRecommends({
-          userId: localStorage.getItem("token") == null ? "" : localStorage.getItem("token"),
+          userId: ' ',
+          //localStorage.getItem("token") == null ? " " : localStorage.getItem("token"),
+          problemId: getProblemId(),
         })
         .then((resp: GetRecommendsResp) => {
           recommendsInfo.data = resp.recommends;

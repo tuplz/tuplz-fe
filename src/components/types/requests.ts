@@ -11,7 +11,8 @@ export interface GetProblemReq {
 }
 
 export interface GetRecommendsReq {
-  userId: string | null;
+  userId: string;
+  problemId: number;
 }
 
 export type UploadRecommendReq = RecommendForm;

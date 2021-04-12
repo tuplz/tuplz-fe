@@ -9,10 +9,12 @@ import { recommendsApiUrl } from '@/utils/config';
 import { mockGetRecommendsResp, mockUploadRecommendResp } from '@/api/mock';
 
 // FIXME: remove mock data
-const getRecommends = (req: GetRecommendsReq): Promise<GetRecommendsResp> =>
+const getRecommends = (
+  req: GetRecommendsReq
+): Promise<GetRecommendsResp> =>
   new Promise((resolve, _reject) => {
     axios
-      .get<void, AxiosResponse<GetRecommendsResp>>(recommendsApiUrl, {
+      .get<GetRecommendsReq, AxiosResponse<GetRecommendsResp>>(recommendsApiUrl, {
           params: req,
         })
       .then((resp: AxiosResponse<GetRecommendsResp>) => {
