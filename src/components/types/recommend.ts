@@ -8,6 +8,7 @@ export interface Recommend {
 
 export interface RecommendForm {
   userId: string;
+  problemId: string;
   recommendUrl: string;
   recommendReason: string;
 }

@@ -204,7 +204,7 @@ export default defineComponent({
     const recommendForm = reactive({
       userId: store.state.id,
       recommendUrl: '',
-      problemId: undefined,
+      problemId: '',
       recommendReason: '',
     } as RecommendForm);
 
@@ -215,7 +215,12 @@ export default defineComponent({
 
     const uploadRecommend = (): void => {
       recommendClient
-        .uploadRecommend(recommendForm as UploadRecommendReq)
+        .uploadRecommend({
+          userId: store.state.id,
+          recommendUrl: recommendForm.recommendUrl,
+          problemId: recommendForm.problemId,
+          recommendReason: recommendForm.recommendReason
+        } as UploadRecommendReq)
         .then((resp: UploadRecommendResp): void => {
           console.log(resp);
         })
