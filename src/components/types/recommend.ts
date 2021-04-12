@@ -1,5 +1,5 @@
 export interface Recommend {
-  userId: number;
+  userId: string;
   problemId: number;
   recommendId: number;
   message: string;

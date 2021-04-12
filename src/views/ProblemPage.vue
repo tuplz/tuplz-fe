@@ -84,17 +84,20 @@ import { AxiosError } from 'axios';
 import { notification } from 'ant-design-vue';
 
 import {
+  GetProblemRecommendsReq,
+  GetProblemRecommendsResp,
   GetProblemReq,
   GetProblemResp,
-  GetRecommendsResp,
   Problem,
   Recommend,
 } from '@/components/types';
 import { problemClient, recommendClient } from '@/api';
+import { useStore } from '@/store';
 
 export default defineComponent({
   setup() {
     const route = useRoute();
+    const store = useStore();
 
     const problemInfo = reactive({
       data: {
@@ -146,7 +149,7 @@ export default defineComponent({
     const getProblem = (): void => {
       problemClient
         .getProblem({
-          userId: localStorage.getItem("token") || "",
+          userId: store.state.id,
           id: getProblemId(),
         } as GetProblemReq)
         .then((resp: GetProblemResp) => {
@@ -161,13 +164,13 @@ export default defineComponent({
         });
     };
 
-    const getRecommendation = (): void => {
+    const getRecommends = (): void => {
       recommendClient
-        .getRecommends({
-          userId: localStorage.getItem("token") || "",
-          problemId: getProblemId(),
-        })
-        .then((resp: GetRecommendsResp) => {
+        .getProblemRecommends({
+          id: getProblemId(),
+          userId: store.state.id,
+        } as GetProblemRecommendsReq)
+        .then((resp: GetProblemRecommendsResp) => {
           recommendsInfo.data = resp.recommends;
         })
         .catch((err: AxiosError) => {
@@ -180,7 +183,7 @@ export default defineComponent({
 
     const refresh = (): void => {
       getProblem();
-      getRecommendation();
+      getRecommends();
     };
 
     return {

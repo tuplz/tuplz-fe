@@ -9,6 +9,7 @@
       pageSizeOptions: ['10', '20', '50', '100'],
       defaultPageSize: 20,
     }"
+    :loading="table.loading"
     :row-key="table.rowKey"
   >
     <template #id="{ text }">
@@ -37,15 +38,16 @@
     ref="form"
     :model="recommendForm"
     v-bind="layout"
+    style="margin-top: 24px"
     @finish="handleFinish"
   >
     <a-form-item
-      label="Recommend URL"
-      name="recommendUrl"
+      label="Problem ID"
+      name="problemId"
       required
       has-feedback
     >
-      <a-input v-model:value="recommendForm.recommendUrl" />
+      <a-input v-model:value="recommendForm.problemId" />
     </a-form-item>
     <a-form-item
       label="Recommend Reason"
@@ -83,16 +85,19 @@ import { notification } from 'ant-design-vue';
 import {
   Problem,
   TagColorMap,
+  RecommendForm,
   GetProblemsReq,
   GetProblemsResp,
   UploadRecommendReq,
   UploadRecommendResp,
 } from '@/components/types';
 import { problemClient, recommendClient } from '@/api';
+import { useStore } from '@/store';
 
 export default defineComponent({
   setup() {
     const form = ref();
+    const store = useStore();
 
     const openNotification = (type: string, description: string) => {
       notification[type]({
@@ -158,6 +163,7 @@ export default defineComponent({
       ],
       rowKey: 'id',
       data: [] as Problem[],
+      loading: false,
     });
 
     const defaultTagColors: TagColorMap = reactive({
@@ -171,19 +177,23 @@ export default defineComponent({
       tag in defaultTagColors ? defaultTagColors[tag] : 'purple';
 
     const getProblems = (): void => {
+      table.loading = true;
       problemClient
         .getProblems({
-          userId: localStorage.getItem("token") || "",
+          userId: store.state.id,
           maxLength: 10000,
         } as GetProblemsReq)
-        .then((resp: GetProblemsResp) => {
+        .then((resp: GetProblemsResp): void => {
           table.data = resp.problems;
         })
-        .catch((err: AxiosError) => {
+        .catch((err: AxiosError): void => {
           openNotification(
             'error',
             `Failed to load problems, error: ${err.message}`
           );
+        })
+        .finally((): void => {
+          table.loading = false;
         });
     };
 
@@ -192,10 +202,11 @@ export default defineComponent({
     };
 
     const recommendForm = reactive({
-      userId: localStorage.getItem("token") || "",
+      userId: store.state.id,
       recommendUrl: '',
+      problemId: undefined,
       recommendReason: '',
-    } as UploadRecommendReq);
+    } as RecommendForm);
 
     const layout = {
       labelCol: { span: 6 },
@@ -205,10 +216,10 @@ export default defineComponent({
     const uploadRecommend = (): void => {
       recommendClient
         .uploadRecommend(recommendForm as UploadRecommendReq)
-        .then((resp: UploadRecommendResp) => {
+        .then((resp: UploadRecommendResp): void => {
           console.log(resp);
         })
-        .catch((err: AxiosError) => {
+        .catch((err: AxiosError): void => {
           openNotification(
             'error',
             `Failed to upload recommendation, error: ${err.message}`
