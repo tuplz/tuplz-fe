@@ -129,12 +129,12 @@ export default defineComponent({
           misc: '',
         },
       } as Problem,
-      loading: true
+      loading: false
     });
 
     const recommendsInfo = reactive({
       data: [] as Recommend[],
-      loading: true
+      loading: false
     });
 
     const openNotification = (type: string, description: string): void => {
@@ -167,8 +167,10 @@ export default defineComponent({
             'error',
             `Failed to load problem, error: ${err.message}`
           );
+        })
+        .finally((): void => {
+          problemInfo.loading = true;
         });
-      problemInfo.loading = false
     };
 
     const getRecommends = (): void => {
@@ -185,8 +187,10 @@ export default defineComponent({
             'error',
             `Failed to load recommendations, error: ${err.message}`
           );
+        })
+        .finally((): void => {
+          recommendsInfo.loading = true;
         });
-      recommendsInfo.loading = false;
     };
 
     const refresh = (): void => {
