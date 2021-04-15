@@ -119,7 +119,7 @@ export default defineComponent({
         {
           title: 'Problem Name',
           dataIndex: 'content.title',
-          width: '25%',
+          width: '20%',
           ellipsis: true,
           sorter: (a: Problem, b: Problem) =>
             a.content.title.localeCompare(b.content.title),
@@ -184,6 +184,7 @@ export default defineComponent({
         } as GetProblemsReq)
         .then((resp: GetProblemsResp): void => {
           table.data = resp.problems;
+          console.log(resp.problems);
         })
         .catch((err: AxiosError): void => {
           openNotification(

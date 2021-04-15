@@ -1,6 +1,9 @@
 <!-- eslint-disable vue/no-v-html -->
 <template>
-  <a-space direction="vertical">
+  <a-space
+    direction="vertical"
+    style="width: 100%"
+  >
     <a-card
       :title="`Problem #${problemInfo.data.id}`"
       :loading="problemInfo.loading"
@@ -14,46 +17,40 @@
           :key="section.title"
         >
           <a-typography-title :level="2">
+            <!-- Placeholder for prettier rendering. -->
+          </a-typography-title>
+          <a-typography-title :level="2">
             <span v-html="section.title" />
           </a-typography-title>
           <a-typography-paragraph>
             <span v-html="section.content" />
           </a-typography-paragraph>
+          <a-typography-paragraph
+            v-if="section.title === '限制与规定'"
+          >
+            <ul>
+              <li>
+                <a-typography-text strong>
+                  时间限制：
+                </a-typography-text>
+                <a-typography-text code>
+                  {{ problemInfo.data.content.rules.runtime / 1e9 }}
+                </a-typography-text>
+                s
+              </li>
+              <li>
+                <a-typography-text strong>
+                  空间限制：
+                </a-typography-text>
+                <a-typography-text code>
+                  {{ problemInfo.data.content.rules.memory / 1048576 }}
+                </a-typography-text>
+                MB
+              </li>
+            </ul>
+          </a-typography-paragraph>
           <a-typography-paragraph v-if="section.misc.length > 0">
             <span v-html="section.misc" />
-          </a-typography-paragraph>
-        </div>
-        <div>
-          <a-typography-title :level="2">
-            Constraints and Limitations
-          </a-typography-title>
-          <a-typography-paragraph>
-            <a-space direction="vertical">
-              <span>
-                Time Limit:
-                <a-typography-text code>
-                  {{ problemInfo.data.content.rules.runtime }}
-                </a-typography-text>
-              </span>
-              <span>
-                Memory Limit:
-                <a-typography-text code>
-                  {{ problemInfo.data.content.rules.memory }}
-                </a-typography-text>
-              </span>
-              <span>
-                Stack Limit:
-                <a-typography-text code>
-                  {{ problemInfo.data.content.rules.stack }}
-                </a-typography-text>
-              </span>
-              <span>
-                Source:
-                <a-typography-text code>
-                  {{ problemInfo.data.content.rules.source }}
-                </a-typography-text>
-              </span>
-            </a-space>
           </a-typography-paragraph>
         </div>
       </a-typography>
