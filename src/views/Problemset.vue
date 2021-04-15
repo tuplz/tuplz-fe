@@ -206,7 +206,7 @@ export default defineComponent({
           if (resp.status !== 'success') {
             openNotification(
               'error',
-              `Failed to upload recommendation, unknown error.`
+              `Failed to upload recommendation, user not logged in.`
             );
           } else {
             resetForm();
