@@ -25,9 +25,7 @@
           <a-typography-paragraph>
             <span v-html="section.content" />
           </a-typography-paragraph>
-          <a-typography-paragraph
-            v-if="section.title.startsWith('限制')"
-          >
+          <a-typography-paragraph v-if="section.title.startsWith('限制')">
             <ul>
               <li>
                 <a-typography-text strong>
@@ -108,9 +106,17 @@ export default defineComponent({
     const route = useRoute();
     const store = useStore();
 
+    const getProblemId = (): number => {
+      if (Array.isArray(route.params.id)) {
+        console.log('Invalid route for parsing Problem ID.');
+        return parseInt(route.params.id[0]);
+      }
+      return parseInt(route.params.id);
+    };
+
     const problemInfo = reactive({
       data: {
-        id: 0,
+        id: getProblemId(),
         like: 0,
         dislike: 0,
         visit: 0,
@@ -148,14 +154,6 @@ export default defineComponent({
         message: type.toUpperCase(),
         description,
       });
-    };
-
-    const getProblemId = (): number => {
-      if (Array.isArray(route.params.id)) {
-        console.log('Invalid route for parsing Problem ID.');
-        return parseInt(route.params.id[0]);
-      }
-      return parseInt(route.params.id);
     };
 
     const getProblem = (): void => {
