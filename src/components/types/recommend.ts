@@ -1,7 +1,7 @@
 export interface Recommend {
+  recommendId: number;
   userId: string;
   problemId: number;
-  recommendId: number;
   message: string;
   updateTime: string;
 }

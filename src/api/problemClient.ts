@@ -6,7 +6,7 @@ import {
 } from '@/components/types';
 import axios, { AxiosError, AxiosResponse } from 'axios';
 import { problemsApiUrl } from '@/utils/config';
-// import { mockGetProblemsResp, mockGetProblemResp } from '@/api/mock';
+import { mockGetProblemsResp, mockGetProblemResp } from '@/api/mock';
 
 const getProblems = (req: GetProblemsReq): Promise<GetProblemsResp> =>
   new Promise((resolve, reject) => {
@@ -18,8 +18,9 @@ const getProblems = (req: GetProblemsReq): Promise<GetProblemsResp> =>
         resolve(resp.data);
       })
       .catch((err: AxiosError) => {
-        // resolve(mockGetProblemsResp);
-        reject(err);
+        process.env.NODE_ENV === 'development'
+          ? resolve(mockGetProblemsResp)
+          : reject(err);
       });
   });
 
@@ -31,8 +32,9 @@ const getProblem = (req: GetProblemReq): Promise<GetProblemResp> =>
         resolve(resp.data);
       })
       .catch((err: AxiosError) => {
-        // resolve(mockGetProblemResp);
-        reject(err);
+        process.env.NODE_ENV === 'development'
+          ? resolve(mockGetProblemResp)
+          : reject(err);
       });
   });
 

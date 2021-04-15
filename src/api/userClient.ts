@@ -6,7 +6,7 @@ import {
 } from '@/components/types';
 import axios, { AxiosError, AxiosResponse } from 'axios';
 import { userApiUrl } from '@/utils/config';
-// import { mockUserLoginResp } from '@/api/mock';
+import { mockUserLoginResp } from '@/api/mock';
 
 const userLogin = (req: UserLoginReq): Promise<UserLoginResp> =>
   new Promise((resolve, reject) => {
@@ -19,8 +19,9 @@ const userLogin = (req: UserLoginReq): Promise<UserLoginResp> =>
         resolve(resp.data);
       })
       .catch((err: AxiosError) => {
-        // resolve(mockUserLoginResp);
-        reject(err);
+        process.env.NODE_ENV === 'development'
+          ? resolve(mockUserLoginResp)
+          : reject(err);
       });
   });
 
@@ -35,8 +36,9 @@ const userRegister = (req: UserRegisterReq): Promise<UserRegisterResp> =>
         resolve(resp.data);
       })
       .catch((err: AxiosError) => {
-        // resolve(mockUserLoginResp);
-        reject(err);
+        process.env.NODE_ENV === 'development'
+          ? resolve(mockUserLoginResp)
+          : reject(err);
       });
   });
 
