@@ -89,7 +89,6 @@ import { defineComponent, reactive } from 'vue';
 import { useRoute } from 'vue-router';
 import { useStore } from '@/store';
 import { AxiosError } from 'axios';
-import { notification } from 'ant-design-vue';
 
 import {
   GetProblemRecommendsReq,
@@ -100,6 +99,7 @@ import {
   Recommend,
 } from '@/components/types';
 import { problemClient, recommendClient } from '@/api';
+import { openNotification } from '@/mixins';
 
 export default defineComponent({
   setup() {
@@ -148,13 +148,6 @@ export default defineComponent({
       loading: false,
       rowKey: 'recommendId',
     });
-
-    const openNotification = (type: string, description: string): void => {
-      notification[type]({
-        message: type.toUpperCase(),
-        description,
-      });
-    };
 
     const getProblem = (): void => {
       problemInfo.loading = true;

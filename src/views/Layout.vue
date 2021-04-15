@@ -135,13 +135,13 @@ import {
   UserOutlined,
 } from '@ant-design/icons-vue';
 import { ValidateErrorEntity } from 'ant-design-vue/lib/form/interface';
-import { notification } from 'ant-design-vue';
 
 import {
   UserLoginReq,
   UserLoginResp,
   UserRegisterResp,
 } from '@/components/types';
+import { openNotification, title } from '@/mixins';
 
 export default defineComponent({
   components: {
@@ -155,11 +155,8 @@ export default defineComponent({
     UserOutlined,
   },
   setup() {
-    const store = useStore();
-
-    const title = 'Teach Us Please!';
-
     const form = ref();
+    const store = useStore();
 
     const loginFormRules = {
       username: [
@@ -208,13 +205,6 @@ export default defineComponent({
         },
       },
     });
-
-    const openNotification = (type: string, description: string): void => {
-      notification[type]({
-        message: type.toUpperCase(),
-        description,
-      });
-    };
 
     const resetForm = (): void => {
       form.value.resetFields();

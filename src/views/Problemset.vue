@@ -81,11 +81,9 @@
 import { defineComponent, reactive, ref } from 'vue';
 import { useStore } from '@/store';
 import { AxiosError } from 'axios';
-import { notification } from 'ant-design-vue';
 
 import {
   Problem,
-  TagColorMap,
   RecommendForm,
   GetProblemsReq,
   GetProblemsResp,
@@ -93,18 +91,12 @@ import {
   UploadRecommendResp,
 } from '@/components/types';
 import { problemClient, recommendClient } from '@/api';
+import { openNotification, tagColor } from '@/mixins';
 
 export default defineComponent({
   setup() {
     const form = ref();
     const store = useStore();
-
-    const openNotification = (type: string, description: string) => {
-      notification[type]({
-        message: type.toUpperCase(),
-        description,
-      });
-    };
 
     const table = reactive({
       columns: [
@@ -165,15 +157,6 @@ export default defineComponent({
       data: [] as Problem[],
       loading: false,
     });
-
-    const defaultTagColors: TagColorMap = reactive({
-      naive: 'blue',
-      easy: 'green',
-      normal: 'orange',
-      hard: 'red',
-    });
-
-    const tagColor = (tag: string): string => defaultTagColors[tag] || 'purple';
 
     const getProblems = (): void => {
       table.loading = true;
@@ -239,7 +222,6 @@ export default defineComponent({
 
     return {
       form,
-      openNotification,
       table,
       tagColor,
       refresh,
