@@ -10,12 +10,12 @@ import {
   Button,
   Card,
   Col,
-  Comment,
   Divider,
   Form,
   Icon,
   Input,
   Layout,
+  List,
   Modal,
   Row,
   Space,
@@ -34,12 +34,12 @@ app
   .use(Button)
   .use(Card)
   .use(Col)
-  .use(Comment)
   .use(Divider)
   .use(Form)
   .use(Icon)
   .use(Input)
   .use(Layout)
+  .use(List)
   .use(Modal)
   .use(Row)
   .use(Space)

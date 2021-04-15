@@ -79,6 +79,7 @@
 
 <script lang="ts">
 import { defineComponent, reactive, ref } from 'vue';
+import { useStore } from '@/store';
 import { AxiosError } from 'axios';
 import { notification } from 'ant-design-vue';
 
@@ -92,7 +93,6 @@ import {
   UploadRecommendResp,
 } from '@/components/types';
 import { problemClient, recommendClient } from '@/api';
-import { useStore } from '@/store';
 
 export default defineComponent({
   setup() {
@@ -173,8 +173,7 @@ export default defineComponent({
       hard: 'red',
     });
 
-    const tagColor = (tag: string): string =>
-      tag in defaultTagColors ? defaultTagColors[tag] : 'purple';
+    const tagColor = (tag: string): string => defaultTagColors[tag] || 'purple';
 
     const getProblems = (): void => {
       table.loading = true;
@@ -202,9 +201,7 @@ export default defineComponent({
     };
 
     const recommendForm = reactive({
-      userId: store.state.id,
-      recommendUrl: '',
-      problemId: '',
+      problemId: undefined,
       recommendReason: '',
     } as RecommendForm);
 
@@ -217,12 +214,11 @@ export default defineComponent({
       recommendClient
         .uploadRecommend({
           userId: store.state.id,
-          recommendUrl: recommendForm.recommendUrl,
-          problemId: recommendForm.problemId,
-          recommendReason: recommendForm.recommendReason
+          ...recommendForm,
         } as UploadRecommendReq)
         .then((resp: UploadRecommendResp): void => {
           console.log(resp);
+          resetForm();
         })
         .catch((err: AxiosError): void => {
           openNotification(
@@ -238,7 +234,6 @@ export default defineComponent({
 
     const handleFinish = (): void => {
       uploadRecommend();
-      resetForm();
     };
 
     return {
