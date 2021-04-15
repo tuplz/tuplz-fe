@@ -12,6 +12,10 @@
         <a-typography-title>
           {{ problemInfo.data.content.title }}
         </a-typography-title>
+
+        <a-typography-title :level="2">
+          题目描述
+        </a-typography-title>
         <div
           v-for="section in problemInfo.data.content.sections"
           :key="section.title"
@@ -19,7 +23,7 @@
           <a-typography-title :level="2">
             <!-- Placeholder for prettier rendering. -->
           </a-typography-title>
-          <a-typography-title :level="2">
+          <a-typography-title :level="3">
             <span v-html="section.title" />
           </a-typography-title>
           <a-typography-paragraph>
@@ -47,8 +51,53 @@
               </li>
             </ul>
           </a-typography-paragraph>
-          <a-typography-paragraph v-if="section.misc.length > 0">
+          <a-typography-paragraph v-if="section.misc.length">
             <span v-html="section.misc" />
+          </a-typography-paragraph>
+        </div>
+
+        <a-typography-title :level="2">
+          测试样例
+        </a-typography-title>
+        <div
+          v-for="sample in problemInfo.data.content.samples"
+          :key="sample.title"
+        >
+          <a-typography-title :level="2">
+            <!-- Placeholder for prettier rendering. -->
+          </a-typography-title>
+          <a-typography-title :level="3">
+            <span v-html="sample.title" />
+          </a-typography-title>
+          <a-typography-title
+            v-if="sample.input.length"
+            :level="4"
+          >
+            Input
+          </a-typography-title>
+          <a-typography-paragraph v-if="sample.input.length">
+            <span v-html="sample.input" />
+          </a-typography-paragraph>
+          <a-typography-title
+            v-if="sample.output.length"
+            :level="4"
+          >
+            Output
+          </a-typography-title>
+          <a-typography-paragraph v-if="sample.output.length">
+            <span v-html="sample.output" />
+          </a-typography-paragraph>
+          <a-typography-title
+            v-if="sample.explanation.length"
+            :level="4"
+          >
+            Explanation
+          </a-typography-title>
+          <a-typography-paragraph v-if="sample.explanation.length">
+            <span v-html="sample.explanation" />
+          </a-typography-paragraph>
+          <a-typography-paragraph v-if="sample.misc.length">
+            <span v-html="sample.misc" />
           </a-typography-paragraph>
         </div>
       </a-typography>
@@ -86,7 +135,7 @@
 
 <script lang="ts">
 import { defineComponent, reactive } from 'vue';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import { useStore } from '@/store';
 import { AxiosError } from 'axios';
 
@@ -99,11 +148,12 @@ import {
   Recommend,
 } from '@/components/types';
 import { problemClient, recommendClient } from '@/api';
-import { openNotification } from '@/mixins';
+import { openNotification, title } from '@/mixins';
 
 export default defineComponent({
   setup() {
     const route = useRoute();
+    const router = useRouter();
     const store = useStore();
 
     const getProblemId = (): number => {
@@ -157,17 +207,28 @@ export default defineComponent({
           id: getProblemId(),
         } as GetProblemReq)
         .then((resp: GetProblemResp) => {
-          problemInfo.data = resp.problem;
-          console.log(resp.problem);
+          if (!resp.problem.id) {
+            openNotification(
+              'error',
+              `Problem not found, redirecting to home page.`
+            );
+            setTimeout((): void => {
+              router.replace({ name: 'Problemset' });
+            }, 3000);
+          } else {
+            problemInfo.data = resp.problem;
+            console.log(resp.problem);
+            document.title = `${getProblemId()}. ${
+              problemInfo.data.content.title
+            } - ${title}`;
+            problemInfo.loading = false;
+          }
         })
         .catch((err: AxiosError) => {
           openNotification(
             'error',
             `Failed to load problem, error: ${err.message}`
           );
-        })
-        .finally((): void => {
-          problemInfo.loading = false;
         });
     };
 
@@ -180,15 +241,13 @@ export default defineComponent({
         } as GetProblemRecommendsReq)
         .then((resp: GetProblemRecommendsResp) => {
           recommendsInfo.data = resp.recommends;
+          recommendsInfo.loading = false;
         })
         .catch((err: AxiosError) => {
           openNotification(
             'error',
             `Failed to load recommendations, error: ${err.message}`
           );
-        })
-        .finally((): void => {
-          recommendsInfo.loading = false;
         });
     };
 
@@ -198,6 +257,7 @@ export default defineComponent({
     };
 
     return {
+      getProblemId,
       problemInfo,
       recommendsInfo,
       openNotification,

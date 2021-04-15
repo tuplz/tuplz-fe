@@ -91,7 +91,7 @@ import {
   UploadRecommendResp,
 } from '@/components/types';
 import { problemClient, recommendClient } from '@/api';
-import { openNotification, tagColor } from '@/mixins';
+import { openNotification, tagColor, title } from '@/mixins';
 
 export default defineComponent({
   setup() {
@@ -181,6 +181,7 @@ export default defineComponent({
     };
 
     const refresh = (): void => {
+      document.title = `Problem Set - ${title}`;
       getProblems();
     };
 
