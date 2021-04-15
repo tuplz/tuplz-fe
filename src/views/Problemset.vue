@@ -203,7 +203,14 @@ export default defineComponent({
         } as UploadRecommendReq)
         .then((resp: UploadRecommendResp): void => {
           console.log(resp);
-          resetForm();
+          if (resp.status !== 'success') {
+            openNotification(
+              'error',
+              `Failed to upload recommendation, unknown error.`
+            );
+          } else {
+            resetForm();
+          }
         })
         .catch((err: AxiosError): void => {
           openNotification(
