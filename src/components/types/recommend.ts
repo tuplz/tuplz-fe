@@ -1,14 +1,12 @@
 export interface Recommend {
+  recommendId: number;
   userId: string;
   problemId: number;
-  recommendId: number;
   message: string;
   updateTime: string;
 }
 
 export interface RecommendForm {
-  userId: string;
-  problemId: string;
-  recommendUrl: string;
+  problemId?: number;
   recommendReason: string;
 }

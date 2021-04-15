@@ -1,18 +1,22 @@
 import { RecommendForm } from '.';
 
-export interface GetProblemsReq {
+interface ReqHeader {
   userId: string;
+}
+
+export interface GetProblemsReq extends ReqHeader {
   maxLength: number;
 }
 
-export interface GetProblemReq {
-  userId: string;
+export interface GetProblemReq extends ReqHeader {
   id: number;
 }
 
 export type GetProblemRecommendsReq = GetProblemReq;
 
-export type UploadRecommendReq = Required<RecommendForm>;
+export interface UploadRecommendReq
+  extends ReqHeader,
+    Required<RecommendForm> {}
 
 export interface UserLoginReq {
   username: string;
