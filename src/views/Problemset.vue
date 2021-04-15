@@ -12,11 +12,11 @@
     :loading="table.loading"
     :row-key="table.rowKey"
   >
-    <template #id="{ text }">
+    <template #name="{ text, record }">
       <router-link
         :to="{
           name: 'ProblemPage',
-          params: { id: text },
+          params: { id: record.id },
         }"
       >
         {{ text }}
@@ -34,6 +34,7 @@
       </span>
     </template>
   </a-table>
+
   <a-form
     ref="form"
     :model="recommendForm"
@@ -105,7 +106,6 @@ export default defineComponent({
           dataIndex: 'id',
           width: 100,
           ellipsis: true,
-          slots: { customRender: 'id' },
           sorter: (a: Problem, b: Problem) => a.id - b.id,
         },
         {
@@ -113,6 +113,7 @@ export default defineComponent({
           dataIndex: 'content.title',
           width: '20%',
           ellipsis: true,
+          slots: { customRender: 'name' },
           sorter: (a: Problem, b: Problem) =>
             a.content.title.localeCompare(b.content.title),
         },
