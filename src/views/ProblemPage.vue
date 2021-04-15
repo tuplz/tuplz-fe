@@ -26,7 +26,7 @@
             <span v-html="section.content" />
           </a-typography-paragraph>
           <a-typography-paragraph
-            v-if="section.title === '限制与规定'"
+            v-if="section.title.startsWith('限制')"
           >
             <ul>
               <li>
