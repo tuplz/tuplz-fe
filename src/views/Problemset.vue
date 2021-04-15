@@ -79,6 +79,7 @@
 
 <script lang="ts">
 import { defineComponent, reactive, ref } from 'vue';
+import { useStore } from '@/store';
 import { AxiosError } from 'axios';
 import { notification } from 'ant-design-vue';
 
@@ -96,6 +97,7 @@ import { problemClient, recommendClient } from '@/api';
 export default defineComponent({
   setup() {
     const form = ref();
+    const store = useStore();
 
     const openNotification = (type: string, description: string) => {
       notification[type]({
@@ -117,7 +119,7 @@ export default defineComponent({
         {
           title: 'Problem Name',
           dataIndex: 'content.title',
-          width: '25%',
+          width: '20%',
           ellipsis: true,
           sorter: (a: Problem, b: Problem) =>
             a.content.title.localeCompare(b.content.title),
@@ -171,17 +173,18 @@ export default defineComponent({
       hard: 'red',
     });
 
-    const tagColor = (tag: string): string =>
-      tag in defaultTagColors ? defaultTagColors[tag] : 'purple';
+    const tagColor = (tag: string): string => defaultTagColors[tag] || 'purple';
 
     const getProblems = (): void => {
       table.loading = true;
       problemClient
         .getProblems({
+          userId: store.state.id,
           maxLength: 10000,
         } as GetProblemsReq)
         .then((resp: GetProblemsResp): void => {
           table.data = resp.problems;
+          console.log(resp.problems);
         })
         .catch((err: AxiosError): void => {
           openNotification(
@@ -210,9 +213,13 @@ export default defineComponent({
 
     const uploadRecommend = (): void => {
       recommendClient
-        .uploadRecommend(recommendForm as UploadRecommendReq)
+        .uploadRecommend({
+          userId: store.state.id,
+          ...recommendForm,
+        } as UploadRecommendReq)
         .then((resp: UploadRecommendResp): void => {
           console.log(resp);
+          resetForm();
         })
         .catch((err: AxiosError): void => {
           openNotification(

@@ -17,7 +17,7 @@ export const store: Store<State> = createStore<State>({
   state: {
     status: '',
     token: localStorage.getItem('token') || '',
-    id: 0,
+    id: '',
   },
   getters: {
     isLoggedIn: (state): boolean => !!state.token,
@@ -27,7 +27,7 @@ export const store: Store<State> = createStore<State>({
     authRequest(state): void {
       state.status = 'loading';
     },
-    authSuccess(state, { token, id }: { token: string; id: number }): void {
+    authSuccess(state, { token, id }: { token: string; id: string }): void {
       state.status = 'success';
       state.token = token;
       state.id = id;

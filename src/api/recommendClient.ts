@@ -7,7 +7,7 @@ import {
 } from '@/components/types';
 import axios, { AxiosError, AxiosResponse } from 'axios';
 import { problemsApiUrl, recommendsApiUrl } from '@/utils/config';
-// import { mockGetRecommendsResp, mockUploadRecommendResp } from '@/api/mock';
+import { mockGetRecommendsResp, mockUploadRecommendResp } from '@/api/mock';
 
 const getRecommends = (): Promise<GetRecommendsResp> =>
   new Promise((resolve, reject) => {
@@ -17,8 +17,9 @@ const getRecommends = (): Promise<GetRecommendsResp> =>
         resolve(resp.data);
       })
       .catch((err: AxiosError) => {
-        // resolve(mockGetRecommendsResp);
-        reject(err);
+        process.env.NODE_ENV === 'development'
+          ? resolve(mockGetRecommendsResp)
+          : reject(err);
       });
   });
 
@@ -34,8 +35,9 @@ const getProblemRecommends = (
         resolve(resp.data);
       })
       .catch((err: AxiosError) => {
-        // resolve(mockGetRecommendsResp);
-        reject(err);
+        process.env.NODE_ENV === 'development'
+          ? resolve(mockGetRecommendsResp)
+          : reject(err);
       });
   });
 
@@ -52,8 +54,9 @@ const uploadRecommend = (
         resolve(resp.data);
       })
       .catch((err: AxiosError) => {
-        // resolve(mockUploadRecommendResp);
-        reject(err);
+        process.env.NODE_ENV === 'development'
+          ? resolve(mockUploadRecommendResp)
+          : reject(err);
       });
   });
 
