@@ -1,30 +1,27 @@
 import {
   GetProblemRecommendsReq,
   GetProblemRecommendsResp,
-  // GetRecommendsResp,
+  GetRecommendsResp,
   UploadRecommendReq,
   UploadRecommendResp,
 } from '@/components/types';
 import axios, { AxiosError, AxiosResponse } from 'axios';
 import { problemsApiUrl, recommendsApiUrl } from '@/utils/config';
-// import { mockGetRecommendsResp, mockUploadRecommendResp } from '@/api/mock';
+import { mockGetRecommendsResp, mockUploadRecommendResp } from '@/api/mock';
 
-// const getRecommends = (
-//   req: GetRecommendsReq
-// ): Promise<GetRecommendsResp> =>
-//   new Promise((resolve, reject) => {
-//     axios
-//       .get<GetRecommendsReq, AxiosResponse<GetRecommendsResp>>(recommendsApiUrl, {
-//           params: req,
-//         })
-//       .then((resp: AxiosResponse<GetRecommendsResp>) => {
-//         resolve(resp.data);
-//       })
-//       .catch((err: AxiosError) => {
-//         // resolve(mockGetRecommendsResp);
-//         reject(err);
-//       });
-//   });
+const getRecommends = (): Promise<GetRecommendsResp> =>
+  new Promise((resolve, reject) => {
+    axios
+      .get<void, AxiosResponse<GetRecommendsResp>>(recommendsApiUrl)
+      .then((resp: AxiosResponse<GetRecommendsResp>) => {
+        resolve(resp.data);
+      })
+      .catch((err: AxiosError) => {
+        process.env.NODE_ENV === 'development'
+          ? resolve(mockGetRecommendsResp)
+          : reject(err);
+      });
+  });
 
 const getProblemRecommends = (
   req: GetProblemRecommendsReq
@@ -38,8 +35,9 @@ const getProblemRecommends = (
         resolve(resp.data);
       })
       .catch((err: AxiosError) => {
-        // resolve(mockGetRecommendsResp);
-        reject(err);
+        process.env.NODE_ENV === 'development'
+          ? resolve(mockGetRecommendsResp)
+          : reject(err);
       });
   });
 
@@ -56,13 +54,14 @@ const uploadRecommend = (
         resolve(resp.data);
       })
       .catch((err: AxiosError) => {
-        // resolve(mockUploadRecommendResp);
-        reject(err);
+        process.env.NODE_ENV === 'development'
+          ? resolve(mockUploadRecommendResp)
+          : reject(err);
       });
   });
 
 const recommendClient = {
-  // getRecommends,
+  getRecommends,
   getProblemRecommends,
   uploadRecommend,
 };
