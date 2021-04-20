@@ -12,11 +12,11 @@
     :loading="table.loading"
     :row-key="table.rowKey"
   >
-    <template #id="{ text }">
+    <template #name="{ text, record }">
       <router-link
         :to="{
           name: 'ProblemPage',
-          params: { id: text },
+          params: { id: record.id },
         }"
       >
         {{ text }}
@@ -34,6 +34,7 @@
       </span>
     </template>
   </a-table>
+
   <a-form
     ref="form"
     :model="recommendForm"
@@ -81,11 +82,9 @@
 import { defineComponent, reactive, ref } from 'vue';
 import { useStore } from '@/store';
 import { AxiosError } from 'axios';
-import { notification } from 'ant-design-vue';
 
 import {
   Problem,
-  TagColorMap,
   RecommendForm,
   GetProblemsReq,
   GetProblemsResp,
@@ -93,18 +92,12 @@ import {
   UploadRecommendResp,
 } from '@/components/types';
 import { problemClient, recommendClient } from '@/api';
+import { openNotification, tagColor, title } from '@/mixins';
 
 export default defineComponent({
   setup() {
     const form = ref();
     const store = useStore();
-
-    const openNotification = (type: string, description: string) => {
-      notification[type]({
-        message: type.toUpperCase(),
-        description,
-      });
-    };
 
     const table = reactive({
       columns: [
@@ -113,7 +106,6 @@ export default defineComponent({
           dataIndex: 'id',
           width: 100,
           ellipsis: true,
-          slots: { customRender: 'id' },
           sorter: (a: Problem, b: Problem) => a.id - b.id,
         },
         {
@@ -121,6 +113,7 @@ export default defineComponent({
           dataIndex: 'content.title',
           width: '20%',
           ellipsis: true,
+          slots: { customRender: 'name' },
           sorter: (a: Problem, b: Problem) =>
             a.content.title.localeCompare(b.content.title),
         },
@@ -166,15 +159,6 @@ export default defineComponent({
       loading: false,
     });
 
-    const defaultTagColors: TagColorMap = reactive({
-      naive: 'blue',
-      easy: 'green',
-      normal: 'orange',
-      hard: 'red',
-    });
-
-    const tagColor = (tag: string): string => defaultTagColors[tag] || 'purple';
-
     const getProblems = (): void => {
       table.loading = true;
       problemClient
@@ -198,6 +182,7 @@ export default defineComponent({
     };
 
     const refresh = (): void => {
+      document.title = `Problem Set - ${title}`;
       getProblems();
     };
 
@@ -219,7 +204,14 @@ export default defineComponent({
         } as UploadRecommendReq)
         .then((resp: UploadRecommendResp): void => {
           console.log(resp);
-          resetForm();
+          if (resp.status !== 'success') {
+            openNotification(
+              'error',
+              `Failed to upload recommendation, user not logged in.`
+            );
+          } else {
+            resetForm();
+          }
         })
         .catch((err: AxiosError): void => {
           openNotification(
@@ -239,7 +231,6 @@ export default defineComponent({
 
     return {
       form,
-      openNotification,
       table,
       tagColor,
       refresh,
