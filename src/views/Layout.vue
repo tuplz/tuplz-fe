@@ -6,7 +6,7 @@
         justify="space-between"
       >
         <router-link
-          class="title"
+          class="router-link"
           :to="{ name: 'Problemset' }"
         >
           <BulbFilled id="logo" />
@@ -17,7 +17,7 @@
           v-if="isLoggedIn"
           placement="bottomRight"
         >
-          <div @click.prevent>
+          <div>
             <a-avatar
               size="large"
               style="font-size: 20px"
@@ -27,15 +27,18 @@
           </div>
           <template #overlay>
             <a-menu>
-              <a-menu-item key="0">
-                <span>
-                  <ProfileOutlined />
+              <a-menu-item key="profile">
+                <router-link
+                  class="router-link"
+                  :to="{ name: 'UserProfile' }"
+                >
+                  <ProfileOutlined class="menu-icon" />
                   Profile
-                </span>
+                </router-link>
               </a-menu-item>
-              <a-menu-item key="1">
+              <a-menu-item key="logout">
                 <span @click="logout">
-                  <LogoutOutlined />
+                  <LogoutOutlined class="menu-icon" />
                   Logout
                 </span>
               </a-menu-item>
@@ -161,7 +164,7 @@ import {
   UserLoginResp,
   UserRegisterResp,
 } from '@/components/types';
-import { openNotification, title } from '@/mixins';
+import { openNotification, title, validateEmail } from '@/mixins';
 
 export default defineComponent({
   components: {
@@ -202,8 +205,7 @@ export default defineComponent({
       ...loginFormRules,
       email: [
         {
-          required: true,
-          message: 'Please input E-mail',
+          validator: validateEmail,
           trigger: 'blur',
         },
       ],
@@ -333,7 +335,7 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 .ant-layout-header {
-  .title {
+  .ant-row > .router-link {
     height: 64px;
 
     > #logo {
@@ -349,16 +351,14 @@ export default defineComponent({
       vertical-align: top;
     }
   }
-
-  .ant-btn {
-    margin: 16px 0;
-  }
 }
 
-.ant-form {
-  .modal-icon {
-    margin-right: 6px;
-    color: rgba(0, 0, 0, 0.25);
+.ant-dropdown-menu-item {
+  > span > .menu-icon,
+  > a > .menu-icon {
+    min-width: 14px;
+    margin-right: 8px;
+    font-size: 14px;
   }
 }
 

@@ -17,7 +17,7 @@ const saveLocalStorage = (resp: UserLoginResp | UserRegisterResp): void => {
   const { id, username, key } = resp;
   localStorage.setItem('token', key);
   localStorage.setItem('id', id);
-  localStorage.setItem('username', username);
+  localStorage.setItem('username', username || 'username');
   axios.defaults.headers.common['Authorization'] = `Bearer ${key}`;
 };
 
@@ -33,7 +33,7 @@ export const store: Store<State> = createStore<State>({
     status: '',
     token: localStorage.getItem('token') || '',
     id: localStorage.getItem('id') || '',
-    username: localStorage.getItem('username') || 'undefined',
+    username: localStorage.getItem('username') || 'username',
   },
   getters: {
     isLoggedIn: (state): boolean => !!state.token,
@@ -46,7 +46,7 @@ export const store: Store<State> = createStore<State>({
       state.status = 'success';
       state.token = resp.key || '';
       state.id = resp.id || '';
-      state.username = resp.username || 'undefined';
+      state.username = resp.username || 'username';
     },
     authError(state) {
       state.status = 'error';

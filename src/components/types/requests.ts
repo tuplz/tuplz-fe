@@ -4,11 +4,11 @@ interface ReqHeader {
   userId: string;
 }
 
-export interface GetProblemsReq extends ReqHeader {
+export interface GetProblemsReq {
   maxLength: number;
 }
 
-export interface GetProblemReq extends ReqHeader {
+export interface GetProblemReq {
   id: number;
 }
 
@@ -25,4 +25,14 @@ export interface UserLoginReq {
 
 export interface UserRegisterReq extends UserLoginReq {
   email: string;
+}
+
+export type GetUserProfileReq = ReqHeader;
+
+export interface SendVerifyEmailReq extends ReqHeader {
+  email: string;
+}
+
+export interface VerifyEmailReq extends SendVerifyEmailReq {
+  verifyCode: string;
 }

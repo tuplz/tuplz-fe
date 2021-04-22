@@ -261,7 +261,6 @@ export default defineComponent({
       getProblemId,
       problemInfo,
       recommendsInfo,
-      openNotification,
       refresh,
     };
   },

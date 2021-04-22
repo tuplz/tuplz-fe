@@ -1,12 +1,23 @@
 import {
+  GetUserProfileReq,
+  GetUserProfileResp,
+  SendVerifyEmailReq,
+  SendVerifyEmailResp,
   UserLoginReq,
   UserLoginResp,
   UserRegisterReq,
   UserRegisterResp,
+  VerifyEmailReq,
+  VerifyEmailResp,
 } from '@/components/types';
 import axios, { AxiosError, AxiosResponse } from 'axios';
-import { userApiUrl } from '@/utils/config';
-import { mockUserLoginResp } from '@/api/mock';
+import { userApiUrl, usersApiUrl } from '@/utils/config';
+import {
+  mockGetUserProfileResp,
+  mockSendVerifyEmailResp,
+  mockUserLoginResp,
+  mockVerifyEmailResp,
+} from '@/api/mock';
 
 const userLogin = (req: UserLoginReq): Promise<UserLoginResp> =>
   new Promise((resolve, reject) => {
@@ -42,9 +53,64 @@ const userRegister = (req: UserRegisterReq): Promise<UserRegisterResp> =>
       });
   });
 
+const getUserProfile = (req: GetUserProfileReq): Promise<GetUserProfileResp> =>
+  new Promise((resolve, reject) => {
+    axios
+      .get<void, AxiosResponse<GetUserProfileResp>>(
+        `${usersApiUrl}/${req.userId}`
+      )
+      .then((resp: AxiosResponse<GetUserProfileResp>) => {
+        resolve(resp.data);
+      })
+      .catch((err: AxiosError) => {
+        process.env.NODE_ENV === 'development'
+          ? resolve(mockGetUserProfileResp)
+          : reject(err);
+      });
+  });
+
+const sendVerifyEmail = (
+  req: SendVerifyEmailReq
+): Promise<SendVerifyEmailResp> =>
+  new Promise((resolve, reject) => {
+    axios
+      .post<SendVerifyEmailReq, AxiosResponse<SendVerifyEmailResp>>(
+        `${userApiUrl}/verify/email`,
+        req
+      )
+      .then((resp: AxiosResponse<SendVerifyEmailResp>) => {
+        resolve(resp.data);
+      })
+      .catch((err: AxiosError) => {
+        process.env.NODE_ENV === 'development'
+          ? resolve(mockSendVerifyEmailResp)
+          : reject(err);
+      });
+  });
+
+const verifyEmail = (req: VerifyEmailReq): Promise<VerifyEmailResp> =>
+  new Promise((resolve, reject) => {
+    axios
+      .post<VerifyEmailReq, AxiosResponse<VerifyEmailResp>>(
+        `${userApiUrl}/verify/user`,
+        req
+      )
+      .then((resp: AxiosResponse<VerifyEmailResp>) => {
+        resolve(resp.data);
+      })
+      .catch((err: AxiosError) => {
+        process.env.NODE_ENV === 'development'
+          ? resolve(mockVerifyEmailResp)
+          : reject(err);
+      });
+  });
+
 const userClient = {
   userLogin,
   userRegister,
+  getUserProfile,
+  sendVerifyEmail,
+  verifyEmail,
 };
 
 export default userClient;
