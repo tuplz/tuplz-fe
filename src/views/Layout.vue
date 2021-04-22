@@ -13,16 +13,36 @@
           <span>{{ title }}</span>
         </router-link>
 
-        <a-button
+        <a-dropdown
           v-if="isLoggedIn"
-          shape="round"
-          @click="logout"
+          placement="bottomRight"
         >
-          <template #icon>
-            <LogoutOutlined />
-            Logout
+          <div @click.prevent>
+            <a-avatar
+              size="large"
+              style="font-size: 20px"
+            >
+              {{ username[0].toUpperCase() }}
+            </a-avatar>
+          </div>
+          <template #overlay>
+            <a-menu>
+              <a-menu-item key="0">
+                <span>
+                  <ProfileOutlined />
+                  Profile
+                </span>
+              </a-menu-item>
+              <a-menu-item key="1">
+                <span @click="logout">
+                  <LogoutOutlined />
+                  Logout
+                </span>
+              </a-menu-item>
+            </a-menu>
           </template>
-        </a-button>
+        </a-dropdown>
+
         <a-space v-else>
           <a-button
             shape="round"
@@ -120,8 +140,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, ref } from 'vue';
-import { mapGetters } from 'vuex';
+import { computed, defineComponent, reactive, ref } from 'vue';
 import { useStore } from '@/store';
 import { AxiosError } from 'axios';
 import {
@@ -132,6 +151,7 @@ import {
   LoginOutlined,
   LogoutOutlined,
   MailOutlined,
+  ProfileOutlined,
   UserOutlined,
 } from '@ant-design/icons-vue';
 import { ValidateErrorEntity } from 'ant-design-vue/lib/form/interface';
@@ -152,11 +172,14 @@ export default defineComponent({
     LoginOutlined,
     LogoutOutlined,
     MailOutlined,
+    ProfileOutlined,
     UserOutlined,
   },
   setup() {
     const form = ref();
     const store = useStore();
+    const username = computed((): string => store.state.username);
+    const isLoggedIn = computed((): boolean => store.getters.isLoggedIn);
 
     const loginFormRules = {
       username: [
@@ -301,10 +324,9 @@ export default defineComponent({
       register,
       login,
       logout,
+      username,
+      isLoggedIn,
     };
-  },
-  computed: {
-    ...mapGetters(['isLoggedIn']),
   },
 });
 </script>

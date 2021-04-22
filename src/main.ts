@@ -11,11 +11,13 @@ import {
   Card,
   Col,
   Divider,
+  Dropdown,
   Form,
   Icon,
   Input,
   Layout,
   List,
+  Menu,
   Modal,
   Row,
   Space,
@@ -35,11 +37,13 @@ app
   .use(Card)
   .use(Col)
   .use(Divider)
+  .use(Dropdown)
   .use(Form)
   .use(Icon)
   .use(Input)
   .use(Layout)
   .use(List)
+  .use(Menu)
   .use(Modal)
   .use(Row)
   .use(Space)

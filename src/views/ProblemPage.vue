@@ -134,7 +134,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive } from 'vue';
+import { computed, defineComponent, reactive } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useStore } from '@/store';
 import { AxiosError } from 'axios';
@@ -155,6 +155,7 @@ export default defineComponent({
     const route = useRoute();
     const router = useRouter();
     const store = useStore();
+    const userId = computed((): string => store.state.id);
 
     const getProblemId = (): number => {
       if (Array.isArray(route.params.id)) {
@@ -203,7 +204,7 @@ export default defineComponent({
       problemInfo.loading = true;
       problemClient
         .getProblem({
-          userId: store.state.id,
+          userId: userId.value,
           id: getProblemId(),
         } as GetProblemReq)
         .then((resp: GetProblemResp) => {
@@ -236,7 +237,7 @@ export default defineComponent({
       recommendsInfo.loading = true;
       recommendClient
         .getProblemRecommends({
-          userId: store.state.id,
+          userId: userId.value,
           id: getProblemId(),
         } as GetProblemRecommendsReq)
         .then((resp: GetProblemRecommendsResp) => {

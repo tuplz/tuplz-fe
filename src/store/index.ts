@@ -13,24 +13,40 @@ import { userClient } from '@/api';
 
 export const key: InjectionKey<Store<State>> = Symbol();
 
+const saveLocalStorage = (resp: UserLoginResp | UserRegisterResp): void => {
+  const { id, username, key } = resp;
+  localStorage.setItem('token', key);
+  localStorage.setItem('id', id);
+  localStorage.setItem('username', username);
+  axios.defaults.headers.common['Authorization'] = `Bearer ${key}`;
+};
+
+const removeLocalStorage = (): void => {
+  localStorage.removeItem('token');
+  localStorage.removeItem('id');
+  localStorage.removeItem('username');
+  delete axios.defaults.headers.common['Authorization'];
+};
+
 export const store: Store<State> = createStore<State>({
   state: {
     status: '',
     token: localStorage.getItem('token') || '',
-    id: '',
+    id: localStorage.getItem('id') || '',
+    username: localStorage.getItem('username') || 'undefined',
   },
   getters: {
     isLoggedIn: (state): boolean => !!state.token,
-    authStatus: (state): string => state.status,
   },
   mutations: {
     authRequest(state): void {
       state.status = 'loading';
     },
-    authSuccess(state, { token, id }: { token: string; id: string }): void {
+    authSuccess(state, resp: UserLoginResp): void {
       state.status = 'success';
-      state.token = token;
-      state.id = id;
+      state.token = resp.key || '';
+      state.id = resp.id || '';
+      state.username = resp.username || 'undefined';
     },
     authError(state) {
       state.status = 'error';
@@ -48,19 +64,14 @@ export const store: Store<State> = createStore<State>({
           .userRegister(req)
           .then((resp: UserRegisterResp) => {
             if (resp.status === 'success') {
-              const id = resp.id;
-              const token = resp.key;
-              localStorage.setItem('token', token);
-              axios.defaults.headers.common[
-                'Authorization'
-              ] = `Bearer ${token}`;
-              commit('authSuccess', { token, id });
+              saveLocalStorage(resp);
+              commit('authSuccess', resp);
               resolve(resp);
             }
           })
           .catch((err: AxiosError) => {
             commit('authError');
-            localStorage.removeItem('token');
+            removeLocalStorage();
             reject(err);
           });
       });
@@ -73,17 +84,14 @@ export const store: Store<State> = createStore<State>({
           .userLogin(req)
           .then((resp: UserLoginResp) => {
             if (resp.status === 'success') {
-              const id = resp.id;
-              const token = resp.key;
-              localStorage.setItem('token', token);
-              axios.defaults.headers.common['Authorization'] = token;
-              commit('authSuccess', { token, id });
+              saveLocalStorage(resp);
+              commit('authSuccess', resp);
               resolve(resp);
             }
           })
           .catch((err: AxiosError) => {
             commit('authError');
-            localStorage.removeItem('token');
+            removeLocalStorage();
             reject(err);
           });
       });
@@ -92,8 +100,7 @@ export const store: Store<State> = createStore<State>({
     logout({ commit }): Promise<void> {
       return new Promise((resolve, _reject) => {
         commit('logout');
-        localStorage.removeItem('token');
-        delete axios.defaults.headers.common['Authorization'];
+        removeLocalStorage();
         resolve();
       });
     },
