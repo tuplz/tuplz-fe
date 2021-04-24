@@ -265,6 +265,8 @@ export default defineComponent({
               'error',
               'Failed to verify email, wrong verify code.'
             );
+          } else {
+            verifyModal.visible = false;
           }
         })
         .catch((err: AxiosError) => {

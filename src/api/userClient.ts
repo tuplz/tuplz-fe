@@ -11,6 +11,7 @@ import {
   VerifyEmailResp,
 } from '@/components/types';
 import axios, { AxiosError, AxiosResponse } from 'axios';
+import { store } from '@/store';
 import { userApiUrl, usersApiUrl } from '@/utils/config';
 import {
   mockGetUserProfileResp,
@@ -18,6 +19,15 @@ import {
   mockUserLoginResp,
   mockVerifyEmailResp,
 } from '@/api/mock';
+
+const setAuthHeader = (): void => {
+  const key = store.state.token;
+  if (key) axios.defaults.headers.common['Authorization'] = `Bearer ${key}`;
+};
+
+const removeAuthHeader = (): void => {
+  delete axios.defaults.headers.common['Authorization'];
+};
 
 const userLogin = (req: UserLoginReq): Promise<UserLoginResp> =>
   new Promise((resolve, reject) => {
@@ -106,6 +116,8 @@ const verifyEmail = (req: VerifyEmailReq): Promise<VerifyEmailResp> =>
   });
 
 const userClient = {
+  setAuthHeader,
+  removeAuthHeader,
   userLogin,
   userRegister,
   getUserProfile,

@@ -1,6 +1,6 @@
 import { createStore, Store, useStore as baseUseStore } from 'vuex';
 import { InjectionKey } from '@vue/runtime-core';
-import axios, { AxiosError } from 'axios';
+import { AxiosError } from 'axios';
 
 import {
   State,
@@ -19,19 +19,19 @@ const saveLocalStorage = (resp: UserLoginResp | UserRegisterResp): void => {
   localStorage.setItem('token', key);
   localStorage.setItem('id', id);
   localStorage.setItem('username', username || defaultUsername);
-  axios.defaults.headers.common['Authorization'] = `Bearer ${key}`;
+  userClient.setAuthHeader();
 };
 
 const removeLocalStorage = (): void => {
   localStorage.removeItem('token');
   localStorage.removeItem('id');
   localStorage.removeItem('username');
-  delete axios.defaults.headers.common['Authorization'];
+  userClient.removeAuthHeader();
 };
 
 export const store: Store<State> = createStore<State>({
   state: {
-    status: '',
+    status: localStorage.getItem('token') ? 'success' : '',
     token: localStorage.getItem('token') || '',
     id: localStorage.getItem('id') || '',
     username: localStorage.getItem('username') || defaultUsername,
@@ -65,8 +65,8 @@ export const store: Store<State> = createStore<State>({
           .userRegister(req)
           .then((resp: UserRegisterResp) => {
             if (resp.status === 'success') {
-              saveLocalStorage(resp);
               commit('authSuccess', resp);
+              saveLocalStorage(resp);
               resolve(resp);
             }
           })
@@ -85,8 +85,8 @@ export const store: Store<State> = createStore<State>({
           .userLogin(req)
           .then((resp: UserLoginResp) => {
             if (resp.status === 'success') {
-              saveLocalStorage(resp);
               commit('authSuccess', resp);
+              saveLocalStorage(resp);
               resolve(resp);
             }
           })
