@@ -10,6 +10,7 @@ import {
   UserRegisterResp,
 } from '@/components/types';
 import { userClient } from '@/api';
+import { defaultUsername } from '@/utils/config';
 
 export const key: InjectionKey<Store<State>> = Symbol();
 
@@ -17,7 +18,7 @@ const saveLocalStorage = (resp: UserLoginResp | UserRegisterResp): void => {
   const { id, username, key } = resp;
   localStorage.setItem('token', key);
   localStorage.setItem('id', id);
-  localStorage.setItem('username', username || 'username');
+  localStorage.setItem('username', username || defaultUsername);
   axios.defaults.headers.common['Authorization'] = `Bearer ${key}`;
 };
 
@@ -33,7 +34,7 @@ export const store: Store<State> = createStore<State>({
     status: '',
     token: localStorage.getItem('token') || '',
     id: localStorage.getItem('id') || '',
-    username: localStorage.getItem('username') || 'username',
+    username: localStorage.getItem('username') || defaultUsername,
   },
   getters: {
     isLoggedIn: (state): boolean => !!state.token,
@@ -46,7 +47,7 @@ export const store: Store<State> = createStore<State>({
       state.status = 'success';
       state.token = resp.key || '';
       state.id = resp.id || '';
-      state.username = resp.username || 'username';
+      state.username = resp.username || defaultUsername;
     },
     authError(state) {
       state.status = 'error';
