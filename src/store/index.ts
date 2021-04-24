@@ -40,26 +40,26 @@ export const store: Store<State> = createStore<State>({
     isLoggedIn: (state): boolean => !!state.token,
   },
   mutations: {
-    authRequest(state): void {
+    authRequest: (state): void => {
       state.status = 'loading';
     },
-    authSuccess(state, resp: UserLoginResp): void {
+    authSuccess: (state, resp: UserLoginResp): void => {
       state.status = 'success';
       state.token = resp.key || '';
       state.id = resp.id || '';
       state.username = resp.username || defaultUsername;
     },
-    authError(state) {
+    authError: (state) => {
       state.status = 'error';
     },
-    logout(state) {
+    logout: (state) => {
       state.status = '';
       state.token = '';
     },
   },
   actions: {
-    register({ commit }, req: UserRegisterReq): Promise<UserRegisterResp> {
-      return new Promise((resolve, reject) => {
+    register: ({ commit }, req: UserRegisterReq): Promise<UserRegisterResp> =>
+      new Promise((resolve, reject) => {
         commit('authRequest');
         userClient
           .userRegister(req)
@@ -75,11 +75,10 @@ export const store: Store<State> = createStore<State>({
             removeLocalStorage();
             reject(err);
           });
-      });
-    },
+      }),
 
-    login({ commit }, req: UserLoginReq): Promise<UserLoginResp> {
-      return new Promise((resolve, reject) => {
+    login: ({ commit }, req: UserLoginReq): Promise<UserLoginResp> =>
+      new Promise((resolve, reject) => {
         commit('authRequest');
         userClient
           .userLogin(req)
@@ -95,19 +94,15 @@ export const store: Store<State> = createStore<State>({
             removeLocalStorage();
             reject(err);
           });
-      });
-    },
+      }),
 
-    logout({ commit }): Promise<void> {
-      return new Promise((resolve, _reject) => {
+    logout: ({ commit }): Promise<void> =>
+      new Promise((resolve, _reject) => {
         commit('logout');
         removeLocalStorage();
         resolve();
-      });
-    },
+      }),
   },
 });
 
-export const useStore = (): Store<State> => {
-  return baseUseStore(key);
-};
+export const useStore = (): Store<State> => baseUseStore(key);
