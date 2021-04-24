@@ -23,7 +23,7 @@
             {{ userInfo.data.email }}
           </span>
           <a-button
-            :v-if="!userInfo.isVerified"
+            v-if="!userInfo.data.isVerified"
             shape="round"
             size="small"
             @click="openVerifyModal"
