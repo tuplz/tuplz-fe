@@ -168,7 +168,6 @@ export default defineComponent({
         } as GetProblemsReq)
         .then((resp: GetProblemsResp): void => {
           table.data = resp.problems;
-          console.log(resp.problems);
         })
         .catch((err: AxiosError): void => {
           openNotification(
@@ -245,5 +244,3 @@ export default defineComponent({
   },
 });
 </script>
-
-<style lang="scss" scoped></style>

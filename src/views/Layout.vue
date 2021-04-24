@@ -6,23 +6,46 @@
         justify="space-between"
       >
         <router-link
-          class="title"
+          class="router-link"
           :to="{ name: 'Problemset' }"
         >
           <BulbFilled id="logo" />
           <span>{{ title }}</span>
         </router-link>
 
-        <a-button
+        <a-dropdown
           v-if="isLoggedIn"
-          shape="round"
-          @click="logout"
+          placement="bottomRight"
         >
-          <template #icon>
-            <LogoutOutlined />
-            Logout
+          <div>
+            <a-avatar
+              size="large"
+              style="font-size: 20px"
+            >
+              {{ username[0].toUpperCase() }}
+            </a-avatar>
+          </div>
+          <template #overlay>
+            <a-menu>
+              <a-menu-item key="profile">
+                <router-link
+                  class="router-link"
+                  :to="{ name: 'UserProfile' }"
+                >
+                  <ProfileOutlined class="menu-icon" />
+                  Profile
+                </router-link>
+              </a-menu-item>
+              <a-menu-item key="logout">
+                <span @click="logout">
+                  <LogoutOutlined class="menu-icon" />
+                  Logout
+                </span>
+              </a-menu-item>
+            </a-menu>
           </template>
-        </a-button>
+        </a-dropdown>
+
         <a-space v-else>
           <a-button
             shape="round"
@@ -120,8 +143,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, ref } from 'vue';
-import { mapGetters } from 'vuex';
+import { computed, defineComponent, reactive, ref } from 'vue';
 import { useStore } from '@/store';
 import { AxiosError } from 'axios';
 import {
@@ -132,6 +154,7 @@ import {
   LoginOutlined,
   LogoutOutlined,
   MailOutlined,
+  ProfileOutlined,
   UserOutlined,
 } from '@ant-design/icons-vue';
 import { ValidateErrorEntity } from 'ant-design-vue/lib/form/interface';
@@ -141,7 +164,7 @@ import {
   UserLoginResp,
   UserRegisterResp,
 } from '@/components/types';
-import { openNotification, title } from '@/mixins';
+import { openNotification, title, validateEmail } from '@/mixins';
 
 export default defineComponent({
   components: {
@@ -152,11 +175,14 @@ export default defineComponent({
     LoginOutlined,
     LogoutOutlined,
     MailOutlined,
+    ProfileOutlined,
     UserOutlined,
   },
   setup() {
     const form = ref();
     const store = useStore();
+    const username = computed((): string => store.state.username);
+    const isLoggedIn = computed((): boolean => store.getters.isLoggedIn);
 
     const loginFormRules = {
       username: [
@@ -179,8 +205,7 @@ export default defineComponent({
       ...loginFormRules,
       email: [
         {
-          required: true,
-          message: 'Please input E-mail',
+          validator: validateEmail,
           trigger: 'blur',
         },
       ],
@@ -301,17 +326,16 @@ export default defineComponent({
       register,
       login,
       logout,
+      username,
+      isLoggedIn,
     };
-  },
-  computed: {
-    ...mapGetters(['isLoggedIn']),
   },
 });
 </script>
 
 <style lang="scss" scoped>
 .ant-layout-header {
-  .title {
+  .ant-row > .router-link {
     height: 64px;
 
     > #logo {
@@ -327,16 +351,14 @@ export default defineComponent({
       vertical-align: top;
     }
   }
-
-  .ant-btn {
-    margin: 16px 0;
-  }
 }
 
-.ant-form {
-  .modal-icon {
-    margin-right: 6px;
-    color: rgba(0, 0, 0, 0.25);
+.ant-dropdown-menu-item {
+  > span > .menu-icon,
+  > a > .menu-icon {
+    min-width: 14px;
+    margin-right: 8px;
+    font-size: 14px;
   }
 }
 
