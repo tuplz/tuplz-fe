@@ -140,6 +140,7 @@ export default defineComponent({
           userId: userId.value,
         } as GetUserProfileReq)
         .then((resp: GetUserProfileResp) => {
+          console.log('getUserProfile', resp);
           userInfo.data = resp.user;
           userInfo.loading = false;
         })

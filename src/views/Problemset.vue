@@ -208,11 +208,11 @@ export default defineComponent({
           ...recommendForm,
         } as UploadRecommendReq)
         .then((resp: UploadRecommendResp): void => {
-          console.log(resp);
+          console.log('uploadRecommend', resp);
           if (resp.status !== 'success') {
             openNotification(
               'error',
-              `Failed to upload recommendation, user not logged in.`
+              `Failed to upload recommendation, user not logged in or not verified.`
             );
           } else {
             resetForm();
