@@ -24,7 +24,7 @@ export const tagColor = (tag: string): string =>
   defaultTagColors[tag] || 'purple';
 
 export const parseDatetime = (isoDatetime: string): string =>
-  isoDatetime.replace('T', ' ').replace('Z', '');
+  isoDatetime.replace(/T/, ' ').replace(/\..*/, '');
 
 export const validateEmail = async (
   _rule: RuleObject,
