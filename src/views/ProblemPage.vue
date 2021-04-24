@@ -114,7 +114,7 @@
             <a-list-item-meta :description="item.message">
               <template #title>
                 <span>
-                  {{ item.userId }}
+                  {{ item.username }}
                 </span>
               </template>
               <template #avatar>
@@ -122,7 +122,7 @@
                   size="large"
                   style="font-size: 20px"
                 >
-                  {{ item.userId[0].toUpperCase() }}
+                  {{ item.username[0].toUpperCase() }}
                 </a-avatar>
               </template>
             </a-list-item-meta>
