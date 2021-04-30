@@ -1,4 +1,4 @@
-import { Problem, Recommend, User } from '.';
+import { Comment, Problem, Recommend, User } from '.';
 
 interface Status {
   status: string;
@@ -39,3 +39,13 @@ export interface GetUserProfileResp extends Status {
 export type SendVerifyEmailResp = Status;
 
 export type VerifyEmailResp = Status;
+
+export interface GetCommentResp extends Status {
+  comment: Comment;
+}
+
+export interface GetCommentsResp extends Status {
+  comments: Comment[];
+}
+
+export type UploadCommentResp = GetCommentResp;

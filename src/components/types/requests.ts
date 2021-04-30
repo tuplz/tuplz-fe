@@ -1,4 +1,5 @@
 import { RecommendForm } from '.';
+import { CommentForm } from '.';
 
 interface ReqHeader {
   userId: string;
@@ -13,6 +14,10 @@ export interface GetProblemReq {
 }
 
 export type GetProblemRecommendsReq = GetProblemReq;
+
+export interface GetRecommendReq {
+  recommendId: number;
+}
 
 export interface UploadRecommendReq
   extends ReqHeader,
@@ -35,4 +40,12 @@ export interface SendVerifyEmailReq extends ReqHeader {
 
 export interface VerifyEmailReq extends SendVerifyEmailReq {
   verifyCode: string;
+}
+
+export interface GetCommentsReq {
+  recommendId: number;
+}
+
+export interface UploadCommentReq extends ReqHeader, Required<CommentForm> {
+  replyTo: number;
 }

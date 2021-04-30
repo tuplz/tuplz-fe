@@ -12,6 +12,8 @@ const Problemset = () =>
   import(/* webpackChunkName: "problemset" */ '@/views/Problemset.vue');
 const ProblemPage = () =>
   import(/* webpackChunkName: "problemPage" */ '@/views/ProblemPage.vue');
+const RecommendPage = () =>
+  import(/* webpackChunkName: "recommendPage" */ '@/views/RecommendPage.vue');
 const UserProfile = () =>
   import(/* webpackChunkName: "userProfile" */ '@/views/UserProfile.vue');
 
@@ -32,6 +34,11 @@ const routes: Array<RouteRecordRaw> = [
         path: 'problems/:id',
         name: 'ProblemPage',
         component: ProblemPage,
+      },
+      {
+        path: 'recommends/:id',
+        name: 'RecommendPage',
+        component: RecommendPage,
       },
       {
         path: 'profile',
