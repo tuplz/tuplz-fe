@@ -10,6 +10,7 @@ import {
   Button,
   Card,
   Col,
+  Comment,
   Descriptions,
   Divider,
   Dropdown,
@@ -38,6 +39,7 @@ app
   .use(Button)
   .use(Card)
   .use(Col)
+  .use(Comment)
   .use(Descriptions)
   .use(Divider)
   .use(Dropdown)

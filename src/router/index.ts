@@ -14,6 +14,8 @@ const ProblemPage = () =>
   import(/* webpackChunkName: "problemPage" */ '@/views/ProblemPage.vue');
 const CollectionPage = () =>
   import(/* webpackChunkName: "collectionPage" */ '@/views/CollectionPage.vue');
+const RecommendPage = () =>
+  import(/* webpackChunkName: "recommendPage" */ '@/views/RecommendPage.vue');
 const UserProfile = () =>
   import(/* webpackChunkName: "userProfile" */ '@/views/UserProfile.vue');
 const UserSettings = () =>
@@ -44,6 +46,11 @@ const routes: Array<RouteRecordRaw> = [
         meta: {
           requiresLogin: true,
         },
+      },
+      {
+        path: 'recommends/:id',
+        name: 'RecommendPage',
+        component: RecommendPage,
       },
       {
         path: 'profile',

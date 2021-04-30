@@ -8,21 +8,28 @@
     >
       <template #renderItem="{ item }">
         <a-list-item :key="item.recommendId">
-          <a-list-item-meta :description="item.message">
-            <template #title>
-              <span>
-                {{ item.username || defaultUsername }}
-              </span>
-            </template>
-            <template #avatar>
-              <a-avatar
-                size="large"
-                style="font-size: 20px"
-              >
-                {{ (item.username || defaultUsername)[0].toUpperCase() }}
-              </a-avatar>
-            </template>
-          </a-list-item-meta>
+          <router-link
+            :to="{
+              name: 'RecommendPage',
+              params: { id: item.recommendId },
+            }"
+          >
+            <a-list-item-meta :description="item.message">
+              <template #title>
+                <span>
+                  {{ item.username || defaultUsername }}
+                </span>
+              </template>
+              <template #avatar>
+                <a-avatar
+                  size="large"
+                  style="font-size: 20px"
+                >
+                  {{ (item.username || defaultUsername)[0].toUpperCase() }}
+                </a-avatar>
+              </template>
+            </a-list-item-meta>
+          </router-link>
         </a-list-item>
       </template>
     </a-list>

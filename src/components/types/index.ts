@@ -1,4 +1,5 @@
 export * from './collection';
+export * from './comment';
 export * from './problem';
 export * from './recommend';
 export * from './responses';
