@@ -230,6 +230,7 @@ export default defineComponent({
         .uploadComment({
           userId: store.state.id,
           replyTo: id,
+          id: getRecommendId(),
           ...commentForm,
         } as UploadCommentReq)
         .then((resp: UploadCommentResp): void => {
