@@ -1,6 +1,6 @@
 export interface Comment {
   commentId: number;
-  commentTime: string;
+  updateTime: string;
   commentContent: string;
   userId: number;
   username: string;
