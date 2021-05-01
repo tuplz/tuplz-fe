@@ -5,7 +5,6 @@ export interface Comment {
   userId: number;
   username: string;
   replyTo: number;
-  response: number[];
   isReply: boolean;
 }
 
