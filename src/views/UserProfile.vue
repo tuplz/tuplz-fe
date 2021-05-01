@@ -23,7 +23,7 @@
             {{ userInfo.data.email }}
           </span>
           <a-button
-            :v-if="!userInfo.isVerified"
+            v-if="!userInfo.data.isVerified"
             shape="round"
             size="small"
             @click="openVerifyModal"
@@ -140,6 +140,7 @@ export default defineComponent({
           userId: userId.value,
         } as GetUserProfileReq)
         .then((resp: GetUserProfileResp) => {
+          console.log('getUserProfile', resp);
           userInfo.data = resp.user;
           userInfo.loading = false;
         })
@@ -264,6 +265,8 @@ export default defineComponent({
               'error',
               'Failed to verify email, wrong verify code.'
             );
+          } else {
+            verifyModal.visible = false;
           }
         })
         .catch((err: AxiosError) => {

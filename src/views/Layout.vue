@@ -144,6 +144,7 @@
 
 <script lang="ts">
 import { computed, defineComponent, reactive, ref } from 'vue';
+import { useRouter } from 'vue-router';
 import { useStore } from '@/store';
 import { AxiosError } from 'axios';
 import {
@@ -164,6 +165,7 @@ import {
   UserLoginResp,
   UserRegisterResp,
 } from '@/components/types';
+import { userClient } from '@/api';
 import { openNotification, title, validateEmail } from '@/mixins';
 
 export default defineComponent({
@@ -180,6 +182,7 @@ export default defineComponent({
   },
   setup() {
     const form = ref();
+    const router = useRouter();
     const store = useStore();
     const username = computed((): string => store.state.username);
     const isLoggedIn = computed((): boolean => store.getters.isLoggedIn);
@@ -281,6 +284,7 @@ export default defineComponent({
         .then((resp: UserRegisterResp): void => {
           console.log('Registered.', resp);
           closeModal();
+          router.go(0);
         })
         .catch((err: AxiosError): void => {
           openNotification(
@@ -299,6 +303,7 @@ export default defineComponent({
         .then((resp: UserLoginResp): void => {
           console.log('Logged in.', resp);
           closeModal();
+          router.go(0);
         })
         .catch((err: AxiosError): void => {
           openNotification('error', `Failed to login, error: ${err.message}`);
@@ -311,6 +316,7 @@ export default defineComponent({
     const logout = (): void => {
       store.dispatch('logout').then((): void => {
         console.log('Logged out.');
+        router.go(0);
       });
     };
 
@@ -329,6 +335,9 @@ export default defineComponent({
       username,
       isLoggedIn,
     };
+  },
+  created() {
+    userClient.setAuthHeader();
   },
 });
 </script>
