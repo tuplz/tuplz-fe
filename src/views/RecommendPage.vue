@@ -31,7 +31,7 @@
         :row-key="commentsInfo.rowKey"
       >
         <template #renderItem="{ item }">
-          <a-list-item v-show="item.replyTo == -1">
+          <a-list-item>
             <a-comment>
               <template #actions>
                 <span
@@ -80,72 +80,33 @@
               <template #content>
                 {{ item.commentContent }}
               </template>
-              <a-list v-if="item.response.length > 0">
-                <a-list-item
-                  v-for="id in item.response"
-                  :key="id"
-                >
-                  <a-comment>
-                    <template #actions>
-                      <span
-                        @click="
-                          commentsInfo.data[id].isReply = !commentsInfo.data[id]
-                            .isReply
-                        "
-                      >
-                        Reply to
-                      </span>
-                      <span v-show="commentsInfo.data[id].isReply">
-                        <a-form
-                          ref="form"
-                          :model="commentForm"
-                          style="margin-top: 24px"
-                          @finish="
-                            handleFinish(commentsInfo.data[id].commentId)
-                          "
-                        >
-                          <a-form-item>
-                            <a-textarea
-                              v-model:value="commentForm.commentContent"
-                              :rows="4"
-                            />
-                          </a-form-item>
-                          <a-form-item>
-                            <a-button
-                              html-type="submit"
-                              type="primary"
-                            >
-                              Submit
-                            </a-button>
-                          </a-form-item>
-                        </a-form>
-                      </span>
-                    </template>
-                    <template #author>
-                      <span>
-                        {{ commentsInfo.data[id].username }}
-                      </span>
-                    </template>
-                    <template #avatar>
-                      <a-avatar
-                        size="large"
-                        style="font-size: 20px"
-                      >
-                        {{ commentsInfo.data[id].username[0].toUpperCase() }}
-                      </a-avatar>
-                    </template>
-                    <template #content>
-                      {{ commentsInfo.data[id].commentContent }}
-                    </template>
-                  </a-comment>
-                </a-list-item>
-              </a-list>
             </a-comment>
           </a-list-item>
         </template>
       </a-list>
     </a-card>
   </a-space>
+  <a-form
+    ref="form"
+    :model="commentForm"
+    style="margin-top: 24px"
+    @finish="handleFinish(-1)"
+  >
+    <a-form-item>
+      <a-textarea
+        v-model:value="commentForm.commentContent"
+        :rows="4"
+      />
+    </a-form-item>
+    <a-form-item>
+      <a-button
+        html-type="submit"
+        type="primary"
+      >
+        Submit
+      </a-button>
+    </a-form-item>
+  </a-form>
 </template>
 
 <script lang="ts">
@@ -208,6 +169,7 @@ export default defineComponent({
       recommendClient
         .getRecommend({
           recommendId: getRecommendId(),
+          userId: userId,
         } as GetRecommendReq)
         .then((resp: GetRecommendResp) => {
           if (!resp.recommend.recommendId) {
