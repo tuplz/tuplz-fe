@@ -12,14 +12,14 @@
     :loading="table.loading"
     :row-key="table.rowKey"
   >
-    <template #name="{ text, record }">
+    <template #name="{ text: id, record }">
       <router-link
         :to="{
           name: 'ProblemPage',
           params: { id: record.id },
         }"
       >
-        {{ text }}
+        {{ id }}
       </router-link>
     </template>
     <template #tags="{ text: tags }">
@@ -31,6 +31,11 @@
         >
           {{ tag.toUpperCase() }}
         </a-tag>
+      </span>
+    </template>
+    <template #datetime="{ text: datetime }">
+      <span>
+        {{ parseDatetime(datetime) }}
       </span>
     </template>
   </a-table>
@@ -92,7 +97,7 @@ import {
   UploadRecommendResp,
 } from '@/components/types';
 import { problemClient, recommendClient } from '@/api';
-import { openNotification, tagColor, title } from '@/mixins';
+import { openNotification, parseDatetime, tagColor, title } from '@/mixins';
 
 export default defineComponent({
   setup() {
@@ -150,6 +155,7 @@ export default defineComponent({
           align: 'right',
           width: 200,
           ellipsis: true,
+          slots: { customRender: 'datetime' },
           sorter: (a: Problem, b: Problem) =>
             a.content.meta.updated.localeCompare(b.content.meta.updated),
         },
@@ -230,6 +236,7 @@ export default defineComponent({
 
     return {
       form,
+      parseDatetime,
       table,
       tagColor,
       refresh,

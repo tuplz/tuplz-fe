@@ -114,7 +114,7 @@
             <a-list-item-meta :description="item.message">
               <template #title>
                 <span>
-                  {{ item.userId }}
+                  {{ item.username || defaultUsername }}
                 </span>
               </template>
               <template #avatar>
@@ -122,7 +122,7 @@
                   size="large"
                   style="font-size: 20px"
                 >
-                  {{ item.userId[0].toUpperCase() }}
+                  {{ (item.username || defaultUsername)[0].toUpperCase() }}
                 </a-avatar>
               </template>
             </a-list-item-meta>
@@ -149,6 +149,7 @@ import {
 } from '@/components/types';
 import { problemClient, recommendClient } from '@/api';
 import { openNotification, title } from '@/mixins';
+import { defaultUsername } from '@/utils/config';
 
 export default defineComponent({
   setup() {
@@ -217,8 +218,8 @@ export default defineComponent({
               router.replace({ name: 'Problemset' });
             }, 3000);
           } else {
+            console.log('getProblem', resp);
             problemInfo.data = resp.problem;
-            console.log(resp.problem);
             document.title = `${getProblemId()}. ${
               problemInfo.data.content.title
             } - ${title}`;
@@ -241,6 +242,7 @@ export default defineComponent({
           id: getProblemId(),
         } as GetProblemRecommendsReq)
         .then((resp: GetProblemRecommendsResp) => {
+          console.log('getRecommends', resp);
           recommendsInfo.data = resp.recommends;
           recommendsInfo.loading = false;
         })
@@ -258,6 +260,7 @@ export default defineComponent({
     };
 
     return {
+      defaultUsername,
       getProblemId,
       problemInfo,
       recommendsInfo,
