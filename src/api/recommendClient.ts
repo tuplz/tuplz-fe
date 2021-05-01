@@ -18,7 +18,10 @@ import {
 const getRecommend = (req: GetRecommendReq): Promise<GetRecommendResp> =>
   new Promise((resolve, reject) => {
     axios
-      .get<void, AxiosResponse<GetRecommendResp>>(recommendsApiUrl, {
+      .get<void, AxiosResponse<GetRecommendResp>>(
+        `${recommendsApiUrl}/${req.recommendId}`, {
+        params: req,
+      })
         params: req,
       })
       .then((resp: AxiosResponse<GetRecommendResp>) => {
