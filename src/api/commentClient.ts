@@ -11,9 +11,12 @@ import { mockGetCommentsResp, mockUploadCommentResp } from '@/api/mock';
 const getComments = (req: GetCommentsReq): Promise<GetCommentsResp> =>
   new Promise((resolve, reject) => {
     axios
-      .get<void, AxiosResponse<GetCommentsResp>>(commentsApiUrl, {
-        params: req,
-      })
+      .get<void, AxiosResponse<GetCommentsResp>>(
+        `${recommendsApiUrl}/${req.recommendId}/comments`,
+        {
+          params: req,
+        }
+      )
       .then((resp: AxiosResponse<GetCommentsResp>) => {
         console.log('hi');
         resolve(resp.data);
@@ -29,7 +32,7 @@ const uploadComment = (req: UploadCommentReq): Promise<UploadCommentResp> =>
   new Promise((resolve, reject) => {
     axios
       .post<UploadCommentReq, AxiosResponse<UploadCommentResp>>(
-        `${recommendsApiUrl}/${req.id}/comment`,
+        commentsApiUrl,
         req
       )
       .then((resp: AxiosResponse<UploadCommentResp>) => {

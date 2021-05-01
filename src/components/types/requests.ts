@@ -48,5 +48,4 @@ export interface GetCommentsReq {
 
 export interface UploadCommentReq extends ReqHeader, Required<CommentForm> {
   replyTo: number;
-  id: number;
 }
