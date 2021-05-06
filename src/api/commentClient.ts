@@ -18,7 +18,7 @@ const getComments = (req: GetCommentsReq): Promise<GetCommentsResp> =>
         }
       )
       .then((resp: AxiosResponse<GetCommentsResp>) => {
-        console.log('hi');
+        console.log(resp.data);
         resolve(resp.data);
       })
       .catch((err: AxiosError) => {
@@ -45,9 +45,9 @@ const uploadComment = (req: UploadCommentReq): Promise<UploadCommentResp> =>
       });
   });
 
-const recommendClient = {
+const commentClient = {
   getComments,
   uploadComment,
 };
 
-export default recommendClient;
+export default commentClient;
