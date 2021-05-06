@@ -266,6 +266,7 @@ export default defineComponent({
               'Failed to verify email, wrong verify code.'
             );
           } else {
+            userInfo.data.isVerified = true;
             verifyModal.visible = false;
           }
         })
