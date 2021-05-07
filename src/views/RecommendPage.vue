@@ -43,13 +43,15 @@
                 <span v-show="item.isReply">
                   <a-form
                     ref="form"
-                    :model="commentForm"
+                    :model="commentForm.data"
                     style="margin-top: 24px"
                     @finish="handleFinish(item.commentId)"
                   >
                     <a-form-item>
                       <a-textarea
-                        v-model:value="commentForm.commentContent"
+                        v-model:value="
+                          commentForm.data[item.commentId].commentContent
+                        "
                         :rows="4"
                       />
                     </a-form-item>
@@ -194,6 +196,10 @@ export default defineComponent({
         });
     };
 
+    const commentForm = reactive({
+      data: [] as CommentForm[],
+    });
+
     const getComments = (): void => {
       commentsInfo.loading = true;
       commentClient
@@ -205,6 +211,13 @@ export default defineComponent({
           console.log('getComments', resp);
 
           commentsInfo.data = resp.comments;
+          var len = commentsInfo.data.length;
+          for (var i = 0; i < len; i++) {
+            commentForm.data.push({
+              commentContent: '',
+              recommendId: getRecommendId(),
+            });
+          }
           commentsInfo.loading = false;
         })
         .catch((err: AxiosError) => {
@@ -214,11 +227,6 @@ export default defineComponent({
           );
         });
     };
-
-    const commentForm = reactive({
-      recommendId: getRecommendId(),
-      commentContent: '',
-    } as CommentForm);
 
     const resetForm = (): void => {
       form.value.resetFields();
@@ -231,7 +239,7 @@ export default defineComponent({
           userId: store.state.id,
           replyTo: id,
           id: getRecommendId(),
-          ...commentForm,
+          ...commentForm.data[id],
         } as UploadCommentReq)
         .then((resp: UploadCommentResp): void => {
           console.log(resp);
