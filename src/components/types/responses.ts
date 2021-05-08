@@ -49,3 +49,7 @@ export interface GetCommentsResp extends Status {
 }
 
 export type UploadCommentResp = GetCommentResp;
+
+export interface AddFavouriteResp extends Status {
+  problem: Problem;
+}

@@ -17,6 +17,7 @@ export interface Problem {
   like: number;
   dislike: number;
   visit: number;
+  favourite: boolean;
   content: {
     title: string;
     type: string;

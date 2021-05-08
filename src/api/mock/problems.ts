@@ -6,6 +6,7 @@ const mockProblemTemplate = {
   like: '@integer(1, 10000)',
   dislike: '@integer(1, 10000)',
   visit: '@integer(1, 10000)',
+  favourite: '@boolean',
   content: {
     title: '@title(1, 6)',
     type: '@title(1, 6)',
@@ -52,6 +53,11 @@ export const mockGetProblemsResp: GetProblemsResp = mock({
 });
 
 export const mockGetProblemResp: GetProblemResp = mock({
+  status: 'success',
+  problem: mockProblemTemplate,
+});
+
+export const mockAddFavouriteResp: GetProblemResp = mock({
   status: 'success',
   problem: mockProblemTemplate,
 });

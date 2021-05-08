@@ -179,6 +179,7 @@ export default defineComponent({
         like: 0,
         dislike: 0,
         visit: 0,
+        favourite: false,
         content: {
           title: '',
           type: '',

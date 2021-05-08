@@ -12,6 +12,18 @@
     :loading="table.loading"
     :row-key="table.rowKey"
   >
+    <template #status="{ text: status, index }">
+      <span @click="handleFavourite(index)">
+        <StarOutlined
+          v-show="status"
+          :style="{ color: '#FBC740' }"
+        />
+        <StarFilled
+          v-show="!status"
+          :style="{ color: '#87CEFA' }"
+        />
+      </span>
+    </template>
     <template #name="{ text: id, record }">
       <router-link
         :to="{
@@ -95,17 +107,31 @@ import {
   GetProblemsResp,
   UploadRecommendReq,
   UploadRecommendResp,
+  AddFavouriteReq,
+  AddFavouriteResp,
 } from '@/components/types';
 import { problemClient, recommendClient } from '@/api';
 import { openNotification, parseDatetime, tagColor, title } from '@/mixins';
+import { StarOutlined, StarFilled } from '@ant-design/icons-vue';
 
 export default defineComponent({
+  components: {
+    StarOutlined,
+    StarFilled,
+  },
   setup() {
     const form = ref();
     const store = useStore();
 
     const table = reactive({
       columns: [
+        {
+          title: 'Status',
+          dataIndex: 'favourite',
+          width: 100,
+          ellipsis: true,
+          slots: { customRender: 'status' },
+        },
         {
           title: 'ID',
           dataIndex: 'id',
@@ -234,6 +260,32 @@ export default defineComponent({
       uploadRecommend();
     };
 
+    const handleFavourite = (id: number): void => {
+      console.log('add ' + id + ' to favourite');
+      problemClient
+        .addFavourite({
+          userId: store.state.id,
+          id: id,
+        } as AddFavouriteReq)
+        .then((resp: AddFavouriteResp): void => {
+          console.log(resp);
+          if (resp.status !== 'success') {
+            openNotification(
+              'error',
+              `Failed to add favourite, user not logged in.`
+            );
+          } else {
+            table.data[id].favourite = !table.data[id].favourite;
+          }
+        })
+        .catch((err: AxiosError): void => {
+          openNotification(
+            'error',
+            `Failed to upload recommendation, error: ${err.message}`
+          );
+        });
+    };
+
     return {
       form,
       parseDatetime,
@@ -244,6 +296,7 @@ export default defineComponent({
       layout,
       resetForm,
       handleFinish,
+      handleFavourite,
     };
   },
   created() {
