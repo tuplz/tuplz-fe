@@ -1,4 +1,4 @@
-import { CollectionForm, RecommendForm } from '.';
+import { CollectionForm, RecommendForm, UserForm } from '.';
 
 interface ReqHeader {
   userId: string;
@@ -29,6 +29,8 @@ export interface UserRegisterReq extends UserLoginReq {
 
 export type GetUserProfileReq = ReqHeader;
 
+export interface EditUserProfileReq extends ReqHeader, UserForm {}
+
 export interface SendVerifyEmailReq extends ReqHeader {
   email: string;
 }
@@ -43,9 +45,7 @@ export interface GetCollectionReq {
   collectionId: number;
 }
 
-export interface CreateCollectionReq
-  extends ReqHeader,
-    Required<CollectionForm> {}
+export interface CreateCollectionReq extends ReqHeader, CollectionForm {}
 
 export type DeleteCollectionReq = GetCollectionReq;
 

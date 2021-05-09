@@ -37,6 +37,8 @@ export interface GetUserProfileResp extends Status {
   user: User;
 }
 
+export type EditUserProfileResp = GetUserProfileResp;
+
 export type SendVerifyEmailResp = Status;
 
 export type VerifyEmailResp = Status;

@@ -1,4 +1,5 @@
 import {
+  EditUserProfileResp,
   GetUserProfileResp,
   SendVerifyEmailResp,
   UserLoginResp,
@@ -22,6 +23,8 @@ export const mockGetUserProfileResp: GetUserProfileResp = mock({
     isVerified: '@boolean',
   },
 });
+
+export const mockEditUserProfileResp: EditUserProfileResp = mockGetUserProfileResp;
 
 export const mockSendVerifyEmailResp: SendVerifyEmailResp = mock({
   ...mockStatusTemplate,

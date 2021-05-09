@@ -9,7 +9,10 @@
       bordered
     >
       <template #extra>
-        <a-button type="primary">
+        <a-button
+          type="primary"
+          @click="openEditUserModal"
+        >
           <FormOutlined />
           Edit
         </a-button>
@@ -37,6 +40,37 @@
       </a-descriptions-item>
     </a-descriptions>
   </a-card>
+
+  <a-modal
+    v-model:visible="userModal.visible"
+    :title="userModal.title"
+    :confirm-loading="userModal.loading"
+    width="500px"
+    :closable="false"
+    @ok="userModal.callback"
+    @cancel="closeUserModal"
+  >
+    <a-form
+      ref="userForm"
+      name="userForm"
+      :model="userModal.data"
+      :rules="userModal.rules"
+      v-bind="userModal.layout"
+    >
+      <a-form-item
+        label="Username"
+        name="username"
+      >
+        <a-input v-model:value="userModal.data.username" />
+      </a-form-item>
+      <a-form-item
+        label="E-mail"
+        name="email"
+      >
+        <a-input v-model:value="userModal.data.email" />
+      </a-form-item>
+    </a-form>
+  </a-modal>
 
   <a-modal
     v-model:visible="verifyModal.visible"
@@ -101,15 +135,18 @@ import { FormOutlined, KeyOutlined, MailOutlined } from '@ant-design/icons-vue';
 
 import {
   User,
+  UserForm,
   GetUserProfileReq,
   GetUserProfileResp,
+  EditUserProfileReq,
+  EditUserProfileResp,
   SendVerifyEmailReq,
   SendVerifyEmailResp,
   VerifyEmailReq,
   VerifyEmailResp,
 } from '@/components/types';
 import { userClient } from '@/api';
-import { openNotification } from '@/mixins';
+import { openNotification, validateEmail } from '@/mixins';
 import {
   RuleObject,
   ValidateErrorEntity,
@@ -135,6 +172,60 @@ export default defineComponent({
       loading: false,
     });
 
+    const userModalRules = {
+      username: [
+        {
+          required: true,
+          message: 'Please input username',
+          trigger: 'blur',
+        },
+      ],
+      email: [
+        {
+          validator: validateEmail,
+          trigger: 'blur',
+        },
+      ],
+    };
+
+    const userModal = reactive({
+      visible: false,
+      loading: false,
+      title: '',
+      data: {
+        username: '',
+        email: '',
+      } as UserForm,
+      callback: Function() as () => void,
+      rules: userModalRules,
+      layout: {
+        labelCol: { span: 6 },
+        wrapperCol: { span: 16 },
+      },
+    });
+
+    const userForm = ref();
+
+    const resetUserForm = (): void => {
+      userForm.value.resetFields();
+    };
+
+    const openEditUserModal = (): void => {
+      userModal.visible = true;
+      userModal.title = 'Edit profile';
+      userModal.data = {
+        username: userInfo.data.username,
+        email: userInfo.data.email,
+      };
+      userModal.callback = () => editUserProfile();
+    };
+
+    const closeUserModal = (): void => {
+      userModal.visible = false;
+      userModal.loading = false;
+      resetUserForm();
+    };
+
     const getUserProfile = (): void => {
       userInfo.loading = true;
       userClient
@@ -151,6 +242,34 @@ export default defineComponent({
             'error',
             `Failed to load user profile, error: ${err.message}`
           );
+        });
+    };
+
+    const editUserProfile = (): void => {
+      userModal.loading = true;
+      userClient
+        .editUserProfile({
+          userId: userId.value,
+          ...userModal.data,
+        } as EditUserProfileReq)
+        .then((resp: EditUserProfileResp) => {
+          console.log('editUserProfile', resp);
+          if (resp.status !== 'success') {
+            openNotification('error', `Failed to edit user profile.`);
+          } else {
+            resetUserForm();
+            userModal.visible = false;
+            getUserProfile();
+          }
+        })
+        .catch((err: AxiosError) => {
+          openNotification(
+            'error',
+            `Failed to edit user profile, error: ${err.message}`
+          );
+        })
+        .finally(() => {
+          userModal.loading = false;
         });
     };
 
@@ -304,9 +423,14 @@ export default defineComponent({
 
     return {
       userInfo,
+      userForm,
+      userModal,
+      openEditUserModal,
+      closeUserModal,
       getUserProfile,
-      verifyForm,
+      editUserProfile,
       verifyModal,
+      verifyForm,
       resetVerifyForm,
       openVerifyModal,
       closeVerifyModal,

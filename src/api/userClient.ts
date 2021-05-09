@@ -1,4 +1,6 @@
 import {
+  EditUserProfileReq,
+  EditUserProfileResp,
   GetUserProfileReq,
   GetUserProfileResp,
   SendVerifyEmailReq,
@@ -14,6 +16,7 @@ import axios, { AxiosError, AxiosResponse } from 'axios';
 import { store } from '@/store';
 import { userApiUrl, usersApiUrl } from '@/utils/config';
 import {
+  mockEditUserProfileResp,
   mockGetUserProfileResp,
   mockSendVerifyEmailResp,
   mockUserLoginResp,
@@ -79,6 +82,26 @@ const getUserProfile = (req: GetUserProfileReq): Promise<GetUserProfileResp> =>
       });
   });
 
+const editUserProfile = (
+  req: EditUserProfileReq
+): Promise<EditUserProfileResp> =>
+  new Promise((resolve, reject) => {
+    const { userId, ...reqBody } = req;
+    axios
+      .patch<void, AxiosResponse<EditUserProfileResp>>(
+        `${usersApiUrl}/${userId}`,
+        reqBody
+      )
+      .then((resp) => {
+        resolve(resp.data);
+      })
+      .catch((err: AxiosError) => {
+        process.env.NODE_ENV === 'development'
+          ? resolve(mockEditUserProfileResp)
+          : reject(err);
+      });
+  });
+
 const sendVerifyEmail = (
   req: SendVerifyEmailReq
 ): Promise<SendVerifyEmailResp> =>
@@ -121,6 +144,7 @@ const userClient = {
   userLogin,
   userRegister,
   getUserProfile,
+  editUserProfile,
   sendVerifyEmail,
   verifyEmail,
 };
