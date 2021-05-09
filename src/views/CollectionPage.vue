@@ -11,7 +11,7 @@
       <a-card-meta>
         <template #description>
           <span>
-            <ClockCircleOutlined style="padding: 3px" />
+            <ClockCircleOutlined class="card-icon" />
             Updated at {{ collection.data.updateTime }}
           </span>
         </template>
@@ -168,3 +168,11 @@ export default defineComponent({
   },
 });
 </script>
+
+<style lang="scss" scoped>
+.ant-card-body {
+  .card-icon {
+    padding: 3px;
+  }
+}
+</style>

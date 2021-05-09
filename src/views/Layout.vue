@@ -27,7 +27,7 @@
           </div>
           <template #overlay>
             <a-menu>
-              <a-menu-item key="profile">
+              <a-menu-item>
                 <router-link
                   class="router-link"
                   :to="{ name: 'UserProfile' }"
@@ -36,7 +36,7 @@
                   Profile
                 </router-link>
               </a-menu-item>
-              <a-menu-item key="logout">
+              <a-menu-item>
                 <span @click="logout">
                   <LogoutOutlined class="menu-icon" />
                   Logout

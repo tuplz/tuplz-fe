@@ -28,12 +28,12 @@
             <template #description>
               <div>
                 <span>
-                  <BarsOutlined style="padding: 3px" />
+                  <BarsOutlined class="list-icon" />
                   {{ item.problemCount }} problems
                 </span>
                 <a-divider type="vertical" />
                 <span>
-                  <ClockCircleOutlined style="padding: 3px" />
+                  <ClockCircleOutlined class="list-icon" />
                   Updated at {{ item.updateTime }}
                 </span>
               </div>
@@ -42,7 +42,7 @@
           <template #actions>
             <div>
               <span @click="openEditModal(item)">
-                <EditOutlined style="padding: 3px" />
+                <EditOutlined class="list-icon" />
                 Edit
               </span>
               <a-divider type="vertical" />
@@ -53,7 +53,7 @@
                 @confirm="deleteCollection(item.collectionId)"
               >
                 <span>
-                  <DeleteOutlined style="padding: 3px" />
+                  <DeleteOutlined class="list-icon" />
                   Delete
                 </span>
               </a-popconfirm>
@@ -230,7 +230,7 @@ export default defineComponent({
         .catch((err: AxiosError) => {
           openNotification(
             'error',
-            `Failed to load collections, error: ${err.message}`
+            `Failed to create collection, error: ${err.message}`
           );
         });
     };
@@ -254,12 +254,13 @@ export default defineComponent({
         .catch((err: AxiosError) => {
           openNotification(
             'error',
-            `Failed to load collections, error: ${err.message}`
+            `Failed to delete collection, error: ${err.message}`
           );
         });
     };
 
     const editCollection = (collectionId: number): void => {
+      collectionModal.loading = true;
       collectionClient
         .editCollection({
           collectionId,
@@ -281,8 +282,11 @@ export default defineComponent({
         .catch((err: AxiosError) => {
           openNotification(
             'error',
-            `Failed to load collections, error: ${err.message}`
+            `Failed to edit collection, error: ${err.message}`
           );
+        })
+        .finally(() => {
+          collectionModal.loading = false;
         });
     };
 
@@ -302,3 +306,11 @@ export default defineComponent({
   },
 });
 </script>
+
+<style lang="scss" scoped>
+.ant-list-item {
+  .list-icon {
+    padding: 3px;
+  }
+}
+</style>
