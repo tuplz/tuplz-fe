@@ -4,12 +4,8 @@ import {
   UserLoginResp,
   VerifyEmailResp,
 } from '@/components/types';
+import { mockStatusTemplate } from './status';
 import { mock } from 'mockjs';
-
-const mockStatusTemplate = {
-  code: 200,
-  status: 'success',
-};
 
 export const mockUserLoginResp: UserLoginResp = mock({
   ...mockStatusTemplate,

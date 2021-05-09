@@ -1,10 +1,6 @@
 import { GetProblemsResp, GetProblemResp } from '@/components/types';
+import { mockStatusTemplate } from './status';
 import { mock } from 'mockjs';
-
-const mockStatusTemplate = {
-  code: 200,
-  status: 'success',
-};
 
 export const mockProblemTemplate = {
   id: '@integer(1, 10000)',

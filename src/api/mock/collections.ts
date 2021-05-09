@@ -1,16 +1,12 @@
 import { GetCollectionResp, GetCollectionsResp } from '@/components/types';
-import { mockProblemTemplate } from '.';
+import { mockProblemTemplate } from './problems';
+import { mockStatusTemplate } from './status';
 import { mock } from 'mockjs';
-
-const mockStatusTemplate = {
-  code: 200,
-  status: 'success',
-};
 
 const mockCollectionBaseTemplate = {
   collectionId: '@integer(1, 10000)',
   userId: '@guid',
-  title: '@title(1, 6)',
+  title: '@title(1, 3)',
   updateTime: '@dateTime',
 };
 

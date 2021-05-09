@@ -3,12 +3,8 @@ import {
   GetRecommendResp,
   UploadRecommendResp,
 } from '@/components/types';
+import { mockStatusTemplate } from './status';
 import { mock } from 'mockjs';
-
-const mockStatusTemplate = {
-  code: 200,
-  status: 'success',
-};
 
 export const mockRecommendTemplate = {
   recommendId: '@integer(1, 10000)',
