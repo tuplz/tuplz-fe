@@ -39,32 +39,52 @@
               </div>
             </template>
           </a-list-item-meta>
+          <template #actions>
+            <div>
+              <span @click="openEditModal(item)">
+                <EditOutlined style="padding: 3px" />
+                Edit
+              </span>
+              <a-divider type="vertical" />
+              <a-popconfirm
+                title="Are you sure to delete this collection?"
+                ok-text="Delete"
+                cancel-text="Cancel"
+                @confirm="deleteCollection(item.collectionId)"
+              >
+                <span>
+                  <DeleteOutlined style="padding: 3px" />
+                  Delete
+                </span>
+              </a-popconfirm>
+            </div>
+          </template>
         </a-list-item>
       </template>
     </a-list>
   </a-card>
 
   <a-modal
-    v-model:visible="createModal.visible"
-    title="Create new collection"
-    :confirm-loading="createModal.loading"
+    v-model:visible="collectionModal.visible"
+    :title="collectionModal.title"
+    :confirm-loading="collectionModal.loading"
     width="500px"
     :closable="false"
-    @ok="createCollection"
-    @cancel="closeCreateModal"
+    @ok="collectionModal.callback"
+    @cancel="closeCollectionModal"
   >
     <a-form
-      ref="createForm"
-      name="createForm"
-      :model="createModal.data"
-      :rules="createModal.rules"
-      v-bind="createModal.layout"
+      ref="collectionForm"
+      name="collectionForm"
+      :model="collectionModal.data"
+      :rules="collectionModal.rules"
+      v-bind="collectionModal.layout"
     >
       <a-form-item
         label="Title"
         name="title"
       >
-        <a-input v-model:value="createModal.data.title" />
+        <a-input v-model:value="collectionModal.data.title" />
       </a-form-item>
     </a-form>
   </a-modal>
@@ -77,6 +97,8 @@ import { AxiosError } from 'axios';
 import {
   BarsOutlined,
   ClockCircleOutlined,
+  DeleteOutlined,
+  EditOutlined,
   PlusOutlined,
 } from '@ant-design/icons-vue';
 
@@ -85,6 +107,10 @@ import {
   CollectionInfo,
   CreateCollectionReq,
   CreateCollectionResp,
+  DeleteCollectionReq,
+  DeleteCollectionResp,
+  EditCollectionReq,
+  EditCollectionResp,
   GetCollectionsReq,
   GetCollectionsResp,
 } from '@/components/types';
@@ -95,6 +121,8 @@ export default defineComponent({
   components: {
     BarsOutlined,
     ClockCircleOutlined,
+    DeleteOutlined,
+    EditOutlined,
     PlusOutlined,
   },
   setup() {
@@ -125,7 +153,7 @@ export default defineComponent({
         });
     };
 
-    const createFormRules = {
+    const collectionFormRules = {
       title: [
         {
           required: true,
@@ -135,40 +163,56 @@ export default defineComponent({
       ],
     };
 
-    const createModal = reactive({
+    const collectionModal = reactive({
       visible: false,
       loading: false,
+      title: '',
       data: {
         title: '',
       } as CollectionForm,
-      rules: createFormRules,
+      callback: Function() as () => void,
+      rules: collectionFormRules,
       layout: {
         labelCol: { span: 4 },
         wrapperCol: { span: 18 },
       },
     });
 
-    const createForm = ref();
+    const collectionForm = ref();
 
-    const resetCreateForm = (): void => {
-      createForm.value.resetFields();
+    const resetCollectionForm = (): void => {
+      collectionForm.value.resetFields();
     };
 
     const openCreateModal = (): void => {
-      createModal.visible = true;
+      collectionModal.visible = true;
+      collectionModal.title = 'Create new collection';
+      collectionModal.data = {
+        title: '',
+      };
+      collectionModal.callback = createCollection;
     };
 
-    const closeCreateModal = (): void => {
-      createModal.visible = false;
-      createModal.loading = false;
-      resetCreateForm();
+    const openEditModal = (collection: CollectionInfo): void => {
+      collectionModal.visible = true;
+      collectionModal.title = 'Edit collection';
+      collectionModal.data = {
+        title: collection.title,
+      };
+      collectionModal.callback = () => editCollection(collection.collectionId);
+    };
+
+    const closeCollectionModal = (): void => {
+      collectionModal.visible = false;
+      collectionModal.loading = false;
+      resetCollectionForm();
     };
 
     const createCollection = (): void => {
       collectionClient
         .createCollection({
           userId: userId.value,
-          ...createModal.data,
+          ...collectionModal.data,
         } as CreateCollectionReq)
         .then((resp: CreateCollectionResp) => {
           console.log('createCollection', resp);
@@ -178,8 +222,59 @@ export default defineComponent({
               `Failed to create collection, user not logged in or not verified.`
             );
           } else {
-            resetCreateForm();
-            createModal.visible = false;
+            resetCollectionForm();
+            collectionModal.visible = false;
+            getCollections();
+          }
+        })
+        .catch((err: AxiosError) => {
+          openNotification(
+            'error',
+            `Failed to load collections, error: ${err.message}`
+          );
+        });
+    };
+
+    const deleteCollection = (collectionId: number): void => {
+      collectionClient
+        .deleteCollection({
+          collectionId,
+        } as DeleteCollectionReq)
+        .then((resp: DeleteCollectionResp) => {
+          console.log('deleteCollection', resp);
+          if (resp.status !== 'success') {
+            openNotification(
+              'error',
+              `Failed to delete collection, user not logged in or not verified.`
+            );
+          } else {
+            getCollections();
+          }
+        })
+        .catch((err: AxiosError) => {
+          openNotification(
+            'error',
+            `Failed to load collections, error: ${err.message}`
+          );
+        });
+    };
+
+    const editCollection = (collectionId: number): void => {
+      collectionClient
+        .editCollection({
+          collectionId,
+          ...collectionModal.data,
+        } as EditCollectionReq)
+        .then((resp: EditCollectionResp) => {
+          console.log('editCollection', resp);
+          if (resp.status !== 'success') {
+            openNotification(
+              'error',
+              `Failed to edit collection, user not logged in or not verified.`
+            );
+          } else {
+            resetCollectionForm();
+            collectionModal.visible = false;
             getCollections();
           }
         })
@@ -194,11 +289,12 @@ export default defineComponent({
     return {
       collections,
       getCollections,
-      createForm,
-      createModal,
+      collectionForm,
+      collectionModal,
       openCreateModal,
-      closeCreateModal,
-      createCollection,
+      openEditModal,
+      closeCollectionModal,
+      deleteCollection,
     };
   },
   created() {

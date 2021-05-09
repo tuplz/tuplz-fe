@@ -50,3 +50,7 @@ export interface GetCollectionResp extends Status {
 }
 
 export type CreateCollectionResp = Status;
+
+export type DeleteCollectionResp = Status;
+
+export type EditCollectionResp = Status;

@@ -1,6 +1,10 @@
 import {
   CreateCollectionReq,
   CreateCollectionResp,
+  DeleteCollectionReq,
+  DeleteCollectionResp,
+  EditCollectionReq,
+  EditCollectionResp,
   GetCollectionReq,
   GetCollectionResp,
   GetCollectionsReq,
@@ -12,6 +16,8 @@ import {
   mockGetCollectionsResp,
   mockGetCollectionResp,
   mockCreateCollectionResp,
+  mockEditCollectionResp,
+  mockDeleteCollectionResp,
 } from '@/api/mock';
 
 const getCollections = (req: GetCollectionsReq): Promise<GetCollectionsResp> =>
@@ -65,10 +71,48 @@ const createCollection = (
       });
   });
 
+const deleteCollection = (
+  req: DeleteCollectionReq
+): Promise<DeleteCollectionResp> =>
+  new Promise((resolve, reject) => {
+    axios
+      .delete<DeleteCollectionReq, AxiosResponse<DeleteCollectionResp>>(
+        `${collectionsApiUrl}/${req.collectionId}`
+      )
+      .then((resp) => {
+        resolve(resp.data);
+      })
+      .catch((err: AxiosError) => {
+        process.env.NODE_ENV === 'development'
+          ? resolve(mockDeleteCollectionResp)
+          : reject(err);
+      });
+  });
+
+const editCollection = (req: EditCollectionReq): Promise<EditCollectionResp> =>
+  new Promise((resolve, reject) => {
+    const { collectionId, ...reqBody } = req;
+    axios
+      .put<EditCollectionReq, AxiosResponse<EditCollectionResp>>(
+        `${collectionsApiUrl}/${collectionId}`,
+        reqBody
+      )
+      .then((resp) => {
+        resolve(resp.data);
+      })
+      .catch((err: AxiosError) => {
+        process.env.NODE_ENV === 'development'
+          ? resolve(mockEditCollectionResp)
+          : reject(err);
+      });
+  });
+
 const collectionClient = {
   getCollections,
   getCollection,
   createCollection,
+  deleteCollection,
+  editCollection,
 };
 
 export default collectionClient;

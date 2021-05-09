@@ -1,5 +1,7 @@
 import {
   CreateCollectionResp,
+  DeleteCollectionResp,
+  EditCollectionResp,
   GetCollectionResp,
   GetCollectionsResp,
 } from '@/components/types';
@@ -35,3 +37,7 @@ export const mockGetCollectionResp: GetCollectionResp = mock({
 });
 
 export const mockCreateCollectionResp: CreateCollectionResp = mockStatusTemplate;
+
+export const mockDeleteCollectionResp: DeleteCollectionResp = mockStatusTemplate;
+
+export const mockEditCollectionResp: EditCollectionResp = mockStatusTemplate;

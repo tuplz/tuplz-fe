@@ -46,3 +46,9 @@ export interface GetCollectionReq {
 export interface CreateCollectionReq
   extends ReqHeader,
     Required<CollectionForm> {}
+
+export type DeleteCollectionReq = GetCollectionReq;
+
+export interface EditCollectionReq
+  extends CreateCollectionReq,
+    DeleteCollectionReq {}
