@@ -104,34 +104,14 @@
       </a-typography>
     </a-card>
 
-    <a-card title="Reviews">
-      <a-list
-        item-layout="horizontal"
-        :data-source="recommendsInfo.data"
-        :loading="recommendsInfo.loading"
-        :row-key="recommendsInfo.rowKey"
-      >
-        <template #renderItem="{ item }">
-          <a-list-item key="item.recommendId">
-            <a-list-item-meta :description="item.message">
-              <template #title>
-                <span>
-                  {{ item.username || defaultUsername }}
-                </span>
-              </template>
-              <template #avatar>
-                <a-avatar
-                  size="large"
-                  style="font-size: 20px"
-                >
-                  {{ (item.username || defaultUsername)[0].toUpperCase() }}
-                </a-avatar>
-              </template>
-            </a-list-item-meta>
-          </a-list-item>
-        </template>
-      </a-list>
-    </a-card>
+    <recommend-list
+      :recommends="recommendsInfo.data"
+      :loading="recommendsInfo.loading"
+    />
+    <recommend-form
+      :problem-id="getProblemId()"
+      @submit="getRecommends()"
+    />
   </a-space>
 </template>
 
@@ -149,11 +129,15 @@ import {
   Problem,
   Recommend,
 } from '@/components/types';
+import { RecommendForm, RecommendList } from '@/components';
 import { problemClient, recommendClient } from '@/api';
 import { openNotification, title } from '@/mixins';
-import { defaultUsername } from '@/utils/config';
 
 export default defineComponent({
+  components: {
+    RecommendForm,
+    RecommendList,
+  },
   setup() {
     const route = useRoute();
     const router = useRouter();
@@ -197,12 +181,6 @@ export default defineComponent({
       loading: false,
     });
 
-    const recommendsInfo = reactive({
-      data: [] as Recommend[],
-      loading: false,
-      rowKey: 'recommendId',
-    });
-
     const getProblem = (): void => {
       problemInfo.loading = true;
       problemClient
@@ -224,7 +202,7 @@ export default defineComponent({
             problemInfo.data = resp.problem;
             document.title = `${getProblemId()}. ${
               problemInfo.data.content.title
-            } - ${title}`;
+            } - Problems - ${title}`;
             problemInfo.loading = false;
           }
         })
@@ -235,6 +213,11 @@ export default defineComponent({
           );
         });
     };
+
+    const recommendsInfo = reactive({
+      data: [] as Recommend[],
+      loading: false,
+    });
 
     const getRecommends = (): void => {
       recommendsInfo.loading = true;
@@ -262,10 +245,10 @@ export default defineComponent({
     };
 
     return {
-      defaultUsername,
       getProblemId,
       problemInfo,
       recommendsInfo,
+      getRecommends,
       refresh,
     };
   },

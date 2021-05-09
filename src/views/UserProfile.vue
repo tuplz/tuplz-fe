@@ -20,8 +20,17 @@ export default defineComponent({
     MyCollections,
     MyProfile,
   },
+  setup() {
+    const refresh = (): void => {
+      document.title = `My Profile - ${title}`;
+    };
+
+    return {
+      refresh,
+    };
+  },
   created() {
-    document.title = `My Profile - ${title}`;
+    this.refresh();
   },
 });
 </script>
