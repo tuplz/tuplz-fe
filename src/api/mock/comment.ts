@@ -24,7 +24,6 @@ export const mockGetCommentsResp: GetCommentsResp = mock({
       userId: '@guid',
       username: '@first',
       replyTo: '@integer(-1, 0)',
-      response: [1, 2, 3, 4, 5],
       isReply: false,
     },
   ],

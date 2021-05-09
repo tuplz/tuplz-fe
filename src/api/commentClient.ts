@@ -5,7 +5,7 @@ import {
   UploadCommentResp,
 } from '@/components/types';
 import axios, { AxiosError, AxiosResponse } from 'axios';
-import { commentsApiUrl, recommendsApiUrl } from '@/utils/config';
+import { recommendsApiUrl } from '@/utils/config';
 import { mockGetCommentsResp, mockUploadCommentResp } from '@/api/mock';
 
 const getComments = (req: GetCommentsReq): Promise<GetCommentsResp> =>
@@ -32,7 +32,7 @@ const uploadComment = (req: UploadCommentReq): Promise<UploadCommentResp> =>
   new Promise((resolve, reject) => {
     axios
       .post<UploadCommentReq, AxiosResponse<UploadCommentResp>>(
-        commentsApiUrl,
+        `${recommendsApiUrl}/${req.recommendId}/comments`,
         req
       )
       .then((resp: AxiosResponse<UploadCommentResp>) => {

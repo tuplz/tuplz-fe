@@ -17,7 +17,9 @@
             size="large"
             style="font-size: 20px"
           >
-            {{ recommendInfo.data.username[0].toUpperCase() }}
+            {{
+              (recommendInfo.data.username || defaultUsername)[0].toUpperCase()
+            }}
           </a-avatar>
         </template>
       </a-card-meta>
@@ -34,24 +36,19 @@
           <a-list-item>
             <a-comment>
               <template #actions>
-                <span
-                  key="comment-nested-reply-to"
-                  @click="item.isReply = !item.isReply"
-                >
+                <span @click="item.reply.visible = !item.reply.visible">
                   Reply to
                 </span>
-                <span v-show="item.isReply">
+                <span v-show="item.reply.visible">
                   <a-form
-                    ref="form"
-                    :model="commentForm.data"
+                    ref="item.reply.data.commentForm"
+                    :model="item.reply.data.commentContent"
                     style="margin-top: 24px"
                     @finish="handleFinish(item.commentId)"
                   >
                     <a-form-item>
                       <a-textarea
-                        v-model:value="
-                          commentForm.data[item.commentId].commentContent
-                        "
+                        v-model:value="item.reply.data.commentContent"
                         :rows="4"
                       />
                     </a-form-item>
@@ -89,14 +86,14 @@
     </a-card>
   </a-space>
   <a-form
-    ref="form"
-    :model="commentForm"
+    ref="commentForm"
+    :model="commentModal"
     style="margin-top: 24px"
     @finish="handleFinish(-1)"
   >
     <a-form-item>
       <a-textarea
-        v-model:value="commentForm.commentContent"
+        v-model:value="commentModal.commentContent"
         :rows="4"
       />
     </a-form-item>
@@ -112,7 +109,7 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, reactive, ref } from 'vue';
+import { computed, defineComponent, reactive, Ref, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useStore } from '@/store';
 import { AxiosError } from 'axios';
@@ -138,8 +135,7 @@ export default defineComponent({
     const router = useRouter();
     const store = useStore();
     const userId = computed((): string => store.state.id);
-    const form = ref();
-
+    const commentForm = ref();
     const getRecommendId = (): number => {
       if (Array.isArray(route.params.id)) {
         console.log('Invalid route for parsing Recommend ID.');
@@ -196,9 +192,10 @@ export default defineComponent({
         });
     };
 
-    const commentForm = reactive({
-      data: [] as CommentForm[],
-    });
+    const commentModal = reactive({
+      recommendId: getRecommendId(),
+      commentContent: '',
+    } as CommentForm);
 
     const getComments = (): void => {
       commentsInfo.loading = true;
@@ -209,15 +206,19 @@ export default defineComponent({
         } as GetCommentsReq)
         .then((resp: GetCommentsResp) => {
           console.log('getComments', resp);
-
-          commentsInfo.data = resp.comments;
-          var len = commentsInfo.data.length;
-          for (var i = 0; i < len; i++) {
-            commentForm.data.push({
-              commentContent: '',
-              recommendId: getRecommendId(),
-            });
-          }
+          commentsInfo.data = resp.comments.map((comment: Comment) =>
+            Object.assign(comment, {
+              reply: {
+                data: {
+                  commentContent: '',
+                  recommendId: getRecommendId(),
+                  CommentForm: ref(),
+                } as CommentForm,
+                visible: false,
+              },
+            })
+          );
+          console.log(commentsInfo.data);
           commentsInfo.loading = false;
         })
         .catch((err: AxiosError) => {
@@ -228,18 +229,18 @@ export default defineComponent({
         });
     };
 
-    const resetForm = (): void => {
+    const resetForm = (form: Ref): void => {
       form.value.resetFields();
     };
 
-    const uploadComment = (id: number): void => {
-      console.log(id);
+    const uploadComment = (replyTo: number): void => {
+      console.log(replyTo);
+      // console.log(commentsInfo.data[id].reply?.data.commentContent)
       commentClient
         .uploadComment({
           userId: store.state.id,
-          replyTo: id,
-          id: getRecommendId(),
-          ...commentForm.data[id],
+          replyTo: replyTo,
+          ...commentsInfo.data[replyTo].reply?.data,
         } as UploadCommentReq)
         .then((resp: UploadCommentResp): void => {
           console.log(resp);
@@ -249,7 +250,8 @@ export default defineComponent({
               `Failed to upload recommendation, user not logged in.`
             );
           } else {
-            resetForm();
+            if (replyTo == -1) resetForm(commentForm);
+            else resetForm(commentsInfo.data[replyTo].reply?.commentForm);
           }
         })
         .catch((err: AxiosError): void => {
@@ -260,13 +262,8 @@ export default defineComponent({
         });
     };
 
-    const handleFinish = (id: number): void => {
-      uploadComment(id);
-    };
-
-    const doReply = (id: number): void => {
-      console.log(id);
-      commentsInfo.data[id].isReply = !commentsInfo.data[id].isReply;
+    const handleFinish = (replyTo: number): void => {
+      uploadComment(replyTo);
     };
 
     const refresh = (): void => {
@@ -279,11 +276,11 @@ export default defineComponent({
       getRecommendId,
       recommendInfo,
       commentsInfo,
+      commentModal,
       commentForm,
       refresh,
       getComments,
       handleFinish,
-      doReply,
     };
   },
   created() {

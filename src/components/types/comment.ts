@@ -1,11 +1,17 @@
+import { Ref } from 'vue';
+
 export interface Comment {
   commentId: number;
   updateTime: string;
   commentContent: string;
-  userId: number;
+  userId: string;
   username: string;
   replyTo: number;
-  isReply: boolean;
+  reply?: {
+    data: CommentForm;
+    commentForm: Ref;
+    visible: boolean;
+  };
 }
 
 export interface CommentForm {
