@@ -14,3 +14,7 @@ export interface CollectionInfo extends CollectionBase {
 export interface Collection extends CollectionBase {
   problems: Problem[];
 }
+
+export interface CollectionForm {
+  title: string;
+}

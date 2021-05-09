@@ -1,4 +1,4 @@
-import { RecommendForm } from '.';
+import { CollectionForm, RecommendForm } from '.';
 
 interface ReqHeader {
   userId: string;
@@ -42,3 +42,7 @@ export type GetCollectionsReq = ReqHeader;
 export interface GetCollectionReq {
   collectionId: number;
 }
+
+export interface CreateCollectionReq
+  extends ReqHeader,
+    Required<CollectionForm> {}

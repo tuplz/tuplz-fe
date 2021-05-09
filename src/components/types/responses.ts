@@ -48,3 +48,5 @@ export interface GetCollectionsResp extends Status {
 export interface GetCollectionResp extends Status {
   collection: Collection;
 }
+
+export type CreateCollectionResp = Status;

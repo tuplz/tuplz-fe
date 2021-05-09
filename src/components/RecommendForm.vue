@@ -17,7 +17,7 @@
         >
           Submit
         </a-button>
-        <a-button @click="resetForm">
+        <a-button @click="resetRecommendForm">
           Reset
         </a-button>
       </a-space>
@@ -86,8 +86,8 @@ export default defineComponent({
               `Failed to upload recommendation, user not logged in or not verified.`
             );
           } else {
+            resetRecommendForm();
             emit('submit');
-            resetForm();
           }
         })
         .catch((err: AxiosError): void => {
@@ -98,7 +98,7 @@ export default defineComponent({
         });
     };
 
-    const resetForm = (): void => {
+    const resetRecommendForm = (): void => {
       recommendForm.value.resetFields();
     };
 
@@ -106,7 +106,7 @@ export default defineComponent({
       recommendForm,
       recommend,
       uploadRecommend,
-      resetForm,
+      resetRecommendForm,
     };
   },
 });

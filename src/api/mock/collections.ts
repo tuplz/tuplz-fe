@@ -1,4 +1,8 @@
-import { GetCollectionResp, GetCollectionsResp } from '@/components/types';
+import {
+  CreateCollectionResp,
+  GetCollectionResp,
+  GetCollectionsResp,
+} from '@/components/types';
 import { mockProblemTemplate } from './problems';
 import { mockStatusTemplate } from './status';
 import { mock } from 'mockjs';
@@ -29,3 +33,5 @@ export const mockGetCollectionResp: GetCollectionResp = mock({
   ...mockStatusTemplate,
   collection: mockCollectionTemplate,
 });
+
+export const mockCreateCollectionResp: CreateCollectionResp = mockStatusTemplate;
