@@ -33,6 +33,8 @@ export interface UserLoginResp extends Status {
 
 export type UserRegisterResp = UserLoginResp;
 
+export type ChangePasswordResp = Status;
+
 export interface GetUserProfileResp extends Status {
   user: User;
 }

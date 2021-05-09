@@ -1,8 +1,10 @@
 import {
+  ChangePasswordResp,
   EditUserProfileResp,
   GetUserProfileResp,
   SendVerifyEmailResp,
   UserLoginResp,
+  UserRegisterResp,
   VerifyEmailResp,
 } from '@/components/types';
 import { mockStatusTemplate } from './status';
@@ -13,6 +15,10 @@ export const mockUserLoginResp: UserLoginResp = mock({
   id: '@guid',
   key: '@guid',
 });
+
+export const mockUserRegisterResp: UserRegisterResp = mockUserLoginResp;
+
+export const mockChangePasswordResp: ChangePasswordResp = mockStatusTemplate;
 
 export const mockGetUserProfileResp: GetUserProfileResp = mock({
   ...mockStatusTemplate,

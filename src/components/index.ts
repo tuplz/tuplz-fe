@@ -1,3 +1,4 @@
+export { default as ChangePassword } from './ChangePassword.vue';
 export { default as MyCollections } from './MyCollections.vue';
 export { default as MyProfile } from './MyProfile.vue';
 export { default as ProblemTable } from './ProblemTable.vue';

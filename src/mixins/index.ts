@@ -29,7 +29,7 @@ export const parseDatetime = (isoDatetime: string): string =>
 export const validateEmail = async (
   _rule: RuleObject,
   value: string
-): Promise<string | void> => {
+): Promise<void> => {
   const level = IsEmail.validate(value, { errorLevel: 8 });
   console.log(`E-mail validation error level: ${level}`);
   if (level) {

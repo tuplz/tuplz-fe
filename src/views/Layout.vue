@@ -37,6 +37,15 @@
                 </router-link>
               </a-menu-item>
               <a-menu-item>
+                <router-link
+                  class="router-link"
+                  :to="{ name: 'Settings' }"
+                >
+                  <SettingOutlined class="menu-icon" />
+                  Settings
+                </router-link>
+              </a-menu-item>
+              <a-menu-item>
                 <span @click="logout">
                   <LogoutOutlined class="menu-icon" />
                   Logout
@@ -156,6 +165,7 @@ import {
   LogoutOutlined,
   MailOutlined,
   ProfileOutlined,
+  SettingOutlined,
   UserOutlined,
 } from '@ant-design/icons-vue';
 import { ValidateErrorEntity } from 'ant-design-vue/lib/form/interface';
@@ -178,6 +188,7 @@ export default defineComponent({
     LogoutOutlined,
     MailOutlined,
     ProfileOutlined,
+    SettingOutlined,
     UserOutlined,
   },
   setup() {

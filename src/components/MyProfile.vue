@@ -182,6 +182,7 @@ export default defineComponent({
       ],
       email: [
         {
+          required: true,
           validator: validateEmail,
           trigger: 'blur',
         },

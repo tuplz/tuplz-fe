@@ -1,4 +1,6 @@
 import {
+  ChangePasswordReq,
+  ChangePasswordResp,
   EditUserProfileReq,
   EditUserProfileResp,
   GetUserProfileReq,
@@ -16,10 +18,12 @@ import axios, { AxiosError, AxiosResponse } from 'axios';
 import { store } from '@/store';
 import { userApiUrl, usersApiUrl } from '@/utils/config';
 import {
+  mockChangePasswordResp,
   mockEditUserProfileResp,
   mockGetUserProfileResp,
   mockSendVerifyEmailResp,
   mockUserLoginResp,
+  mockUserRegisterResp,
   mockVerifyEmailResp,
 } from '@/api/mock';
 
@@ -61,7 +65,25 @@ const userRegister = (req: UserRegisterReq): Promise<UserRegisterResp> =>
       })
       .catch((err: AxiosError) => {
         process.env.NODE_ENV === 'development'
-          ? resolve(mockUserLoginResp)
+          ? resolve(mockUserRegisterResp)
+          : reject(err);
+      });
+  });
+
+const changePassword = (req: ChangePasswordReq): Promise<ChangePasswordResp> =>
+  new Promise((resolve, reject) => {
+    const { userId, ...reqBody } = req;
+    axios
+      .patch<void, AxiosResponse<ChangePasswordResp>>(
+        `${usersApiUrl}/${userId}`,
+        reqBody
+      )
+      .then((resp) => {
+        resolve(resp.data);
+      })
+      .catch((err: AxiosError) => {
+        process.env.NODE_ENV === 'development'
+          ? resolve(mockChangePasswordResp)
           : reject(err);
       });
   });
@@ -143,6 +165,7 @@ const userClient = {
   removeAuthHeader,
   userLogin,
   userRegister,
+  changePassword,
   getUserProfile,
   editUserProfile,
   sendVerifyEmail,

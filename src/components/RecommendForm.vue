@@ -4,7 +4,6 @@
     :model="recommend.data"
     :rules="recommend.rules"
     v-bind="recommend.layout"
-    @finish="uploadRecommend"
   >
     <a-form-item name="recommendReason">
       <a-textarea v-model:value="recommend.data.recommendReason" />
@@ -13,7 +12,7 @@
       <a-space>
         <a-button
           type="primary"
-          @click="uploadRecommend"
+          @click="submitRecommendForm"
         >
           Submit
         </a-button>
@@ -37,6 +36,7 @@ import {
 } from '@/components/types';
 import { recommendClient } from '@/api';
 import { openNotification } from '@/mixins';
+import { ValidateErrorEntity } from 'ant-design-vue/lib/form/interface';
 
 export default defineComponent({
   props: {
@@ -98,6 +98,20 @@ export default defineComponent({
         });
     };
 
+    const submitRecommendForm = (): void => {
+      recommendForm.value
+        .validate()
+        .then((): void => {
+          uploadRecommend();
+        })
+        .catch((_error: ValidateErrorEntity): void => {
+          openNotification(
+            'warn',
+            'Please make sure all fields are filled in correctly.'
+          );
+        });
+    };
+
     const resetRecommendForm = (): void => {
       recommendForm.value.resetFields();
     };
@@ -106,6 +120,7 @@ export default defineComponent({
       recommendForm,
       recommend,
       uploadRecommend,
+      submitRecommendForm,
       resetRecommendForm,
     };
   },

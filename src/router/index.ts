@@ -16,6 +16,8 @@ const CollectionPage = () =>
   import(/* webpackChunkName: "collectionPage" */ '@/views/CollectionPage.vue');
 const UserProfile = () =>
   import(/* webpackChunkName: "userProfile" */ '@/views/UserProfile.vue');
+const UserSettings = () =>
+  import(/* webpackChunkName: "userSettings" */ '@/views/UserSettings.vue');
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -47,6 +49,14 @@ const routes: Array<RouteRecordRaw> = [
         path: 'profile',
         name: 'UserProfile',
         component: UserProfile,
+        meta: {
+          requiresLogin: true,
+        },
+      },
+      {
+        path: 'settings',
+        name: 'Settings',
+        component: UserSettings,
         meta: {
           requiresLogin: true,
         },
