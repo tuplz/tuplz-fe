@@ -1,6 +1,7 @@
 ## Customized
 
 .DS_Store
+yarn.lock
 
 
 ## Node.js
