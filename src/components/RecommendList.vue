@@ -7,7 +7,7 @@
       row-key="recommendId"
     >
       <template #renderItem="{ item }">
-        <a-list-item key="item.recommendId">
+        <a-list-item :key="item.recommendId">
           <a-list-item-meta :description="item.message">
             <template #title>
               <span>

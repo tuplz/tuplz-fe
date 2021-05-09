@@ -10,7 +10,7 @@
     </template>
     <a-list :data-source="collections.data">
       <template #renderItem="{ item }">
-        <a-list-item key="item.collectionId">
+        <a-list-item :key="item.collectionId">
           <a-list-item-meta>
             <template #title>
               <router-link
