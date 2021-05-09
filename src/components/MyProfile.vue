@@ -235,6 +235,7 @@ export default defineComponent({
         .then((resp: GetUserProfileResp) => {
           console.log('getUserProfile', resp);
           userInfo.data = resp.user;
+          store.state.username = resp.user.username;
           userInfo.loading = false;
         })
         .catch((err: AxiosError) => {
