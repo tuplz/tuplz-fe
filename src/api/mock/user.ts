@@ -6,14 +6,19 @@ import {
 } from '@/components/types';
 import { mock } from 'mockjs';
 
-export const mockUserLoginResp: UserLoginResp = mock({
+const mockStatusTemplate = {
+  code: 200,
   status: 'success',
+};
+
+export const mockUserLoginResp: UserLoginResp = mock({
+  ...mockStatusTemplate,
   id: '@guid',
   key: '@guid',
 });
 
 export const mockGetUserProfileResp: GetUserProfileResp = mock({
-  status: 'success',
+  ...mockStatusTemplate,
   user: {
     userId: '@guid',
     username: '@first',
@@ -23,7 +28,7 @@ export const mockGetUserProfileResp: GetUserProfileResp = mock({
 });
 
 export const mockSendVerifyEmailResp: SendVerifyEmailResp = mock({
-  status: 'success',
+  ...mockStatusTemplate,
 });
 
 export const mockVerifyEmailResp: VerifyEmailResp = mockSendVerifyEmailResp;

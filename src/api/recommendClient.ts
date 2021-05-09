@@ -13,7 +13,7 @@ const getRecommends = (): Promise<GetRecommendsResp> =>
   new Promise((resolve, reject) => {
     axios
       .get<void, AxiosResponse<GetRecommendsResp>>(recommendsApiUrl)
-      .then((resp: AxiosResponse<GetRecommendsResp>) => {
+      .then((resp) => {
         resolve(resp.data);
       })
       .catch((err: AxiosError) => {
@@ -31,7 +31,7 @@ const getProblemRecommends = (
       .get<void, AxiosResponse<GetProblemRecommendsResp>>(
         `${problemsApiUrl}/${req.id}/recommends`
       )
-      .then((resp: AxiosResponse<GetProblemRecommendsResp>) => {
+      .then((resp) => {
         resolve(resp.data);
       })
       .catch((err: AxiosError) => {
@@ -50,7 +50,7 @@ const uploadRecommend = (
         recommendsApiUrl,
         req
       )
-      .then((resp: AxiosResponse<UploadRecommendResp>) => {
+      .then((resp) => {
         resolve(resp.data);
       })
       .catch((err: AxiosError) => {

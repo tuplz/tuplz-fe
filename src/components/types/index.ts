@@ -1,3 +1,4 @@
+export * from './collection';
 export * from './problem';
 export * from './recommend';
 export * from './responses';

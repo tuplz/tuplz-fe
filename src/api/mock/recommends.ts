@@ -5,7 +5,12 @@ import {
 } from '@/components/types';
 import { mock } from 'mockjs';
 
-const mockRecommendTemplate = {
+const mockStatusTemplate = {
+  code: 200,
+  status: 'success',
+};
+
+export const mockRecommendTemplate = {
   recommendId: '@integer(1, 10000)',
   userId: '@guid',
   username: '@first',
@@ -15,12 +20,12 @@ const mockRecommendTemplate = {
 };
 
 export const mockGetRecommendsResp: GetRecommendsResp = mock({
-  status: 'success',
+  ...mockStatusTemplate,
   'recommends|1-10': [mockRecommendTemplate],
 });
 
 export const mockGetRecommendResp: GetRecommendResp = mock({
-  status: 'success',
+  ...mockStatusTemplate,
   recommend: mockRecommendTemplate,
 });
 

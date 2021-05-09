@@ -36,7 +36,7 @@ const userLogin = (req: UserLoginReq): Promise<UserLoginResp> =>
         `${userApiUrl}/login`,
         req
       )
-      .then((resp: AxiosResponse<UserLoginResp>) => {
+      .then((resp) => {
         resolve(resp.data);
       })
       .catch((err: AxiosError) => {
@@ -53,7 +53,7 @@ const userRegister = (req: UserRegisterReq): Promise<UserRegisterResp> =>
         `${userApiUrl}/register`,
         req
       )
-      .then((resp: AxiosResponse<UserRegisterResp>) => {
+      .then((resp) => {
         resolve(resp.data);
       })
       .catch((err: AxiosError) => {
@@ -69,7 +69,7 @@ const getUserProfile = (req: GetUserProfileReq): Promise<GetUserProfileResp> =>
       .get<void, AxiosResponse<GetUserProfileResp>>(
         `${usersApiUrl}/${req.userId}`
       )
-      .then((resp: AxiosResponse<GetUserProfileResp>) => {
+      .then((resp) => {
         resolve(resp.data);
       })
       .catch((err: AxiosError) => {
@@ -88,7 +88,7 @@ const sendVerifyEmail = (
         `${userApiUrl}/verify/email`,
         req
       )
-      .then((resp: AxiosResponse<SendVerifyEmailResp>) => {
+      .then((resp) => {
         resolve(resp.data);
       })
       .catch((err: AxiosError) => {
@@ -105,7 +105,7 @@ const verifyEmail = (req: VerifyEmailReq): Promise<VerifyEmailResp> =>
         `${userApiUrl}/verify/user`,
         req
       )
-      .then((resp: AxiosResponse<VerifyEmailResp>) => {
+      .then((resp) => {
         resolve(resp.data);
       })
       .catch((err: AxiosError) => {

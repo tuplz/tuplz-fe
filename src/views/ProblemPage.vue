@@ -2,6 +2,7 @@
 <template>
   <a-space
     direction="vertical"
+    size="large"
     style="width: 100%"
   >
     <a-card
@@ -102,6 +103,7 @@
         </div>
       </a-typography>
     </a-card>
+
     <a-card title="Reviews">
       <a-list
         item-layout="horizontal"
@@ -110,7 +112,7 @@
         :row-key="recommendsInfo.rowKey"
       >
         <template #renderItem="{ item }">
-          <a-list-item>
+          <a-list-item key="item.recommendId">
             <a-list-item-meta :description="item.message">
               <template #title>
                 <span>

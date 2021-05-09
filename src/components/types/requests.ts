@@ -36,3 +36,9 @@ export interface SendVerifyEmailReq extends ReqHeader {
 export interface VerifyEmailReq extends SendVerifyEmailReq {
   verifyCode: string;
 }
+
+export type GetCollectionsReq = ReqHeader;
+
+export interface GetCollectionReq {
+  collectionId: number;
+}
