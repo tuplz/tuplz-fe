@@ -1,7 +1,8 @@
 import { GetProblemsResp, GetProblemResp } from '@/components/types';
+import { mockStatusTemplate } from './status';
 import { mock } from 'mockjs';
 
-const mockProblemTemplate = {
+export const mockProblemTemplate = {
   id: '@integer(1, 10000)',
   like: '@integer(1, 10000)',
   dislike: '@integer(1, 10000)',
@@ -47,11 +48,11 @@ const mockProblemTemplate = {
 };
 
 export const mockGetProblemsResp: GetProblemsResp = mock({
-  status: 'success',
+  ...mockStatusTemplate,
   'problems|1-500': [mockProblemTemplate],
 });
 
 export const mockGetProblemResp: GetProblemResp = mock({
-  status: 'success',
+  ...mockStatusTemplate,
   problem: mockProblemTemplate,
 });

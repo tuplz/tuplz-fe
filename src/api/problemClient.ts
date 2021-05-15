@@ -14,7 +14,7 @@ const getProblems = (req: GetProblemsReq): Promise<GetProblemsResp> =>
       .get<void, AxiosResponse<GetProblemsResp>>(problemsApiUrl, {
         params: req,
       })
-      .then((resp: AxiosResponse<GetProblemsResp>) => {
+      .then((resp) => {
         resolve(resp.data);
       })
       .catch((err: AxiosError) => {
@@ -28,7 +28,7 @@ const getProblem = (req: GetProblemReq): Promise<GetProblemResp> =>
   new Promise((resolve, reject) => {
     axios
       .get<void, AxiosResponse<GetProblemResp>>(`${problemsApiUrl}/${req.id}`)
-      .then((resp: AxiosResponse<GetProblemResp>) => {
+      .then((resp) => {
         resolve(resp.data);
       })
       .catch((err: AxiosError) => {

@@ -1,6 +1,7 @@
-import { Problem, Recommend, User } from '.';
+import { CollectionInfo, Collection, Problem, Recommend, User } from '.';
 
 interface Status {
+  code: number;
   status: string;
 }
 
@@ -32,10 +33,28 @@ export interface UserLoginResp extends Status {
 
 export type UserRegisterResp = UserLoginResp;
 
+export type ChangePasswordResp = Status;
+
 export interface GetUserProfileResp extends Status {
   user: User;
 }
 
+export type EditUserProfileResp = GetUserProfileResp;
+
 export type SendVerifyEmailResp = Status;
 
 export type VerifyEmailResp = Status;
+
+export interface GetCollectionsResp extends Status {
+  collections: CollectionInfo[];
+}
+
+export interface GetCollectionResp extends Status {
+  collection: Collection;
+}
+
+export type CreateCollectionResp = Status;
+
+export type DeleteCollectionResp = Status;
+
+export type EditCollectionResp = Status;

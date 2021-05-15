@@ -1,4 +1,8 @@
 import {
+  ChangePasswordReq,
+  ChangePasswordResp,
+  EditUserProfileReq,
+  EditUserProfileResp,
   GetUserProfileReq,
   GetUserProfileResp,
   SendVerifyEmailReq,
@@ -14,9 +18,12 @@ import axios, { AxiosError, AxiosResponse } from 'axios';
 import { store } from '@/store';
 import { userApiUrl, usersApiUrl } from '@/utils/config';
 import {
+  mockChangePasswordResp,
+  mockEditUserProfileResp,
   mockGetUserProfileResp,
   mockSendVerifyEmailResp,
   mockUserLoginResp,
+  mockUserRegisterResp,
   mockVerifyEmailResp,
 } from '@/api/mock';
 
@@ -36,7 +43,7 @@ const userLogin = (req: UserLoginReq): Promise<UserLoginResp> =>
         `${userApiUrl}/login`,
         req
       )
-      .then((resp: AxiosResponse<UserLoginResp>) => {
+      .then((resp) => {
         resolve(resp.data);
       })
       .catch((err: AxiosError) => {
@@ -53,12 +60,30 @@ const userRegister = (req: UserRegisterReq): Promise<UserRegisterResp> =>
         `${userApiUrl}/register`,
         req
       )
-      .then((resp: AxiosResponse<UserRegisterResp>) => {
+      .then((resp) => {
         resolve(resp.data);
       })
       .catch((err: AxiosError) => {
         process.env.NODE_ENV === 'development'
-          ? resolve(mockUserLoginResp)
+          ? resolve(mockUserRegisterResp)
+          : reject(err);
+      });
+  });
+
+const changePassword = (req: ChangePasswordReq): Promise<ChangePasswordResp> =>
+  new Promise((resolve, reject) => {
+    const { userId, ...reqBody } = req;
+    axios
+      .patch<void, AxiosResponse<ChangePasswordResp>>(
+        `${usersApiUrl}/${userId}`,
+        reqBody
+      )
+      .then((resp) => {
+        resolve(resp.data);
+      })
+      .catch((err: AxiosError) => {
+        process.env.NODE_ENV === 'development'
+          ? resolve(mockChangePasswordResp)
           : reject(err);
       });
   });
@@ -69,12 +94,32 @@ const getUserProfile = (req: GetUserProfileReq): Promise<GetUserProfileResp> =>
       .get<void, AxiosResponse<GetUserProfileResp>>(
         `${usersApiUrl}/${req.userId}`
       )
-      .then((resp: AxiosResponse<GetUserProfileResp>) => {
+      .then((resp) => {
         resolve(resp.data);
       })
       .catch((err: AxiosError) => {
         process.env.NODE_ENV === 'development'
           ? resolve(mockGetUserProfileResp)
+          : reject(err);
+      });
+  });
+
+const editUserProfile = (
+  req: EditUserProfileReq
+): Promise<EditUserProfileResp> =>
+  new Promise((resolve, reject) => {
+    const { userId, ...reqBody } = req;
+    axios
+      .patch<void, AxiosResponse<EditUserProfileResp>>(
+        `${usersApiUrl}/${userId}`,
+        reqBody
+      )
+      .then((resp) => {
+        resolve(resp.data);
+      })
+      .catch((err: AxiosError) => {
+        process.env.NODE_ENV === 'development'
+          ? resolve(mockEditUserProfileResp)
           : reject(err);
       });
   });
@@ -88,7 +133,7 @@ const sendVerifyEmail = (
         `${userApiUrl}/verify/email`,
         req
       )
-      .then((resp: AxiosResponse<SendVerifyEmailResp>) => {
+      .then((resp) => {
         resolve(resp.data);
       })
       .catch((err: AxiosError) => {
@@ -105,7 +150,7 @@ const verifyEmail = (req: VerifyEmailReq): Promise<VerifyEmailResp> =>
         `${userApiUrl}/verify/user`,
         req
       )
-      .then((resp: AxiosResponse<VerifyEmailResp>) => {
+      .then((resp) => {
         resolve(resp.data);
       })
       .catch((err: AxiosError) => {
@@ -120,7 +165,9 @@ const userClient = {
   removeAuthHeader,
   userLogin,
   userRegister,
+  changePassword,
   getUserProfile,
+  editUserProfile,
   sendVerifyEmail,
   verifyEmail,
 };

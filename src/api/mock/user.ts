@@ -1,19 +1,27 @@
 import {
+  ChangePasswordResp,
+  EditUserProfileResp,
   GetUserProfileResp,
   SendVerifyEmailResp,
   UserLoginResp,
+  UserRegisterResp,
   VerifyEmailResp,
 } from '@/components/types';
+import { mockStatusTemplate } from './status';
 import { mock } from 'mockjs';
 
 export const mockUserLoginResp: UserLoginResp = mock({
-  status: 'success',
+  ...mockStatusTemplate,
   id: '@guid',
   key: '@guid',
 });
 
+export const mockUserRegisterResp: UserRegisterResp = mockUserLoginResp;
+
+export const mockChangePasswordResp: ChangePasswordResp = mockStatusTemplate;
+
 export const mockGetUserProfileResp: GetUserProfileResp = mock({
-  status: 'success',
+  ...mockStatusTemplate,
   user: {
     userId: '@guid',
     username: '@first',
@@ -22,8 +30,10 @@ export const mockGetUserProfileResp: GetUserProfileResp = mock({
   },
 });
 
+export const mockEditUserProfileResp: EditUserProfileResp = mockGetUserProfileResp;
+
 export const mockSendVerifyEmailResp: SendVerifyEmailResp = mock({
-  status: 'success',
+  ...mockStatusTemplate,
 });
 
 export const mockVerifyEmailResp: VerifyEmailResp = mockSendVerifyEmailResp;

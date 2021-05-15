@@ -1,4 +1,5 @@
 import { createStore, Store, useStore as baseUseStore } from 'vuex';
+import createPersistedState from 'vuex-persistedstate';
 import { InjectionKey } from '@vue/runtime-core';
 import { AxiosError } from 'axios';
 
@@ -14,30 +15,16 @@ import { defaultUsername } from '@/utils/config';
 
 export const key: InjectionKey<Store<State>> = Symbol();
 
-const saveLocalStorage = (resp: UserLoginResp | UserRegisterResp): void => {
-  const { id, username, key } = resp;
-  localStorage.setItem('token', key);
-  localStorage.setItem('id', id);
-  localStorage.setItem('username', username || defaultUsername);
-  userClient.setAuthHeader();
-};
-
-const removeLocalStorage = (): void => {
-  localStorage.removeItem('token');
-  localStorage.removeItem('id');
-  localStorage.removeItem('username');
-  userClient.removeAuthHeader();
-};
-
 export const store: Store<State> = createStore<State>({
+  plugins: [createPersistedState()],
   state: {
-    status: localStorage.getItem('token') ? 'success' : '',
-    token: localStorage.getItem('token') || '',
-    id: localStorage.getItem('id') || '',
-    username: localStorage.getItem('username') || defaultUsername,
+    status: '',
+    token: '',
+    id: '',
+    username: defaultUsername,
   },
   getters: {
-    isLoggedIn: (state): boolean => !!state.token,
+    isLoggedIn: (state): boolean => Boolean(state.token),
   },
   mutations: {
     authRequest: (state): void => {
@@ -66,13 +53,13 @@ export const store: Store<State> = createStore<State>({
           .then((resp: UserRegisterResp) => {
             if (resp.status === 'success') {
               commit('authSuccess', resp);
-              saveLocalStorage(resp);
+              userClient.setAuthHeader();
               resolve(resp);
             }
           })
           .catch((err: AxiosError) => {
             commit('authError');
-            removeLocalStorage();
+            userClient.removeAuthHeader();
             reject(err);
           });
       }),
@@ -85,13 +72,13 @@ export const store: Store<State> = createStore<State>({
           .then((resp: UserLoginResp) => {
             if (resp.status === 'success') {
               commit('authSuccess', resp);
-              saveLocalStorage(resp);
+              userClient.setAuthHeader();
               resolve(resp);
             }
           })
           .catch((err: AxiosError) => {
             commit('authError');
-            removeLocalStorage();
+            userClient.removeAuthHeader();
             reject(err);
           });
       }),
@@ -99,7 +86,7 @@ export const store: Store<State> = createStore<State>({
     logout: ({ commit }): Promise<void> =>
       new Promise((resolve, _reject) => {
         commit('logout');
-        removeLocalStorage();
+        userClient.removeAuthHeader();
         resolve();
       }),
   },
