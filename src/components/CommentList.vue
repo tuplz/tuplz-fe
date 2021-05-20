@@ -1,5 +1,7 @@
 <template>
-  <a-card title="Comments">
+  <a-card
+    :title="`${comments.length} Comment${comments.length <= 1 ? '' : 's'}`"
+  >
     <comment-form
       :recommend-id="recommendId"
       :reply-to="0"
