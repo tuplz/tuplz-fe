@@ -1,5 +1,11 @@
 <template>
-  <a-card :title="`${recommends.length} Reviews`">
+  <a-card
+    :title="`${recommends.length} Review${recommends.length <= 1 ? '' : 's'}`"
+  >
+    <recommend-form
+      :problem-id="problemId"
+      @submit="$emit('submit')"
+    />
     <a-list
       item-layout="horizontal"
       :data-source="recommends"
@@ -45,20 +51,29 @@
 import { defineComponent, PropType } from 'vue';
 
 import { Recommend } from '@/components/types';
+import { RecommendForm } from '@/components';
 import { parseDatetime } from '@/mixins';
 import { defaultUsername } from '@/utils/config';
 
 export default defineComponent({
+  components: {
+    RecommendForm,
+  },
   props: {
+    problemId: {
+      type: Number,
+      required: true,
+    },
     recommends: {
       type: Array as PropType<Recommend[]>,
       default: () => [] as Recommend[],
     },
     loading: {
       type: Boolean,
-      default: () => false,
+      required: true,
     },
   },
+  emits: ['submit'],
   setup() {
     return {
       defaultUsername,

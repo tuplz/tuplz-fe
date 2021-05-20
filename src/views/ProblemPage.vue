@@ -111,11 +111,9 @@
     </a-page-header>
 
     <recommend-list
+      :problem-id="problemId"
       :recommends="recommendsInfo.data"
       :loading="recommendsInfo.loading"
-    />
-    <recommend-form
-      :problem-id="problemId"
       @submit="getRecommends()"
     />
   </a-space>
@@ -135,13 +133,12 @@ import {
   Problem,
   Recommend,
 } from '@/components/types';
-import { RecommendForm, RecommendList } from '@/components';
+import { RecommendList } from '@/components';
 import { problemClient, recommendClient } from '@/api';
 import { openNotification, title } from '@/mixins';
 
 export default defineComponent({
   components: {
-    RecommendForm,
     RecommendList,
   },
   setup() {

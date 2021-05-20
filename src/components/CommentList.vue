@@ -27,7 +27,7 @@
             </template>
             <template #author>
               <span>
-                {{ item.username }}
+                {{ item.username || defaultUsername }}
               </span>
             </template>
             <template #avatar>

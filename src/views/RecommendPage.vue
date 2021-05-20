@@ -3,26 +3,49 @@
     direction="vertical"
     style="width: 100%"
   >
-    <a-card
-      :title="`Problem #${recommendInfo.data.problemId}`"
-      :loading="recommendInfo.loading"
+    <a-page-header
+      :title="`Back to Problem #${recommendInfo.data.problemId}`"
+      :ghost="false"
+      @back="
+        () =>
+          $router.push({
+            name: 'ProblemPage',
+            params: { id: recommendInfo.data.problemId },
+          })
+      "
     >
-      <a-card-meta
-        :title="recommendInfo.data.username || defaultUsername"
-        :description="recommendInfo.data.message"
+      <a-card
+        :loading="recommendInfo.loading"
+        :bordered="false"
       >
-        <template #avatar>
-          <a-avatar
-            size="large"
-            style="font-size: 20px"
-          >
-            {{
-              (recommendInfo.data.username || defaultUsername)[0].toUpperCase()
-            }}
-          </a-avatar>
-        </template>
-      </a-card-meta>
-    </a-card>
+        <a-card-meta>
+          <template #title>
+            <a-space>
+              <span>
+                {{ recommendInfo.data.username || defaultUsername }}
+              </span>
+              <span style="color: #ccc; font-weight: 400">
+                {{ parseDatetime(recommendInfo.data.updateTime) }}
+              </span>
+            </a-space>
+          </template>
+          <template #avatar>
+            <a-avatar
+              size="large"
+              style="font-size: 20px"
+            >
+              {{
+                (recommendInfo.data.username ||
+                  defaultUsername)[0].toUpperCase()
+              }}
+            </a-avatar>
+          </template>
+        </a-card-meta>
+        <p>
+          {{ recommendInfo.data.message }}
+        </p>
+      </a-card>
+    </a-page-header>
 
     <comment-list
       :comments="commentsInfo.data"
@@ -51,7 +74,7 @@ import {
 } from '@/components/types';
 import { CommentForm, CommentList } from '@/components';
 import { commentClient, recommendClient } from '@/api';
-import { openNotification, title } from '@/mixins';
+import { openNotification, parseDatetime, title } from '@/mixins';
 import { defaultUsername } from '@/utils/config';
 
 export default defineComponent({
@@ -112,7 +135,7 @@ export default defineComponent({
         .catch((err: AxiosError) => {
           openNotification(
             'error',
-            `Failed to load problem, error: ${err.message}`
+            `Failed to load recommendation, error: ${err.message}`
           );
         });
     };
@@ -136,13 +159,15 @@ export default defineComponent({
               },
             })
           );
-          document.title = `Review by ${recommendInfo.data.username} - ${title}`;
+          document.title = `Review by ${
+            recommendInfo.data.username || defaultUsername
+          } - ${title}`;
           commentsInfo.loading = false;
         })
         .catch((err: AxiosError) => {
           openNotification(
             'error',
-            `Failed to load recommendations, error: ${err.message}`
+            `Failed to load comments, error: ${err.message}`
           );
         });
     };
@@ -154,6 +179,7 @@ export default defineComponent({
 
     return {
       defaultUsername,
+      parseDatetime,
       recommendId,
       recommendInfo,
       commentsInfo,
