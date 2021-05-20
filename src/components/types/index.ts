@@ -1,3 +1,4 @@
+export * from './antd';
 export * from './collection';
 export * from './comment';
 export * from './problem';

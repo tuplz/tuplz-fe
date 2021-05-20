@@ -61,7 +61,7 @@ export default defineComponent({
       commentContent: [
         {
           required: true,
-          message: 'Please input at least 1 word',
+          message: 'Please input at least one word',
           trigger: 'blur',
         },
       ],
@@ -114,7 +114,7 @@ export default defineComponent({
         })
         .catch((_error: ValidateErrorEntity): void => {
           openNotification(
-            'warn',
+            'warning',
             'Please make sure all fields are filled in correctly.'
           );
         });

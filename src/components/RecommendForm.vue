@@ -56,7 +56,7 @@ export default defineComponent({
       recommendReason: [
         {
           required: true,
-          message: 'Please input recommend reason',
+          message: 'Please input at least one word',
           trigger: 'blur',
         },
       ],
@@ -109,7 +109,7 @@ export default defineComponent({
         })
         .catch((_error: ValidateErrorEntity): void => {
           openNotification(
-            'warn',
+            'warning',
             'Please make sure all fields are filled in correctly.'
           );
         });

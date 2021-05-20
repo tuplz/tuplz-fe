@@ -281,7 +281,7 @@ export default defineComponent({
         })
         .catch((_error: ValidateErrorEntity<UserLoginReq>): void => {
           openNotification(
-            'warn',
+            'warning',
             'Please make sure all fields are filled in correctly.'
           );
         })

@@ -65,7 +65,7 @@ import {
   ChangePasswordResp,
 } from '@/components/types';
 import { userClient } from '@/api';
-import { openNotification } from '@/mixins';
+import { openMessage, openNotification } from '@/mixins';
 import {
   RuleObject,
   ValidateErrorEntity,
@@ -159,7 +159,7 @@ export default defineComponent({
               `Failed to change password, wrong original password.`
             );
           } else {
-            openNotification('success', `Succeeded to change password.`);
+            openMessage('success', `Succeeded to change password.`);
           }
         })
         .catch((err: AxiosError): void => {
@@ -181,7 +181,7 @@ export default defineComponent({
         })
         .catch((_error: ValidateErrorEntity): void => {
           openNotification(
-            'warn',
+            'warning',
             'Please make sure all fields are filled in correctly.'
           );
         });
