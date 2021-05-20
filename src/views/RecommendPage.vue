@@ -122,7 +122,7 @@ export default defineComponent({
           if (!resp.recommend.recommendId) {
             openNotification(
               'error',
-              `Recommend not found, redirecting to home page.`
+              `Review not found, redirecting to home page.`
             );
             setTimeout((): void => {
               router.replace({ name: 'Problemset' });
@@ -136,7 +136,7 @@ export default defineComponent({
         .catch((err: AxiosError) => {
           openNotification(
             'error',
-            `Failed to load recommendation, error: ${err.message}`
+            `Failed to load review, error: ${err.message}`
           );
         });
     };

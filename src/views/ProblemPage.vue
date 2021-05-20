@@ -234,7 +234,7 @@ export default defineComponent({
         .catch((err: AxiosError) => {
           openNotification(
             'error',
-            `Failed to load recommendations, error: ${err.message}`
+            `Failed to load reviews, error: ${err.message}`
           );
         });
     };

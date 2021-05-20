@@ -38,7 +38,7 @@ import {
   UploadRecommendResp,
 } from '@/components/types';
 import { recommendClient } from '@/api';
-import { openNotification } from '@/mixins';
+import { openMessage, openNotification } from '@/mixins';
 import { ValidateErrorEntity } from 'ant-design-vue/lib/form/interface';
 
 export default defineComponent({
@@ -85,17 +85,18 @@ export default defineComponent({
           if (resp.status !== 'success') {
             openNotification(
               'error',
-              `Failed to upload recommendation, user not logged in or not verified.`
+              `Failed to post review, not logged in or not verified.`
             );
           } else {
             resetRecommendForm();
             emit('submit');
+            openMessage('success', `Succeeded to post review.`);
           }
         })
         .catch((err: AxiosError): void => {
           openNotification(
             'error',
-            `Failed to upload recommendation, error: ${err.message}`
+            `Failed to post review, error: ${err.message}`
           );
         });
     };

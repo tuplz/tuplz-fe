@@ -38,7 +38,7 @@ import {
   UploadCommentResp,
 } from '@/components/types';
 import { commentClient } from '@/api';
-import { openNotification } from '@/mixins';
+import { openMessage, openNotification } from '@/mixins';
 import { ValidateErrorEntity } from 'ant-design-vue/lib/form/interface';
 
 export default defineComponent({
@@ -89,19 +89,14 @@ export default defineComponent({
         .then((resp: UploadCommentResp): void => {
           console.log('uploadComment', resp);
           if (resp.status !== 'success') {
-            openNotification(
-              'error',
-              `Failed to upload comment, user not logged in.`
-            );
+            openNotification('error', `Failed to comment, not logged in.`);
           } else {
             resetCommentForm();
+            openMessage('success', `Succeeded to comment.`);
           }
         })
         .catch((err: AxiosError): void => {
-          openNotification(
-            'error',
-            `Failed to upload comment, error: ${err.message}`
-          );
+          openNotification('error', `Failed to comment, error: ${err.message}`);
         });
     };
 
