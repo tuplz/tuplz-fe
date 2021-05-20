@@ -109,7 +109,7 @@
       :loading="recommendsInfo.loading"
     />
     <recommend-form
-      :problem-id="getProblemId()"
+      :problem-id="problemId"
       @submit="getRecommends()"
     />
   </a-space>
@@ -143,18 +143,17 @@ export default defineComponent({
     const router = useRouter();
     const store = useStore();
     const userId = computed((): string => store.state.id);
-
-    const getProblemId = (): number => {
+    const problemId = computed((): number => {
       if (Array.isArray(route.params.id)) {
         console.log('Invalid route for parsing Problem ID.');
         return parseInt(route.params.id[0]);
       }
       return parseInt(route.params.id);
-    };
+    });
 
     const problemInfo = reactive({
       data: {
-        id: getProblemId(),
+        id: problemId.value,
         like: 0,
         dislike: 0,
         visit: 0,
@@ -186,7 +185,7 @@ export default defineComponent({
       problemClient
         .getProblem({
           userId: userId.value,
-          id: getProblemId(),
+          id: problemId.value,
         } as GetProblemReq)
         .then((resp: GetProblemResp) => {
           if (!resp.problem.id) {
@@ -200,9 +199,7 @@ export default defineComponent({
           } else {
             console.log('getProblem', resp);
             problemInfo.data = resp.problem;
-            document.title = `${getProblemId()}. ${
-              problemInfo.data.content.title
-            } - Problems - ${title}`;
+            document.title = `${problemId.value}. ${problemInfo.data.content.title} - Problems - ${title}`;
             problemInfo.loading = false;
           }
         })
@@ -224,7 +221,7 @@ export default defineComponent({
       recommendClient
         .getProblemRecommends({
           userId: userId.value,
-          id: getProblemId(),
+          id: problemId.value,
         } as GetProblemRecommendsReq)
         .then((resp: GetProblemRecommendsResp) => {
           console.log('getRecommends', resp);
@@ -245,11 +242,11 @@ export default defineComponent({
     };
 
     return {
-      getProblemId,
+      problemId,
       problemInfo,
       recommendsInfo,
-      getRecommends,
       refresh,
+      getRecommends,
     };
   },
   created() {

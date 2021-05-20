@@ -1,5 +1,3 @@
-import { Ref } from 'vue';
-
 export interface Comment {
   commentId: number;
   updateTime: string;
@@ -9,7 +7,6 @@ export interface Comment {
   replyTo: number;
   reply?: {
     data: CommentForm;
-    commentForm: Ref;
     visible: boolean;
   };
 }
@@ -18,5 +15,5 @@ export interface CommentForm {
   recommendId: number;
   commentContent: string;
   userId?: string;
-  replyTo?: number;
+  replyTo: number;
 }

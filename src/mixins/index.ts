@@ -1,3 +1,4 @@
+import { Ref } from 'vue';
 import { notification } from 'ant-design-vue';
 import { RuleObject } from 'ant-design-vue/lib/form/interface';
 import IsEmail from 'isemail';
@@ -37,4 +38,8 @@ export const validateEmail = async (
   } else {
     return Promise.resolve();
   }
+};
+
+export const resetForm = (form: Ref): void => {
+  form.value.resetFields();
 };

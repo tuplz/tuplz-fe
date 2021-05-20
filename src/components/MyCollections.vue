@@ -115,7 +115,7 @@ import {
   GetCollectionsResp,
 } from '@/components/types';
 import { collectionClient } from '@/api';
-import { openNotification } from '@/mixins';
+import { openNotification, resetForm } from '@/mixins';
 
 export default defineComponent({
   components: {
@@ -180,10 +180,6 @@ export default defineComponent({
 
     const collectionForm = ref();
 
-    const resetCollectionForm = (): void => {
-      collectionForm.value.resetFields();
-    };
-
     const openCreateModal = (): void => {
       collectionModal.visible = true;
       collectionModal.title = 'Create new collection';
@@ -205,7 +201,7 @@ export default defineComponent({
     const closeCollectionModal = (): void => {
       collectionModal.visible = false;
       collectionModal.loading = false;
-      resetCollectionForm();
+      resetForm(collectionForm);
     };
 
     const createCollection = (): void => {
@@ -222,7 +218,7 @@ export default defineComponent({
               `Failed to create collection, user not logged in or not verified.`
             );
           } else {
-            resetCollectionForm();
+            resetForm(collectionForm);
             collectionModal.visible = false;
             getCollections();
           }
@@ -274,7 +270,7 @@ export default defineComponent({
               `Failed to edit collection, user not logged in or not verified.`
             );
           } else {
-            resetCollectionForm();
+            resetForm(collectionForm);
             collectionModal.visible = false;
             getCollections();
           }

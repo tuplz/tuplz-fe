@@ -6,9 +6,12 @@
     v-bind="recommend.layout"
   >
     <a-form-item name="recommendReason">
-      <a-textarea v-model:value="recommend.data.recommendReason" />
+      <a-textarea
+        v-model:value="recommend.data.recommendReason"
+        :rows="4"
+      />
     </a-form-item>
-    <a-form-item :wrapper-col="{ offset: 10 }">
+    <a-form-item>
       <a-space>
         <a-button
           type="primary"
@@ -16,7 +19,7 @@
         >
           Submit
         </a-button>
-        <a-button @click="resetRecommendForm">
+        <a-button @click="resetForm(recommendForm)">
           Reset
         </a-button>
       </a-space>
@@ -35,7 +38,7 @@ import {
   UploadRecommendResp,
 } from '@/components/types';
 import { recommendClient } from '@/api';
-import { openNotification } from '@/mixins';
+import { openNotification, resetForm } from '@/mixins';
 import { ValidateErrorEntity } from 'ant-design-vue/lib/form/interface';
 
 export default defineComponent({
@@ -86,7 +89,7 @@ export default defineComponent({
               `Failed to upload recommendation, user not logged in or not verified.`
             );
           } else {
-            resetRecommendForm();
+            resetForm(recommendForm);
             emit('submit');
           }
         })
@@ -112,16 +115,10 @@ export default defineComponent({
         });
     };
 
-    const resetRecommendForm = (): void => {
-      recommendForm.value.resetFields();
-    };
-
     return {
       recommendForm,
       recommend,
-      uploadRecommend,
       submitRecommendForm,
-      resetRecommendForm,
     };
   },
 });
