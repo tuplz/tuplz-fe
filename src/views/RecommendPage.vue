@@ -210,10 +210,10 @@ export default defineComponent({
             Object.assign(comment, {
               reply: {
                 data: {
-                  commentContent: '',
                   recommendId: getRecommendId(),
-                  CommentForm: ref(),
+                  commentContent: '',
                 } as CommentForm,
+                commentForm: ref(),
                 visible: false,
               },
             })

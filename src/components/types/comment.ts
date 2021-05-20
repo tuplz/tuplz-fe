@@ -15,8 +15,8 @@ export interface Comment {
 }
 
 export interface CommentForm {
-  recommendId?: number;
+  recommendId: number;
   commentContent: string;
-  userId: string;
+  userId?: string;
   replyTo?: number;
 }
