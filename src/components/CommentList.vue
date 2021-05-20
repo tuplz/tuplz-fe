@@ -44,7 +44,9 @@
             <template #content>
               <a-typography>
                 <a-typography-paragraph>
-                  <blockquote>Re: #{{ item.replyTo }}</blockquote>
+                  <blockquote v-if="item.replyTo">
+                    Re: #{{ item.replyTo }}
+                  </blockquote>
                   {{ item.commentContent }}
                 </a-typography-paragraph>
               </a-typography>
