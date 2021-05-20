@@ -19,10 +19,7 @@ const getRecommend = (req: GetRecommendReq): Promise<GetRecommendResp> =>
   new Promise((resolve, reject) => {
     axios
       .get<void, AxiosResponse<GetRecommendResp>>(
-        `${recommendsApiUrl}/${req.recommendId}`,
-        {
-          params: req,
-        }
+        `${recommendsApiUrl}/${req.recommendId}`
       )
       .then((resp: AxiosResponse<GetRecommendResp>) => {
         resolve(resp.data);

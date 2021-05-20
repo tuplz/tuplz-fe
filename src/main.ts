@@ -21,6 +21,7 @@ import {
   List,
   Menu,
   Modal,
+  PageHeader,
   Popconfirm,
   Row,
   Space,
@@ -50,6 +51,7 @@ app
   .use(List)
   .use(Menu)
   .use(Modal)
+  .use(PageHeader)
   .use(Popconfirm)
   .use(Row)
   .use(Space)

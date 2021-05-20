@@ -8,7 +8,7 @@
       :loading="recommendInfo.loading"
     >
       <a-card-meta
-        :title="recommendInfo.data.username"
+        :title="recommendInfo.data.username || defaultUsername"
         :description="recommendInfo.data.message"
       >
         <template #avatar>

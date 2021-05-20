@@ -5,104 +5,110 @@
     size="large"
     style="width: 100%"
   >
-    <a-card
+    <a-page-header
       :title="`Problem #${problemInfo.data.id}`"
-      :loading="problemInfo.loading"
+      :ghost="false"
+      @back="() => $router.push({ name: 'Problemset' })"
     >
-      <a-typography>
-        <a-typography-title>
-          {{ problemInfo.data.content.title }}
-        </a-typography-title>
+      <a-card
+        :loading="problemInfo.loading"
+        :bordered="false"
+      >
+        <a-typography>
+          <a-typography-title>
+            {{ problemInfo.data.content.title }}
+          </a-typography-title>
 
-        <a-typography-title :level="2">
-          题目描述
-        </a-typography-title>
-        <div
-          v-for="section in problemInfo.data.content.sections"
-          :key="section.title"
-        >
           <a-typography-title :level="2">
-            <!-- Placeholder for prettier rendering. -->
+            题目描述
           </a-typography-title>
-          <a-typography-title :level="3">
-            <span v-html="section.title" />
-          </a-typography-title>
-          <a-typography-paragraph>
-            <span v-html="section.content" />
-          </a-typography-paragraph>
-          <a-typography-paragraph v-if="section.title.startsWith('限制')">
-            <ul>
-              <li>
-                <a-typography-text strong>
-                  时间限制：
-                </a-typography-text>
-                <a-typography-text code>
-                  {{ problemInfo.data.content.rules.runtime / 1e9 }}
-                </a-typography-text>
-                s
-              </li>
-              <li>
-                <a-typography-text strong>
-                  空间限制：
-                </a-typography-text>
-                <a-typography-text code>
-                  {{ problemInfo.data.content.rules.memory / 1048576 }}
-                </a-typography-text>
-                MB
-              </li>
-            </ul>
-          </a-typography-paragraph>
-          <a-typography-paragraph v-if="section.misc.length">
-            <span v-html="section.misc" />
-          </a-typography-paragraph>
-        </div>
+          <div
+            v-for="section in problemInfo.data.content.sections"
+            :key="section.title"
+          >
+            <a-typography-title :level="2">
+              <!-- Placeholder for prettier rendering. -->
+            </a-typography-title>
+            <a-typography-title :level="3">
+              <span v-html="section.title" />
+            </a-typography-title>
+            <a-typography-paragraph>
+              <span v-html="section.content" />
+            </a-typography-paragraph>
+            <a-typography-paragraph v-if="section.title.startsWith('限制')">
+              <ul>
+                <li>
+                  <a-typography-text strong>
+                    时间限制：
+                  </a-typography-text>
+                  <a-typography-text code>
+                    {{ problemInfo.data.content.rules.runtime / 1e9 }}
+                  </a-typography-text>
+                  s
+                </li>
+                <li>
+                  <a-typography-text strong>
+                    空间限制：
+                  </a-typography-text>
+                  <a-typography-text code>
+                    {{ problemInfo.data.content.rules.memory / 1048576 }}
+                  </a-typography-text>
+                  MB
+                </li>
+              </ul>
+            </a-typography-paragraph>
+            <a-typography-paragraph v-if="section.misc.length">
+              <span v-html="section.misc" />
+            </a-typography-paragraph>
+          </div>
 
-        <a-typography-title :level="2">
-          测试样例
-        </a-typography-title>
-        <div
-          v-for="sample in problemInfo.data.content.samples"
-          :key="sample.title"
-        >
           <a-typography-title :level="2">
-            <!-- Placeholder for prettier rendering. -->
+            测试样例
           </a-typography-title>
-          <a-typography-title :level="3">
-            <span v-html="sample.title" />
-          </a-typography-title>
-          <a-typography-title
-            v-if="sample.input.length"
-            :level="4"
+          <div
+            v-for="sample in problemInfo.data.content.samples"
+            :key="sample.title"
           >
-            Input
-          </a-typography-title>
-          <a-typography-paragraph v-if="sample.input.length">
-            <span v-html="sample.input" />
-          </a-typography-paragraph>
-          <a-typography-title
-            v-if="sample.output.length"
-            :level="4"
-          >
-            Output
-          </a-typography-title>
-          <a-typography-paragraph v-if="sample.output.length">
-            <span v-html="sample.output" />
-          </a-typography-paragraph>
-          <a-typography-title
-            v-if="sample.explanation.length"
-            :level="4"
-          >
-            Explanation
-          </a-typography-title>
-          <a-typography-paragraph v-if="sample.explanation.length">
-            <span v-html="sample.explanation" />
-          </a-typography-paragraph>
-          <a-typography-paragraph v-if="sample.misc.length">
-            <span v-html="sample.misc" />
-          </a-typography-paragraph>
-        </div>
-      </a-typography>
-    </a-card>
+            <a-typography-title :level="2">
+              <!-- Placeholder for prettier rendering. -->
+            </a-typography-title>
+            <a-typography-title :level="3">
+              <span v-html="sample.title" />
+            </a-typography-title>
+            <a-typography-title
+              v-if="sample.input.length"
+              :level="4"
+            >
+              Input
+            </a-typography-title>
+            <a-typography-paragraph v-if="sample.input.length">
+              <span v-html="sample.input" />
+            </a-typography-paragraph>
+            <a-typography-title
+              v-if="sample.output.length"
+              :level="4"
+            >
+              Output
+            </a-typography-title>
+            <a-typography-paragraph v-if="sample.output.length">
+              <span v-html="sample.output" />
+            </a-typography-paragraph>
+            <a-typography-title
+              v-if="sample.explanation.length"
+              :level="4"
+            >
+              Explanation
+            </a-typography-title>
+            <a-typography-paragraph v-if="sample.explanation.length">
+              <span v-html="sample.explanation" />
+            </a-typography-paragraph>
+            <a-typography-paragraph v-if="sample.misc.length">
+              <span v-html="sample.misc" />
+            </a-typography-paragraph>
+          </div>
+        </a-typography>
+      </a-card>
+    </a-page-header>
 
     <recommend-list
       :recommends="recommendsInfo.data"
