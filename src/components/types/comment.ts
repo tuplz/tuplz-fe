@@ -17,5 +17,6 @@ export interface Comment {
 export interface CommentForm {
   recommendId?: number;
   commentContent: string;
+  userId: string;
   replyTo?: number;
 }

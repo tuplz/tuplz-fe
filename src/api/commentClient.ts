@@ -12,10 +12,7 @@ const getComments = (req: GetCommentsReq): Promise<GetCommentsResp> =>
   new Promise((resolve, reject) => {
     axios
       .get<void, AxiosResponse<GetCommentsResp>>(
-        `${recommendsApiUrl}/${req.recommendId}/comments`,
-        {
-          params: req,
-        }
+        `${recommendsApiUrl}/${req.recommendId}/comments`
       )
       .then((resp: AxiosResponse<GetCommentsResp>) => {
         console.log(resp.data);
@@ -30,10 +27,11 @@ const getComments = (req: GetCommentsReq): Promise<GetCommentsResp> =>
 
 const uploadComment = (req: UploadCommentReq): Promise<UploadCommentResp> =>
   new Promise((resolve, reject) => {
+    const { recommendId, ...reqBody } = req;
     axios
       .post<UploadCommentReq, AxiosResponse<UploadCommentResp>>(
-        `${recommendsApiUrl}/${req.recommendId}/comments`,
-        req
+        `${recommendsApiUrl}/${recommendId}/comments`,
+        reqBody
       )
       .then((resp: AxiosResponse<UploadCommentResp>) => {
         resolve(resp.data);
