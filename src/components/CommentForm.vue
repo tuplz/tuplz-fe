@@ -1,0 +1,130 @@
+<template>
+  <a-form
+    ref="commentForm"
+    :model="comment.data"
+    :rules="comment.rules"
+    v-bind="comment.layout"
+  >
+    <a-form-item name="commentContent">
+      <a-textarea
+        v-model:value="comment.data.commentContent"
+        :rows="4"
+      />
+    </a-form-item>
+    <a-form-item>
+      <a-space>
+        <a-button
+          type="primary"
+          @click="submitCommentForm"
+        >
+          Submit
+        </a-button>
+        <a-button @click="resetForm(recommendForm)">
+          Reset
+        </a-button>
+      </a-space>
+    </a-form-item>
+  </a-form>
+</template>
+
+<script lang="ts">
+import { computed, defineComponent, reactive, ref } from 'vue';
+import { useStore } from '@/store';
+import { AxiosError } from 'axios';
+
+import {
+  CommentForm,
+  UploadCommentReq,
+  UploadCommentResp,
+} from '@/components/types';
+import { commentClient } from '@/api';
+import { openNotification, resetForm } from '@/mixins';
+import { ValidateErrorEntity } from 'ant-design-vue/lib/form/interface';
+
+export default defineComponent({
+  props: {
+    recommendId: {
+      type: Number,
+      required: true,
+    },
+    replyTo: {
+      type: Number,
+      required: true,
+    },
+  },
+  emits: ['submit'],
+  setup(props) {
+    const store = useStore();
+    const userId = computed((): string => store.state.id);
+
+    const commentFormRules = {
+      commentContent: [
+        {
+          required: true,
+          message: 'Please input at least 1 word',
+          trigger: 'blur',
+        },
+      ],
+    };
+
+    const comment = reactive({
+      data: {
+        recommendId: props.recommendId,
+        commentContent: '',
+        userId: userId.value,
+        replyTo: props.replyTo,
+      } as CommentForm,
+      rules: commentFormRules,
+      layout: {
+        wrapperCol: { span: 12 },
+      },
+    });
+
+    const commentForm = ref();
+
+    const uploadComment = (): void => {
+      commentClient
+        .uploadComment({
+          ...comment.data,
+        } as UploadCommentReq)
+        .then((resp: UploadCommentResp): void => {
+          console.log('uploadComment', resp);
+          if (resp.status !== 'success') {
+            openNotification(
+              'error',
+              `Failed to upload comment, user not logged in.`
+            );
+          } else {
+            resetForm(commentForm);
+          }
+        })
+        .catch((err: AxiosError): void => {
+          openNotification(
+            'error',
+            `Failed to upload comment, error: ${err.message}`
+          );
+        });
+    };
+
+    const submitCommentForm = (): void => {
+      commentForm.value
+        .validate()
+        .then((): void => {
+          uploadComment();
+        })
+        .catch((_error: ValidateErrorEntity): void => {
+          openNotification(
+            'warn',
+            'Please make sure all fields are filled in correctly.'
+          );
+        });
+    };
+
+    return {
+      commentForm,
+      comment,
+      submitCommentForm,
+    };
+  },
+});
+</script>

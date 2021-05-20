@@ -6,27 +6,17 @@ import {
 import { mock } from 'mockjs';
 
 const mockCommentTemplate = {
-  commentId: '@integer(1, 5)',
-  commentTime: '@dateTime',
+  commentId: '@increment',
+  updateTime: '@dateTime',
   commentContent: '@paragraph',
   userId: '@guid',
   username: '@first',
-  replyTo: '@integer(1, 10)',
+  replyTo: '@integer(0, 10)',
 };
 
 export const mockGetCommentsResp: GetCommentsResp = mock({
   status: 'success',
-  'comments|1-20': [
-    {
-      'commentId|+1': 1,
-      commentTime: '@dateTime',
-      commentContent: '@paragraph',
-      userId: '@guid',
-      username: '@first',
-      replyTo: '@integer(-1, 0)',
-      isReply: false,
-    },
-  ],
+  'comments|0-20': [mockCommentTemplate],
 });
 
 export const mockGetCommentResp: GetCommentResp = mock({
