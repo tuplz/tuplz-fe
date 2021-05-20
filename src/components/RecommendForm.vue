@@ -57,7 +57,6 @@ export default defineComponent({
         {
           required: true,
           message: 'Please input at least one word',
-          trigger: 'blur',
         },
       ],
     };

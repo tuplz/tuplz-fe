@@ -15,20 +15,9 @@
         <a-list-item :key="item.commentId">
           <a-comment>
             <template #actions>
-              <a-space
-                direction="vertical"
-                size="large"
-              >
-                <a-button @click="item.reply.visible = !item.reply.visible">
-                  Reply to
-                </a-button>
-                <comment-form
-                  v-show="item.reply.visible"
-                  :recommend-id="item.reply.data.recommendId"
-                  :reply-to="item.commentId"
-                  @submit="getComments()"
-                />
-              </a-space>
+              <a-button @click="item.reply.visible = !item.reply.visible">
+                Reply
+              </a-button>
             </template>
             <template #author>
               <span>
@@ -43,9 +32,28 @@
                 {{ (item.username || defaultUsername)[0].toUpperCase() }}
               </a-avatar>
             </template>
-            <template #content>
-              {{ item.commentContent }}
+            <template #datetime>
+              <span>
+                {{ parseDatetime(item.updateTime) }}
+              </span>
+              <a-divider type="vertical" />
+              <span>#{{ item.commentId }}</span>
             </template>
+            <template #content>
+              <a-typography>
+                <a-typography-paragraph>
+                  <blockquote>Re: #{{ item.replyTo }}</blockquote>
+                  {{ item.commentContent }}
+                </a-typography-paragraph>
+              </a-typography>
+            </template>
+            <comment-form
+              v-show="item.reply.visible"
+              :recommend-id="item.reply.data.recommendId"
+              :reply-to="item.commentId"
+              style="margin: 16px 0 0 8px"
+              @submit="getComments()"
+            />
           </a-comment>
         </a-list-item>
       </template>
@@ -58,6 +66,7 @@ import { defineComponent, PropType } from 'vue';
 
 import { Comment } from '@/components/types';
 import { CommentForm } from '@/components';
+import { parseDatetime } from '@/mixins';
 import { defaultUsername } from '@/utils/config';
 
 export default defineComponent({
@@ -82,6 +91,7 @@ export default defineComponent({
   setup() {
     return {
       defaultUsername,
+      parseDatetime,
     };
   },
 });

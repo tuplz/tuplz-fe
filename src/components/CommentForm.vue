@@ -20,7 +20,7 @@
           Submit
         </a-button>
         <a-button @click="resetCommentForm()">
-          Reset
+          Cancel
         </a-button>
       </a-space>
     </a-form-item>
@@ -62,7 +62,6 @@ export default defineComponent({
         {
           required: true,
           message: 'Please input at least one word',
-          trigger: 'blur',
         },
       ],
     };
