@@ -62,11 +62,14 @@
             </a-typography-paragraph>
           </div>
 
-          <a-typography-title :level="2">
+          <a-typography-title
+            v-if="problemInfo.data.content.samples.length"
+            :level="2"
+          >
             测试样例
           </a-typography-title>
           <div
-            v-for="sample in problemInfo.data.content.samples"
+            v-for="(sample, index) in problemInfo.data.content.samples"
             :key="sample.title"
           >
             <a-typography-title :level="2">
@@ -79,7 +82,7 @@
               v-if="sample.input.length"
               :level="4"
             >
-              Input
+              Input {{ index + 1 }}
             </a-typography-title>
             <a-typography-paragraph v-if="sample.input.length">
               <span v-html="sample.input" />
@@ -88,7 +91,7 @@
               v-if="sample.output.length"
               :level="4"
             >
-              Output
+              Output {{ index + 1 }}
             </a-typography-title>
             <a-typography-paragraph v-if="sample.output.length">
               <span v-html="sample.output" />

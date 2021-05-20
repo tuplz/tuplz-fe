@@ -24,7 +24,7 @@ export const mockProblemTemplate = {
       ['hard', '@word'],
       ['@word', '@word'],
     ],
-    'sample|1-3': [
+    'samples|1-3': [
       {
         input: '@sentence',
         output: '@sentence',
