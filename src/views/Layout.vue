@@ -134,7 +134,14 @@
 
     <a-layout style="padding: 24px 24px 0">
       <a-layout-content style="padding: 24px; min-height: 280px">
-        <router-view />
+        <router-view v-slot="{ Component }">
+          <transition
+            name="fade"
+            mode="out-in"
+          >
+            <component :is="Component" />
+          </transition>
+        </router-view>
       </a-layout-content>
 
       <a-layout-footer style="text-align: center">

@@ -1,10 +1,4 @@
-import {
-  createRouter,
-  createWebHistory,
-  RouteLocationNormalized,
-  RouteRecordNormalized,
-  RouteRecordRaw,
-} from 'vue-router';
+import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
 import { store } from '@/store';
 
 const Root = () => import(/* webpackChunkName: "root" */ '@/views/Layout.vue');
@@ -83,21 +77,18 @@ const router = createRouter({
   routes,
 });
 
-router.beforeEach(
-  (to: RouteLocationNormalized, _from: RouteLocationNormalized) => {
-    if (
-      to.matched.some(
-        (record: RouteRecordNormalized): boolean =>
-          record.meta.requiresLogin as boolean
-      ) &&
-      !store.getters.isLoggedIn
-    ) {
-      console.log('User not logged in, redirecting...');
-      return { name: 'Problemset' };
-    } else {
-      return true;
-    }
+router.beforeEach((to, _from) => {
+  if (
+    to.matched.some(
+      (record): boolean => record.meta.requiresLogin as boolean
+    ) &&
+    !store.getters.isLoggedIn
+  ) {
+    console.log('User not logged in, redirecting...');
+    return { name: 'Problemset' };
+  } else {
+    return true;
   }
-);
+});
 
 export default router;
