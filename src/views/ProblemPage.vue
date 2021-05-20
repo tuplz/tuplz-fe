@@ -6,7 +6,7 @@
     style="width: 100%"
   >
     <a-page-header
-      :title="`Problem #${problemInfo.data.id}`"
+      title="Back to Problemset"
       :ghost="false"
       @back="() => $router.push({ name: 'Problemset' })"
     >
@@ -16,7 +16,7 @@
       >
         <a-typography>
           <a-typography-title>
-            {{ problemInfo.data.content.title }}
+            {{ problemId }}. {{ problemInfo.data.content.title }}
           </a-typography-title>
 
           <a-typography-title :level="2">
