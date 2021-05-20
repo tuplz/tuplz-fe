@@ -20,14 +20,17 @@
       >
         <a-card-meta>
           <template #title>
-            <a-space>
+            <a-row
+              type="flex"
+              justify="space-between"
+            >
               <span>
                 {{ recommendInfo.data.username || defaultUsername }}
               </span>
               <span style="color: #ccc; font-weight: 400">
                 {{ parseDatetime(recommendInfo.data.updateTime) }}
               </span>
-            </a-space>
+            </a-row>
           </template>
           <template #avatar>
             <a-avatar
@@ -40,20 +43,19 @@
               }}
             </a-avatar>
           </template>
+          <template #description>
+            <p style="font-size: 16px">
+              {{ recommendInfo.data.message }}
+            </p>
+          </template>
         </a-card-meta>
-        <p>
-          {{ recommendInfo.data.message }}
-        </p>
       </a-card>
     </a-page-header>
 
     <comment-list
+      :recommend-id="recommendId"
       :comments="commentsInfo.data"
       :loading="commentsInfo.loading"
-    />
-    <comment-form
-      :recommend-id="recommendId"
-      :reply-to="0"
       @submit="getComments()"
     />
   </a-space>
@@ -72,14 +74,13 @@ import {
   GetRecommendResp,
   Recommend,
 } from '@/components/types';
-import { CommentForm, CommentList } from '@/components';
+import { CommentList } from '@/components';
 import { commentClient, recommendClient } from '@/api';
 import { openNotification, parseDatetime, title } from '@/mixins';
 import { defaultUsername } from '@/utils/config';
 
 export default defineComponent({
   components: {
-    CommentForm,
     CommentList,
   },
   setup() {

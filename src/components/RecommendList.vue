@@ -22,14 +22,17 @@
           >
             <a-list-item-meta :description="item.message">
               <template #title>
-                <a-space>
+                <a-row
+                  type="flex"
+                  justify="space-between"
+                >
                   <span>
                     {{ item.username || defaultUsername }}
                   </span>
                   <span style="color: #ccc; font-weight: 400">
                     {{ parseDatetime(item.updateTime) }}
                   </span>
-                </a-space>
+                </a-row>
               </template>
               <template #avatar>
                 <a-avatar

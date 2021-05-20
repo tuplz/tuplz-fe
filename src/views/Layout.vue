@@ -89,7 +89,7 @@
         @cancel="closeModal"
       >
         <a-form
-          ref="form"
+          ref="loginForm"
           name="form"
           :model="modal.data"
           :rules="modal.rules"
@@ -176,7 +176,7 @@ import {
   UserRegisterResp,
 } from '@/components/types';
 import { userClient } from '@/api';
-import { openNotification, title, validateEmail } from '@/mixins';
+import { openNotification, resetForm, title, validateEmail } from '@/mixins';
 
 export default defineComponent({
   components: {
@@ -192,7 +192,7 @@ export default defineComponent({
     UserOutlined,
   },
   setup() {
-    const form = ref();
+    const loginForm = ref();
     const router = useRouter();
     const store = useStore();
     const username = computed((): string => store.state.username);
@@ -245,10 +245,6 @@ export default defineComponent({
       },
     });
 
-    const resetForm = (): void => {
-      form.value.resetFields();
-    };
-
     const openSignUpModal = (): void => {
       modal.visible = true;
       modal.title = 'Sign up';
@@ -268,12 +264,12 @@ export default defineComponent({
     const closeModal = (): void => {
       modal.visible = false;
       modal.loading = false;
-      resetForm();
+      resetForm(loginForm);
     };
 
     const submitForm = (): void => {
       modal.loading = true;
-      form.value
+      loginForm.value
         .validate()
         .then((): void => {
           modal.callback();
@@ -333,18 +329,17 @@ export default defineComponent({
 
     return {
       title,
-      form,
+      loginForm,
       modal,
-      resetForm,
       openSignUpModal,
       openLoginModal,
       closeModal,
-      submitForm,
       register,
       login,
       logout,
       username,
       isLoggedIn,
+      submitForm,
     };
   },
   created() {

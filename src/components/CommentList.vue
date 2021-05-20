@@ -1,5 +1,10 @@
 <template>
   <a-card title="Comments">
+    <comment-form
+      :recommend-id="recommendId"
+      :reply-to="0"
+      @submit="$emit('submit')"
+    />
     <a-list
       item-layout="horizontal"
       :data-source="comments"
@@ -60,15 +65,20 @@ export default defineComponent({
     CommentForm,
   },
   props: {
+    recommendId: {
+      type: Number,
+      required: true,
+    },
     comments: {
       type: Array as PropType<Comment[]>,
       default: () => [] as Comment[],
     },
     loading: {
       type: Boolean,
-      default: () => false,
+      required: true,
     },
   },
+  emits: ['submit'],
   setup() {
     return {
       defaultUsername,
