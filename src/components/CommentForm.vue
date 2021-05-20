@@ -53,7 +53,7 @@ export default defineComponent({
     },
   },
   emits: ['submit'],
-  setup(props) {
+  setup(props, { emit }) {
     const store = useStore();
     const userId = computed((): string => store.state.id);
 
@@ -92,6 +92,7 @@ export default defineComponent({
             openNotification('error', `Failed to comment, not logged in.`);
           } else {
             resetCommentForm();
+            emit('submit');
             openMessage('success', `Succeeded to comment.`);
           }
         })

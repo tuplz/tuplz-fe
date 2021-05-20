@@ -56,7 +56,7 @@
               :recommend-id="item.reply.data.recommendId"
               :reply-to="item.commentId"
               style="margin: 16px 0 0 8px"
-              @submit="getComments()"
+              @submit="$emit('submit')"
             />
           </a-comment>
         </a-list-item>
