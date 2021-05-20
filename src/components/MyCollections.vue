@@ -48,6 +48,7 @@
               <a-divider type="vertical" />
               <a-popconfirm
                 title="Are you sure to delete this collection?"
+                placement="topRight"
                 ok-text="Delete"
                 cancel-text="Cancel"
                 @confirm="deleteCollection(item.collectionId)"
