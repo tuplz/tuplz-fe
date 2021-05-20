@@ -44,7 +44,7 @@
           >
             Submit
           </a-button>
-          <a-button @click="resetForm(passwordForm)">
+          <a-button @click="resetPasswordForm()">
             Reset
           </a-button>
         </a-space>
@@ -65,7 +65,7 @@ import {
   ChangePasswordResp,
 } from '@/components/types';
 import { userClient } from '@/api';
-import { openNotification, resetForm } from '@/mixins';
+import { openNotification } from '@/mixins';
 import {
   RuleObject,
   ValidateErrorEntity,
@@ -169,7 +169,7 @@ export default defineComponent({
           );
         })
         .finally(() => {
-          resetForm(passwordForm);
+          resetPasswordForm();
         });
     };
 
@@ -187,11 +187,15 @@ export default defineComponent({
         });
     };
 
+    const resetPasswordForm = (): void => {
+      passwordForm.value.resetFields();
+    };
+
     return {
       passwordForm,
       password,
       submitPasswordForm,
-      resetForm,
+      resetPasswordForm,
     };
   },
 });

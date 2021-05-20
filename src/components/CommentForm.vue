@@ -19,7 +19,7 @@
         >
           Submit
         </a-button>
-        <a-button @click="resetForm(recommendForm)">
+        <a-button @click="resetCommentForm()">
           Reset
         </a-button>
       </a-space>
@@ -38,7 +38,7 @@ import {
   UploadCommentResp,
 } from '@/components/types';
 import { commentClient } from '@/api';
-import { openNotification, resetForm } from '@/mixins';
+import { openNotification } from '@/mixins';
 import { ValidateErrorEntity } from 'ant-design-vue/lib/form/interface';
 
 export default defineComponent({
@@ -76,7 +76,7 @@ export default defineComponent({
       } as CommentForm,
       rules: commentFormRules,
       layout: {
-        wrapperCol: { span: 12 },
+        wrapperCol: { span: 24 },
       },
     });
 
@@ -95,7 +95,7 @@ export default defineComponent({
               `Failed to upload comment, user not logged in.`
             );
           } else {
-            resetForm(commentForm);
+            resetCommentForm();
           }
         })
         .catch((err: AxiosError): void => {
@@ -120,10 +120,15 @@ export default defineComponent({
         });
     };
 
+    const resetCommentForm = (): void => {
+      commentForm.value.resetFields();
+    };
+
     return {
       commentForm,
       comment,
       submitCommentForm,
+      resetCommentForm,
     };
   },
 });

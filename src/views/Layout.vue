@@ -176,7 +176,7 @@ import {
   UserRegisterResp,
 } from '@/components/types';
 import { userClient } from '@/api';
-import { openNotification, resetForm, title, validateEmail } from '@/mixins';
+import { openNotification, title, validateEmail } from '@/mixins';
 
 export default defineComponent({
   components: {
@@ -192,7 +192,6 @@ export default defineComponent({
     UserOutlined,
   },
   setup() {
-    const loginForm = ref();
     const router = useRouter();
     const store = useStore();
     const username = computed((): string => store.state.username);
@@ -245,6 +244,12 @@ export default defineComponent({
       },
     });
 
+    const loginForm = ref();
+
+    const resetLoginForm = (): void => {
+      loginForm.value.resetFields();
+    };
+
     const openSignUpModal = (): void => {
       modal.visible = true;
       modal.title = 'Sign up';
@@ -264,7 +269,7 @@ export default defineComponent({
     const closeModal = (): void => {
       modal.visible = false;
       modal.loading = false;
-      resetForm(loginForm);
+      resetLoginForm();
     };
 
     const submitForm = (): void => {

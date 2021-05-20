@@ -146,7 +146,7 @@ import {
   VerifyEmailResp,
 } from '@/components/types';
 import { userClient } from '@/api';
-import { openNotification, resetForm, validateEmail } from '@/mixins';
+import { openNotification, validateEmail } from '@/mixins';
 import {
   RuleObject,
   ValidateErrorEntity,
@@ -207,6 +207,10 @@ export default defineComponent({
 
     const userForm = ref();
 
+    const resetUserForm = (): void => {
+      userForm.value.resetFields();
+    };
+
     const openEditUserModal = (): void => {
       userModal.visible = true;
       userModal.title = 'Edit profile';
@@ -220,7 +224,7 @@ export default defineComponent({
     const closeUserModal = (): void => {
       userModal.visible = false;
       userModal.loading = false;
-      resetForm(userForm);
+      resetUserForm();
     };
 
     const getUserProfile = (): void => {
@@ -255,7 +259,7 @@ export default defineComponent({
           if (resp.status !== 'success') {
             openNotification('error', `Failed to edit user profile.`);
           } else {
-            resetForm(userForm);
+            resetUserForm();
             userModal.visible = false;
             getUserProfile();
           }
@@ -316,6 +320,10 @@ export default defineComponent({
 
     const verifyForm = ref();
 
+    const resetVerifyForm = (): void => {
+      verifyForm.value.resetFields();
+    };
+
     const openVerifyModal = (): void => {
       verifyModal.visible = true;
     };
@@ -323,7 +331,7 @@ export default defineComponent({
     const closeVerifyModal = (): void => {
       verifyModal.visible = false;
       verifyModal.loading = false;
-      resetForm(verifyForm);
+      resetVerifyForm();
     };
 
     const disableSendVerifyEmail = (): boolean =>

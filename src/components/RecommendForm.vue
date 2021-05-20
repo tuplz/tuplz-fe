@@ -19,7 +19,7 @@
         >
           Submit
         </a-button>
-        <a-button @click="resetForm(recommendForm)">
+        <a-button @click="resetRecommendForm()">
           Reset
         </a-button>
       </a-space>
@@ -38,7 +38,7 @@ import {
   UploadRecommendResp,
 } from '@/components/types';
 import { recommendClient } from '@/api';
-import { openNotification, resetForm } from '@/mixins';
+import { openNotification } from '@/mixins';
 import { ValidateErrorEntity } from 'ant-design-vue/lib/form/interface';
 
 export default defineComponent({
@@ -89,7 +89,7 @@ export default defineComponent({
               `Failed to upload recommendation, user not logged in or not verified.`
             );
           } else {
-            resetForm(recommendForm);
+            resetRecommendForm();
             emit('submit');
           }
         })
@@ -115,10 +115,15 @@ export default defineComponent({
         });
     };
 
+    const resetRecommendForm = (): void => {
+      recommendForm.value.resetFields();
+    };
+
     return {
       recommendForm,
       recommend,
       submitRecommendForm,
+      resetRecommendForm,
     };
   },
 });
