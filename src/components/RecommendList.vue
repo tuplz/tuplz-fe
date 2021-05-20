@@ -1,5 +1,5 @@
 <template>
-  <a-card title="Reviews">
+  <a-card :title="`${recommends.length} Reviews`">
     <a-list
       item-layout="horizontal"
       :data-source="recommends"
@@ -16,9 +16,14 @@
           >
             <a-list-item-meta :description="item.message">
               <template #title>
-                <span>
-                  {{ item.username || defaultUsername }}
-                </span>
+                <a-space>
+                  <span>
+                    {{ item.username || defaultUsername }}
+                  </span>
+                  <span style="color: #ccc; font-weight: 400">
+                    {{ parseDatetime(item.updateTime) }}
+                  </span>
+                </a-space>
               </template>
               <template #avatar>
                 <a-avatar
@@ -40,6 +45,7 @@
 import { defineComponent, PropType } from 'vue';
 
 import { Recommend } from '@/components/types';
+import { parseDatetime } from '@/mixins';
 import { defaultUsername } from '@/utils/config';
 
 export default defineComponent({
@@ -56,6 +62,7 @@ export default defineComponent({
   setup() {
     return {
       defaultUsername,
+      parseDatetime,
     };
   },
 });
