@@ -6,9 +6,12 @@
     v-bind="recommend.layout"
   >
     <a-form-item name="recommendReason">
-      <a-textarea v-model:value="recommend.data.recommendReason" />
+      <a-textarea
+        v-model:value="recommend.data.recommendReason"
+        :rows="4"
+      />
     </a-form-item>
-    <a-form-item :wrapper-col="{ offset: 10 }">
+    <a-form-item>
       <a-space>
         <a-button
           type="primary"
@@ -16,7 +19,7 @@
         >
           Submit
         </a-button>
-        <a-button @click="resetRecommendForm">
+        <a-button @click="resetRecommendForm()">
           Reset
         </a-button>
       </a-space>
@@ -35,7 +38,7 @@ import {
   UploadRecommendResp,
 } from '@/components/types';
 import { recommendClient } from '@/api';
-import { openNotification } from '@/mixins';
+import { openMessage, openNotification } from '@/mixins';
 import { ValidateErrorEntity } from 'ant-design-vue/lib/form/interface';
 
 export default defineComponent({
@@ -53,8 +56,7 @@ export default defineComponent({
       recommendReason: [
         {
           required: true,
-          message: 'Please input recommend reason',
-          trigger: 'blur',
+          message: 'Please input at least one word',
         },
       ],
     };
@@ -83,17 +85,18 @@ export default defineComponent({
           if (resp.status !== 'success') {
             openNotification(
               'error',
-              `Failed to upload recommendation, user not logged in or not verified.`
+              `Failed to post review, not logged in or not verified.`
             );
           } else {
             resetRecommendForm();
             emit('submit');
+            openMessage('success', `Succeeded to post review.`);
           }
         })
         .catch((err: AxiosError): void => {
           openNotification(
             'error',
-            `Failed to upload recommendation, error: ${err.message}`
+            `Failed to post review, error: ${err.message}`
           );
         });
     };
@@ -106,7 +109,7 @@ export default defineComponent({
         })
         .catch((_error: ValidateErrorEntity): void => {
           openNotification(
-            'warn',
+            'warning',
             'Please make sure all fields are filled in correctly.'
           );
         });
@@ -119,7 +122,6 @@ export default defineComponent({
     return {
       recommendForm,
       recommend,
-      uploadRecommend,
       submitRecommendForm,
       resetRecommendForm,
     };

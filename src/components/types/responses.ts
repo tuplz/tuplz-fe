@@ -1,4 +1,11 @@
-import { CollectionInfo, Collection, Problem, Recommend, User } from '.';
+import {
+  CollectionInfo,
+  Collection,
+  Comment,
+  Problem,
+  Recommend,
+  User,
+} from '.';
 
 interface Status {
   code: number;
@@ -58,3 +65,13 @@ export type CreateCollectionResp = Status;
 export type DeleteCollectionResp = Status;
 
 export type EditCollectionResp = Status;
+
+export interface GetCommentResp extends Status {
+  comment: Comment;
+}
+
+export interface GetCommentsResp extends Status {
+  comments: Comment[];
+}
+
+export type UploadCommentResp = GetCommentResp;

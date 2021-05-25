@@ -1,32 +1,40 @@
 <template>
-  <a-space
-    direction="vertical"
-    size="large"
-    style="width: 100%"
+  <a-page-header
+    title="Back to My Profile"
+    :ghost="false"
+    @back="() => $router.push({ name: 'UserProfile' })"
   >
-    <a-card
-      :title="collection.data.title"
-      :loading="collection.loading"
+    <a-space
+      direction="vertical"
+      size="large"
+      style="width: 100%"
     >
-      <a-card-meta>
-        <template #description>
-          <span>
-            <ClockCircleOutlined class="card-icon" />
-            Updated at {{ collection.data.updateTime }}
-          </span>
-        </template>
-      </a-card-meta>
-    </a-card>
-    <a-card
-      :title="`${collection.data.problems.length} problems`"
-      :loading="collection.loading"
-    >
-      <problem-table
-        :problems="collection.data.problems"
+      <a-card
+        :title="collection.data.title"
         :loading="collection.loading"
-      />
-    </a-card>
-  </a-space>
+        :bordered="false"
+      >
+        <a-card-meta>
+          <template #description>
+            <span>
+              <ClockCircleOutlined class="card-icon" />
+              Updated at {{ collection.data.updateTime }}
+            </span>
+          </template>
+        </a-card-meta>
+      </a-card>
+      <a-card
+        :title="`${collection.data.problems.length} problems`"
+        :loading="collection.loading"
+        :bordered="false"
+      >
+        <problem-table
+          :problems="collection.data.problems"
+          :loading="collection.loading"
+        />
+      </a-card>
+    </a-space>
+  </a-page-header>
 </template>
 
 <script lang="ts">

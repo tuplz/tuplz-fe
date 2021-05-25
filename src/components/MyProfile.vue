@@ -146,7 +146,7 @@ import {
   VerifyEmailResp,
 } from '@/components/types';
 import { userClient } from '@/api';
-import { openNotification, validateEmail } from '@/mixins';
+import { openMessage, openNotification, validateEmail } from '@/mixins';
 import {
   RuleObject,
   ValidateErrorEntity,
@@ -242,7 +242,7 @@ export default defineComponent({
         .catch((err: AxiosError) => {
           openNotification(
             'error',
-            `Failed to load user profile, error: ${err.message}`
+            `Failed to load profile, error: ${err.message}`
           );
         });
     };
@@ -257,17 +257,18 @@ export default defineComponent({
         .then((resp: EditUserProfileResp) => {
           console.log('editUserProfile', resp);
           if (resp.status !== 'success') {
-            openNotification('error', `Failed to edit user profile.`);
+            openNotification('error', `Failed to save profile.`);
           } else {
             resetUserForm();
             userModal.visible = false;
             getUserProfile();
+            openMessage('success', `Succeeded to save profile.`);
           }
         })
         .catch((err: AxiosError) => {
           openNotification(
             'error',
-            `Failed to edit user profile, error: ${err.message}`
+            `Failed to edit profile, error: ${err.message}`
           );
         })
         .finally(() => {
@@ -364,10 +365,10 @@ export default defineComponent({
               'error',
               'Failed to send verify email, please try again later.'
             );
+          } else {
+            openMessage('success', `Succeeded to send verify email.`);
           }
-          if (verifyModal.countdown === 0) {
-            startCountdown(30); // wait for 30s
-          }
+          startCountdown(30); // wait for 30s
         })
         .catch((err: AxiosError) => {
           openNotification(
@@ -392,6 +393,7 @@ export default defineComponent({
             );
           } else {
             verifyModal.visible = false;
+            openMessage('success', `Succeeded to verify email.`);
           }
         })
         .catch((err: AxiosError) => {
@@ -414,7 +416,7 @@ export default defineComponent({
         })
         .catch((_error: ValidateErrorEntity): void => {
           openNotification(
-            'warn',
+            'warning',
             'Please make sure all fields are filled in correctly.'
           );
         })
@@ -433,7 +435,6 @@ export default defineComponent({
       editUserProfile,
       verifyModal,
       verifyForm,
-      resetVerifyForm,
       openVerifyModal,
       closeVerifyModal,
       disableSendVerifyEmail,

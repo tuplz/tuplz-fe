@@ -48,6 +48,7 @@
               <a-divider type="vertical" />
               <a-popconfirm
                 title="Are you sure to delete this collection?"
+                placement="topRight"
                 ok-text="Delete"
                 cancel-text="Cancel"
                 @confirm="deleteCollection(item.collectionId)"
@@ -115,7 +116,7 @@ import {
   GetCollectionsResp,
 } from '@/components/types';
 import { collectionClient } from '@/api';
-import { openNotification } from '@/mixins';
+import { openMessage, openNotification } from '@/mixins';
 
 export default defineComponent({
   components: {
@@ -219,12 +220,13 @@ export default defineComponent({
           if (resp.status !== 'success') {
             openNotification(
               'error',
-              `Failed to create collection, user not logged in or not verified.`
+              `Failed to create collection, not logged in or not verified.`
             );
           } else {
             resetCollectionForm();
             collectionModal.visible = false;
             getCollections();
+            openMessage('success', `Succeeded to create collection.`);
           }
         })
         .catch((err: AxiosError) => {
@@ -245,10 +247,11 @@ export default defineComponent({
           if (resp.status !== 'success') {
             openNotification(
               'error',
-              `Failed to delete collection, user not logged in or not verified.`
+              `Failed to delete collection, not logged in or not verified.`
             );
           } else {
             getCollections();
+            openMessage('success', `Succeeded to delete collection.`);
           }
         })
         .catch((err: AxiosError) => {
@@ -271,12 +274,13 @@ export default defineComponent({
           if (resp.status !== 'success') {
             openNotification(
               'error',
-              `Failed to edit collection, user not logged in or not verified.`
+              `Failed to edit collection, not logged in or not verified.`
             );
           } else {
             resetCollectionForm();
             collectionModal.visible = false;
             getCollections();
+            openMessage('success', `Succeeded to edit collection.`);
           }
         })
         .catch((err: AxiosError) => {

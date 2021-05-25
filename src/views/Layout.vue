@@ -89,7 +89,7 @@
         @cancel="closeModal"
       >
         <a-form
-          ref="form"
+          ref="loginForm"
           name="form"
           :model="modal.data"
           :rules="modal.rules"
@@ -134,7 +134,14 @@
 
     <a-layout style="padding: 24px 24px 0">
       <a-layout-content style="padding: 24px; min-height: 280px">
-        <router-view />
+        <router-view v-slot="{ Component }">
+          <transition
+            name="fade"
+            mode="out-in"
+          >
+            <component :is="Component" />
+          </transition>
+        </router-view>
       </a-layout-content>
 
       <a-layout-footer style="text-align: center">
@@ -192,7 +199,6 @@ export default defineComponent({
     UserOutlined,
   },
   setup() {
-    const form = ref();
     const router = useRouter();
     const store = useStore();
     const username = computed((): string => store.state.username);
@@ -245,8 +251,10 @@ export default defineComponent({
       },
     });
 
-    const resetForm = (): void => {
-      form.value.resetFields();
+    const loginForm = ref();
+
+    const resetLoginForm = (): void => {
+      loginForm.value.resetFields();
     };
 
     const openSignUpModal = (): void => {
@@ -268,19 +276,19 @@ export default defineComponent({
     const closeModal = (): void => {
       modal.visible = false;
       modal.loading = false;
-      resetForm();
+      resetLoginForm();
     };
 
     const submitForm = (): void => {
       modal.loading = true;
-      form.value
+      loginForm.value
         .validate()
         .then((): void => {
           modal.callback();
         })
         .catch((_error: ValidateErrorEntity<UserLoginReq>): void => {
           openNotification(
-            'warn',
+            'warning',
             'Please make sure all fields are filled in correctly.'
           );
         })
@@ -333,18 +341,17 @@ export default defineComponent({
 
     return {
       title,
-      form,
+      loginForm,
       modal,
-      resetForm,
       openSignUpModal,
       openLoginModal,
       closeModal,
-      submitForm,
       register,
       login,
       logout,
       username,
       isLoggedIn,
+      submitForm,
     };
   },
   created() {

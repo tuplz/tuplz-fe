@@ -10,6 +10,7 @@ import {
   Button,
   Card,
   Col,
+  Comment,
   Descriptions,
   Divider,
   Dropdown,
@@ -20,6 +21,7 @@ import {
   List,
   Menu,
   Modal,
+  PageHeader,
   Popconfirm,
   Row,
   Space,
@@ -38,6 +40,7 @@ app
   .use(Button)
   .use(Card)
   .use(Col)
+  .use(Comment)
   .use(Descriptions)
   .use(Divider)
   .use(Dropdown)
@@ -48,6 +51,7 @@ app
   .use(List)
   .use(Menu)
   .use(Modal)
+  .use(PageHeader)
   .use(Popconfirm)
   .use(Row)
   .use(Space)

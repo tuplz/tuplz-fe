@@ -5,111 +5,118 @@
     size="large"
     style="width: 100%"
   >
-    <a-card
-      :title="`Problem #${problemInfo.data.id}`"
-      :loading="problemInfo.loading"
+    <a-page-header
+      title="Back to Problemset"
+      :ghost="false"
+      @back="() => $router.push({ name: 'Problemset' })"
     >
-      <a-typography>
-        <a-typography-title>
-          {{ problemInfo.data.content.title }}
-        </a-typography-title>
+      <a-card
+        :loading="problemInfo.loading"
+        :bordered="false"
+      >
+        <a-typography>
+          <a-typography-title>
+            {{ problemId }}. {{ problemInfo.data.content.title }}
+          </a-typography-title>
 
-        <a-typography-title :level="2">
-          题目描述
-        </a-typography-title>
-        <div
-          v-for="section in problemInfo.data.content.sections"
-          :key="section.title"
-        >
           <a-typography-title :level="2">
-            <!-- Placeholder for prettier rendering. -->
+            题目描述
           </a-typography-title>
-          <a-typography-title :level="3">
-            <span v-html="section.title" />
-          </a-typography-title>
-          <a-typography-paragraph>
-            <span v-html="section.content" />
-          </a-typography-paragraph>
-          <a-typography-paragraph v-if="section.title.startsWith('限制')">
-            <ul>
-              <li>
-                <a-typography-text strong>
-                  时间限制：
-                </a-typography-text>
-                <a-typography-text code>
-                  {{ problemInfo.data.content.rules.runtime / 1e9 }}
-                </a-typography-text>
-                s
-              </li>
-              <li>
-                <a-typography-text strong>
-                  空间限制：
-                </a-typography-text>
-                <a-typography-text code>
-                  {{ problemInfo.data.content.rules.memory / 1048576 }}
-                </a-typography-text>
-                MB
-              </li>
-            </ul>
-          </a-typography-paragraph>
-          <a-typography-paragraph v-if="section.misc.length">
-            <span v-html="section.misc" />
-          </a-typography-paragraph>
-        </div>
+          <div
+            v-for="section in problemInfo.data.content.sections"
+            :key="section.title"
+          >
+            <a-typography-title :level="2">
+              <!-- Placeholder for prettier rendering. -->
+            </a-typography-title>
+            <a-typography-title :level="3">
+              <span v-html="section.title" />
+            </a-typography-title>
+            <a-typography-paragraph>
+              <span v-html="section.content" />
+            </a-typography-paragraph>
+            <a-typography-paragraph v-if="section.title.startsWith('限制')">
+              <ul>
+                <li>
+                  <a-typography-text strong>
+                    时间限制：
+                  </a-typography-text>
+                  <a-typography-text code>
+                    {{ problemInfo.data.content.rules.runtime / 1e9 }}
+                  </a-typography-text>
+                  s
+                </li>
+                <li>
+                  <a-typography-text strong>
+                    空间限制：
+                  </a-typography-text>
+                  <a-typography-text code>
+                    {{ problemInfo.data.content.rules.memory / 1048576 }}
+                  </a-typography-text>
+                  MB
+                </li>
+              </ul>
+            </a-typography-paragraph>
+            <a-typography-paragraph v-if="section.misc.length">
+              <span v-html="section.misc" />
+            </a-typography-paragraph>
+          </div>
 
-        <a-typography-title :level="2">
-          测试样例
-        </a-typography-title>
-        <div
-          v-for="sample in problemInfo.data.content.samples"
-          :key="sample.title"
-        >
-          <a-typography-title :level="2">
-            <!-- Placeholder for prettier rendering. -->
-          </a-typography-title>
-          <a-typography-title :level="3">
-            <span v-html="sample.title" />
-          </a-typography-title>
           <a-typography-title
-            v-if="sample.input.length"
-            :level="4"
+            v-if="problemInfo.data.content.samples.length"
+            :level="2"
           >
-            Input
+            测试样例
           </a-typography-title>
-          <a-typography-paragraph v-if="sample.input.length">
-            <span v-html="sample.input" />
-          </a-typography-paragraph>
-          <a-typography-title
-            v-if="sample.output.length"
-            :level="4"
+          <div
+            v-for="(sample, index) in problemInfo.data.content.samples"
+            :key="sample.title"
           >
-            Output
-          </a-typography-title>
-          <a-typography-paragraph v-if="sample.output.length">
-            <span v-html="sample.output" />
-          </a-typography-paragraph>
-          <a-typography-title
-            v-if="sample.explanation.length"
-            :level="4"
-          >
-            Explanation
-          </a-typography-title>
-          <a-typography-paragraph v-if="sample.explanation.length">
-            <span v-html="sample.explanation" />
-          </a-typography-paragraph>
-          <a-typography-paragraph v-if="sample.misc.length">
-            <span v-html="sample.misc" />
-          </a-typography-paragraph>
-        </div>
-      </a-typography>
-    </a-card>
+            <a-typography-title :level="2">
+              <!-- Placeholder for prettier rendering. -->
+            </a-typography-title>
+            <a-typography-title :level="3">
+              <span v-html="sample.title" />
+            </a-typography-title>
+            <a-typography-title
+              v-if="sample.input.length"
+              :level="4"
+            >
+              Input {{ index + 1 }}
+            </a-typography-title>
+            <a-typography-paragraph v-if="sample.input.length">
+              <span v-html="sample.input" />
+            </a-typography-paragraph>
+            <a-typography-title
+              v-if="sample.output.length"
+              :level="4"
+            >
+              Output {{ index + 1 }}
+            </a-typography-title>
+            <a-typography-paragraph v-if="sample.output.length">
+              <span v-html="sample.output" />
+            </a-typography-paragraph>
+            <a-typography-title
+              v-if="sample.explanation.length"
+              :level="4"
+            >
+              Explanation
+            </a-typography-title>
+            <a-typography-paragraph v-if="sample.explanation.length">
+              <span v-html="sample.explanation" />
+            </a-typography-paragraph>
+            <a-typography-paragraph v-if="sample.misc.length">
+              <span v-html="sample.misc" />
+            </a-typography-paragraph>
+          </div>
+        </a-typography>
+      </a-card>
+    </a-page-header>
 
     <recommend-list
+      :problem-id="problemId"
       :recommends="recommendsInfo.data"
       :loading="recommendsInfo.loading"
-    />
-    <recommend-form
-      :problem-id="getProblemId()"
       @submit="getRecommends()"
     />
   </a-space>
@@ -129,13 +136,12 @@ import {
   Problem,
   Recommend,
 } from '@/components/types';
-import { RecommendForm, RecommendList } from '@/components';
+import { RecommendList } from '@/components';
 import { problemClient, recommendClient } from '@/api';
 import { openNotification, title } from '@/mixins';
 
 export default defineComponent({
   components: {
-    RecommendForm,
     RecommendList,
   },
   setup() {
@@ -143,18 +149,17 @@ export default defineComponent({
     const router = useRouter();
     const store = useStore();
     const userId = computed((): string => store.state.id);
-
-    const getProblemId = (): number => {
+    const problemId = computed((): number => {
       if (Array.isArray(route.params.id)) {
         console.log('Invalid route for parsing Problem ID.');
         return parseInt(route.params.id[0]);
       }
       return parseInt(route.params.id);
-    };
+    });
 
     const problemInfo = reactive({
       data: {
-        id: getProblemId(),
+        id: problemId.value,
         like: 0,
         dislike: 0,
         visit: 0,
@@ -186,7 +191,7 @@ export default defineComponent({
       problemClient
         .getProblem({
           userId: userId.value,
-          id: getProblemId(),
+          id: problemId.value,
         } as GetProblemReq)
         .then((resp: GetProblemResp) => {
           if (!resp.problem.id) {
@@ -200,9 +205,7 @@ export default defineComponent({
           } else {
             console.log('getProblem', resp);
             problemInfo.data = resp.problem;
-            document.title = `${getProblemId()}. ${
-              problemInfo.data.content.title
-            } - Problems - ${title}`;
+            document.title = `${problemId.value}. ${problemInfo.data.content.title} - Problems - ${title}`;
             problemInfo.loading = false;
           }
         })
@@ -224,7 +227,7 @@ export default defineComponent({
       recommendClient
         .getProblemRecommends({
           userId: userId.value,
-          id: getProblemId(),
+          id: problemId.value,
         } as GetProblemRecommendsReq)
         .then((resp: GetProblemRecommendsResp) => {
           console.log('getRecommends', resp);
@@ -234,7 +237,7 @@ export default defineComponent({
         .catch((err: AxiosError) => {
           openNotification(
             'error',
-            `Failed to load recommendations, error: ${err.message}`
+            `Failed to load reviews, error: ${err.message}`
           );
         });
     };
@@ -245,11 +248,11 @@ export default defineComponent({
     };
 
     return {
-      getProblemId,
+      problemId,
       problemInfo,
       recommendsInfo,
-      getRecommends,
       refresh,
+      getRecommends,
     };
   },
   created() {

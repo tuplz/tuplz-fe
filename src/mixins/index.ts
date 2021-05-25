@@ -1,12 +1,21 @@
-import { notification } from 'ant-design-vue';
+import { message, notification } from 'ant-design-vue';
 import { RuleObject } from 'ant-design-vue/lib/form/interface';
 import IsEmail from 'isemail';
 
-import { TagColorMap } from '@/components/types';
+import { NoticeType, TagColorMap } from '@/components/types';
 
 export const title = 'Teach Us Please!';
 
-export const openNotification = (type: string, description: string): void => {
+export const openMessage = (type: NoticeType, content: string): void => {
+  message[type]({
+    content,
+  });
+};
+
+export const openNotification = (
+  type: NoticeType,
+  description: string
+): void => {
   notification[type]({
     message: type.toUpperCase(),
     description,

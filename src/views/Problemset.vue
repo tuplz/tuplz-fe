@@ -1,8 +1,14 @@
 <template>
-  <problem-table
-    :problems="problems.data"
-    :loading="problems.loading"
-  />
+  <a-page-header
+    title="Problemset"
+    :ghost="false"
+  >
+    <problem-table
+      :problems="problems.data"
+      :loading="problems.loading"
+      style="margin-top: 12px"
+    />
+  </a-page-header>
 </template>
 
 <script lang="ts">

@@ -1,4 +1,10 @@
-import { CollectionForm, PasswordForm, RecommendForm, UserForm } from '.';
+import {
+  CollectionForm,
+  CommentForm,
+  PasswordForm,
+  RecommendForm,
+  UserForm,
+} from '.';
 
 interface ReqHeader {
   userId: string;
@@ -13,6 +19,10 @@ export interface GetProblemReq {
 }
 
 export type GetProblemRecommendsReq = GetProblemReq;
+
+export interface GetRecommendReq {
+  recommendId: number;
+}
 
 export interface UploadRecommendReq
   extends ReqHeader,
@@ -54,3 +64,9 @@ export type DeleteCollectionReq = GetCollectionReq;
 export interface EditCollectionReq
   extends CreateCollectionReq,
     DeleteCollectionReq {}
+
+export interface GetCommentsReq {
+  recommendId: number;
+}
+
+export interface UploadCommentReq extends ReqHeader, Required<CommentForm> {}
