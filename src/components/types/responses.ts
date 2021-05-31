@@ -7,6 +7,10 @@ import {
   User,
 } from '.';
 
+export interface AddFavouriteResp extends Status {
+  problem: Problem;
+}
+
 interface Status {
   code: number;
   status: string;
@@ -18,6 +22,7 @@ export interface GetProblemsResp extends Status {
 
 export interface GetProblemResp extends Status {
   problem: Problem;
+  favourite: boolean;
 }
 
 export interface GetRecommendsResp extends Status {

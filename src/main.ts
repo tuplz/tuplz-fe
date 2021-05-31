@@ -23,6 +23,7 @@ import {
   Modal,
   PageHeader,
   Popconfirm,
+  Radio,
   Row,
   Space,
   Table,
@@ -53,6 +54,7 @@ app
   .use(Modal)
   .use(PageHeader)
   .use(Popconfirm)
+  .use(Radio)
   .use(Row)
   .use(Space)
   .use(Table)

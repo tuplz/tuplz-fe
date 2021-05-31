@@ -47,6 +47,10 @@ export const mockProblemTemplate = {
   },
 };
 
+export const mockFavouriteTemplate = {
+  favourite: '@boolean',
+};
+
 export const mockGetProblemsResp: GetProblemsResp = mock({
   ...mockStatusTemplate,
   'problems|1-500': [mockProblemTemplate],
@@ -54,5 +58,11 @@ export const mockGetProblemsResp: GetProblemsResp = mock({
 
 export const mockGetProblemResp: GetProblemResp = mock({
   ...mockStatusTemplate,
+  problem: mockProblemTemplate,
+  ...mockFavouriteTemplate,
+});
+
+export const mockAddFavouriteResp: GetProblemResp = mock({
+  status: 'success',
   problem: mockProblemTemplate,
 });
