@@ -10,13 +10,19 @@ import {
   Button,
   Card,
   Col,
+  Comment,
+  Descriptions,
   Divider,
+  Dropdown,
   Form,
   Icon,
   Input,
   Layout,
   List,
+  Menu,
   Modal,
+  PageHeader,
+  Popconfirm,
   Row,
   Space,
   Table,
@@ -34,13 +40,19 @@ app
   .use(Button)
   .use(Card)
   .use(Col)
+  .use(Comment)
+  .use(Descriptions)
   .use(Divider)
+  .use(Dropdown)
   .use(Form)
   .use(Icon)
   .use(Input)
   .use(Layout)
   .use(List)
+  .use(Menu)
   .use(Modal)
+  .use(PageHeader)
+  .use(Popconfirm)
   .use(Row)
   .use(Space)
   .use(Table)

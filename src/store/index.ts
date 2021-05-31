@@ -1,6 +1,7 @@
 import { createStore, Store, useStore as baseUseStore } from 'vuex';
+import createPersistedState from 'vuex-persistedstate';
 import { InjectionKey } from '@vue/runtime-core';
-import axios, { AxiosError } from 'axios';
+import { AxiosError } from 'axios';
 
 import {
   State,
@@ -10,96 +11,85 @@ import {
   UserRegisterResp,
 } from '@/components/types';
 import { userClient } from '@/api';
+import { defaultUsername } from '@/utils/config';
 
 export const key: InjectionKey<Store<State>> = Symbol();
 
 export const store: Store<State> = createStore<State>({
+  plugins: [createPersistedState()],
   state: {
     status: '',
-    token: localStorage.getItem('token') || '',
+    token: '',
     id: '',
+    username: defaultUsername,
   },
   getters: {
-    isLoggedIn: (state): boolean => !!state.token,
-    authStatus: (state): string => state.status,
+    isLoggedIn: (state): boolean => Boolean(state.token),
   },
   mutations: {
-    authRequest(state): void {
+    authRequest: (state): void => {
       state.status = 'loading';
     },
-    authSuccess(state, { token, id }: { token: string; id: string }): void {
+    authSuccess: (state, resp: UserLoginResp): void => {
       state.status = 'success';
-      state.token = token;
-      state.id = id;
+      state.token = resp.key || '';
+      state.id = resp.id || '';
+      state.username = resp.username || defaultUsername;
     },
-    authError(state) {
+    authError: (state) => {
       state.status = 'error';
     },
-    logout(state) {
+    logout: (state) => {
       state.status = '';
       state.token = '';
     },
   },
   actions: {
-    register({ commit }, req: UserRegisterReq): Promise<UserRegisterResp> {
-      return new Promise((resolve, reject) => {
+    register: ({ commit }, req: UserRegisterReq): Promise<UserRegisterResp> =>
+      new Promise((resolve, reject) => {
         commit('authRequest');
         userClient
           .userRegister(req)
           .then((resp: UserRegisterResp) => {
             if (resp.status === 'success') {
-              const id = resp.id;
-              const token = resp.key;
-              localStorage.setItem('token', token);
-              axios.defaults.headers.common[
-                'Authorization'
-              ] = `Bearer ${token}`;
-              commit('authSuccess', { token, id });
+              commit('authSuccess', resp);
+              userClient.setAuthHeader();
               resolve(resp);
             }
           })
           .catch((err: AxiosError) => {
             commit('authError');
-            localStorage.removeItem('token');
+            userClient.removeAuthHeader();
             reject(err);
           });
-      });
-    },
+      }),
 
-    login({ commit }, req: UserLoginReq): Promise<UserLoginResp> {
-      return new Promise((resolve, reject) => {
+    login: ({ commit }, req: UserLoginReq): Promise<UserLoginResp> =>
+      new Promise((resolve, reject) => {
         commit('authRequest');
         userClient
           .userLogin(req)
           .then((resp: UserLoginResp) => {
             if (resp.status === 'success') {
-              const id = resp.id;
-              const token = resp.key;
-              localStorage.setItem('token', token);
-              axios.defaults.headers.common['Authorization'] = token;
-              commit('authSuccess', { token, id });
+              commit('authSuccess', resp);
+              userClient.setAuthHeader();
               resolve(resp);
             }
           })
           .catch((err: AxiosError) => {
             commit('authError');
-            localStorage.removeItem('token');
+            userClient.removeAuthHeader();
             reject(err);
           });
-      });
-    },
+      }),
 
-    logout({ commit }): Promise<void> {
-      return new Promise((resolve, _reject) => {
+    logout: ({ commit }): Promise<void> =>
+      new Promise((resolve, _reject) => {
         commit('logout');
-        localStorage.removeItem('token');
-        delete axios.defaults.headers.common['Authorization'];
+        userClient.removeAuthHeader();
         resolve();
-      });
-    },
+      }),
   },
 });
 
-export const useStore = (): Store<State> => {
-  return baseUseStore(key);
-};
+export const useStore = (): Store<State> => baseUseStore(key);

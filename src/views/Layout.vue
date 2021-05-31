@@ -6,23 +6,55 @@
         justify="space-between"
       >
         <router-link
-          class="title"
+          class="router-link"
           :to="{ name: 'Problemset' }"
         >
           <BulbFilled id="logo" />
           <span>{{ title }}</span>
         </router-link>
 
-        <a-button
+        <a-dropdown
           v-if="isLoggedIn"
-          shape="round"
-          @click="logout"
+          placement="bottomRight"
         >
-          <template #icon>
-            <LogoutOutlined />
-            Logout
+          <div>
+            <a-avatar
+              size="large"
+              style="font-size: 20px"
+            >
+              {{ username[0].toUpperCase() }}
+            </a-avatar>
+          </div>
+          <template #overlay>
+            <a-menu>
+              <a-menu-item>
+                <router-link
+                  class="router-link"
+                  :to="{ name: 'UserProfile' }"
+                >
+                  <ProfileOutlined class="menu-icon" />
+                  Profile
+                </router-link>
+              </a-menu-item>
+              <a-menu-item>
+                <router-link
+                  class="router-link"
+                  :to="{ name: 'Settings' }"
+                >
+                  <SettingOutlined class="menu-icon" />
+                  Settings
+                </router-link>
+              </a-menu-item>
+              <a-menu-item>
+                <span @click="logout">
+                  <LogoutOutlined class="menu-icon" />
+                  Logout
+                </span>
+              </a-menu-item>
+            </a-menu>
           </template>
-        </a-button>
+        </a-dropdown>
+
         <a-space v-else>
           <a-button
             shape="round"
@@ -57,7 +89,7 @@
         @cancel="closeModal"
       >
         <a-form
-          ref="form"
+          ref="loginForm"
           name="form"
           :model="modal.data"
           :rules="modal.rules"
@@ -102,7 +134,14 @@
 
     <a-layout style="padding: 24px 24px 0">
       <a-layout-content style="padding: 24px; min-height: 280px">
-        <router-view />
+        <router-view v-slot="{ Component }">
+          <transition
+            name="fade"
+            mode="out-in"
+          >
+            <component :is="Component" />
+          </transition>
+        </router-view>
       </a-layout-content>
 
       <a-layout-footer style="text-align: center">
@@ -120,8 +159,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, ref } from 'vue';
-import { mapGetters } from 'vuex';
+import { computed, defineComponent, reactive, ref } from 'vue';
+import { useRouter } from 'vue-router';
 import { useStore } from '@/store';
 import { AxiosError } from 'axios';
 import {
@@ -132,16 +171,19 @@ import {
   LoginOutlined,
   LogoutOutlined,
   MailOutlined,
+  ProfileOutlined,
+  SettingOutlined,
   UserOutlined,
 } from '@ant-design/icons-vue';
 import { ValidateErrorEntity } from 'ant-design-vue/lib/form/interface';
-import { notification } from 'ant-design-vue';
 
 import {
   UserLoginReq,
   UserLoginResp,
   UserRegisterResp,
 } from '@/components/types';
+import { userClient } from '@/api';
+import { openNotification, title, validateEmail } from '@/mixins';
 
 export default defineComponent({
   components: {
@@ -152,14 +194,15 @@ export default defineComponent({
     LoginOutlined,
     LogoutOutlined,
     MailOutlined,
+    ProfileOutlined,
+    SettingOutlined,
     UserOutlined,
   },
   setup() {
+    const router = useRouter();
     const store = useStore();
-
-    const title = 'Teach Us Please!';
-
-    const form = ref();
+    const username = computed((): string => store.state.username);
+    const isLoggedIn = computed((): boolean => store.getters.isLoggedIn);
 
     const loginFormRules = {
       username: [
@@ -182,8 +225,7 @@ export default defineComponent({
       ...loginFormRules,
       email: [
         {
-          required: true,
-          message: 'Please input E-mail',
+          validator: validateEmail,
           trigger: 'blur',
         },
       ],
@@ -209,15 +251,10 @@ export default defineComponent({
       },
     });
 
-    const openNotification = (type: string, description: string): void => {
-      notification[type]({
-        message: type.toUpperCase(),
-        description,
-      });
-    };
+    const loginForm = ref();
 
-    const resetForm = (): void => {
-      form.value.resetFields();
+    const resetLoginForm = (): void => {
+      loginForm.value.resetFields();
     };
 
     const openSignUpModal = (): void => {
@@ -239,19 +276,19 @@ export default defineComponent({
     const closeModal = (): void => {
       modal.visible = false;
       modal.loading = false;
-      resetForm();
+      resetLoginForm();
     };
 
     const submitForm = (): void => {
       modal.loading = true;
-      form.value
+      loginForm.value
         .validate()
         .then((): void => {
           modal.callback();
         })
         .catch((_error: ValidateErrorEntity<UserLoginReq>): void => {
           openNotification(
-            'warn',
+            'warning',
             'Please make sure all fields are filled in correctly.'
           );
         })
@@ -266,6 +303,7 @@ export default defineComponent({
         .then((resp: UserRegisterResp): void => {
           console.log('Registered.', resp);
           closeModal();
+          router.go(0);
         })
         .catch((err: AxiosError): void => {
           openNotification(
@@ -284,6 +322,7 @@ export default defineComponent({
         .then((resp: UserLoginResp): void => {
           console.log('Logged in.', resp);
           closeModal();
+          router.go(0);
         })
         .catch((err: AxiosError): void => {
           openNotification('error', `Failed to login, error: ${err.message}`);
@@ -296,32 +335,34 @@ export default defineComponent({
     const logout = (): void => {
       store.dispatch('logout').then((): void => {
         console.log('Logged out.');
+        router.go(0);
       });
     };
 
     return {
       title,
-      form,
+      loginForm,
       modal,
-      resetForm,
       openSignUpModal,
       openLoginModal,
       closeModal,
-      submitForm,
       register,
       login,
       logout,
+      username,
+      isLoggedIn,
+      submitForm,
     };
   },
-  computed: {
-    ...mapGetters(['isLoggedIn']),
+  created() {
+    userClient.setAuthHeader();
   },
 });
 </script>
 
 <style lang="scss" scoped>
 .ant-layout-header {
-  .title {
+  .ant-row > .router-link {
     height: 64px;
 
     > #logo {
@@ -337,16 +378,14 @@ export default defineComponent({
       vertical-align: top;
     }
   }
-
-  .ant-btn {
-    margin: 16px 0;
-  }
 }
 
-.ant-form {
-  .modal-icon {
-    margin-right: 6px;
-    color: rgba(0, 0, 0, 0.25);
+.ant-dropdown-menu-item {
+  > span > .menu-icon,
+  > a > .menu-icon {
+    min-width: 14px;
+    margin-right: 8px;
+    font-size: 14px;
   }
 }
 
