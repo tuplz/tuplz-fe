@@ -33,8 +33,11 @@ const getProblems = (req: GetProblemsReq): Promise<GetProblemsResp> =>
 const getProblem = (req: GetProblemReq): Promise<GetProblemResp> =>
   new Promise((resolve, reject) => {
     axios
-      .get<void, AxiosResponse<GetProblemResp>>(`${problemsApiUrl}/${req.id}`)
+      .get<void, AxiosResponse<GetProblemResp>>(`${problemsApiUrl}/${req.id}`, {
+        params: req,
+      })
       .then((resp) => {
+        console.log(req);
         resolve(resp.data);
       })
       .catch((err: AxiosError) => {
