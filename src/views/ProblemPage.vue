@@ -360,10 +360,14 @@ export default defineComponent({
 
     const openCollectionModal = (): void => {
       console.log('show collections');
-      collectionsModal.visible = true;
-      collectionsModal.title = 'My Collections';
-      getCollections();
-      collectionsModal.callback = handleFavourite;
+      if (problemInfo.data.favourite == true) {
+        handleFavourite();
+      } else {
+        collectionsModal.visible = true;
+        collectionsModal.title = 'My Collections';
+        getCollections();
+        collectionsModal.callback = handleFavourite;
+      }
     };
 
     const closeCollectionModal = (): void => {
