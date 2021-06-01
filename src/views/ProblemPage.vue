@@ -131,36 +131,36 @@
       :loading="recommendsInfo.loading"
       @submit="getRecommends()"
     />
-  </a-space>
-  <a-modal
-    v-model:visible="collectionsModal.visible"
-    :title="collectionsModal.title"
-    :confirm-loading="collectionsModal.loading"
-    width="500px"
-    :closable="false"
-    @ok="collectionsModal.callback"
-    @cancel="closeCollectionModal"
-  >
-    <a-list
-      item-layout="horizontal"
-      :data-source="collectionsModal.data"
-      row-key="collectionsId"
+    <a-modal
+      v-model:visible="collectionsModal.visible"
+      :title="collectionsModal.title"
+      :confirm-loading="collectionsModal.loading"
+      width="500px"
+      :closable="false"
+      @ok="collectionsModal.callback"
+      @cancel="closeCollectionModal"
     >
-      <template #renderItem="{ item }">
-        <a-radio-group
-          v-model:value="selectedCollection.data"
-          button-style="solid"
-        >
-          <a-list-item :key="item.collectionId">
-            <a-radio-button :value="item.collectionId">
-              {{ item.title }}
-            </a-radio-button>
-            <br>
-          </a-list-item>
-        </a-radio-group>
-      </template>
-    </a-list>
-  </a-modal>
+      <a-list
+        item-layout="horizontal"
+        :data-source="collectionsModal.data"
+        row-key="collectionsId"
+      >
+        <template #renderItem="{ item }">
+          <a-radio-group
+            v-model:value="selectedCollection.data"
+            button-style="solid"
+          >
+            <a-list-item :key="item.collectionId">
+              <a-radio-button :value="item.collectionId">
+                {{ item.title }}
+              </a-radio-button>
+              <br>
+            </a-list-item>
+          </a-radio-group>
+        </template>
+      </a-list>
+    </a-modal>
+  </a-space>
 </template>
 
 <script lang="ts">
