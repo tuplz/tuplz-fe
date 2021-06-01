@@ -48,7 +48,7 @@ const addFavourite = (req: AddFavouriteReq): Promise<AddFavouriteResp> =>
   new Promise((resolve, reject) => {
     axios
       .post<AddFavouriteReq, AxiosResponse<AddFavouriteResp>>(
-        problemsApiUrl,
+        `${problemsApiUrl}/collection/${req.id}`,
         req
       )
       .then((resp: AxiosResponse<AddFavouriteResp>) => {
