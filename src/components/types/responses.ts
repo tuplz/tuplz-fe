@@ -25,6 +25,8 @@ export interface GetProblemResp extends Status {
   favourite: boolean;
 }
 
+export type GetRecommendedProblemsResp = GetProblemsResp;
+
 export interface GetRecommendsResp extends Status {
   recommends: Recommend[];
 }

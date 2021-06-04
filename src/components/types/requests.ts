@@ -19,6 +19,10 @@ export interface GetProblemsReq {
   maxLength: number;
 }
 
+export interface GetRecommendedProblemsReq extends ReqHeader {
+  maxLength: number;
+}
+
 export interface GetProblemReq extends ReqHeader {
   id: number;
 }

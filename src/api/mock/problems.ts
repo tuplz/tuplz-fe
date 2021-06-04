@@ -1,4 +1,8 @@
-import { GetProblemsResp, GetProblemResp } from '@/components/types';
+import {
+  GetProblemsResp,
+  GetProblemResp,
+  GetRecommendedProblemsResp,
+} from '@/components/types';
 import { mockStatusTemplate } from './status';
 import { mock } from 'mockjs';
 
@@ -61,4 +65,9 @@ export const mockGetProblemResp: GetProblemResp = mock({
 export const mockAddFavouriteResp: GetProblemResp = mock({
   status: 'success',
   problem: mockProblemTemplate,
+});
+
+export const mockGetRecommendedProblemsResp: GetRecommendedProblemsResp = mock({
+  ...mockStatusTemplate,
+  'problems|1-500': [mockProblemTemplate],
 });

@@ -9,6 +9,7 @@ import {
   BackTop,
   Button,
   Card,
+  Carousel,
   Col,
   Comment,
   Descriptions,
@@ -40,6 +41,7 @@ app
   .use(BackTop)
   .use(Button)
   .use(Card)
+  .use(Carousel)
   .use(Col)
   .use(Comment)
   .use(Descriptions)
