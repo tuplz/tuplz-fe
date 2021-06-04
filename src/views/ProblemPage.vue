@@ -18,22 +18,22 @@
           <a-typography-title>
             <span @click="openCollectionModal">
               <StarOutlined
-                v-show="problemInfo.data.favourite"
+                v-show="!problemInfo.data.favourite"
                 :style="{ color: '#FBC740' }"
               />
               <StarFilled
-                v-show="!problemInfo.data.favourite"
-                :style="{ color: '#87CEFA' }"
+                v-show="problemInfo.data.favourite"
+                :style="{ color: '#FBC740' }"
               />
             </span>
-            {{ problemId }}. {{ problemInfo.data.problem.content.title }}
+            {{ problemId }}. {{ problemInfo.data.content.title }}
           </a-typography-title>
 
           <a-typography-title :level="2">
             题目描述
           </a-typography-title>
           <div
-            v-for="section in problemInfo.data.problem.content.sections"
+            v-for="section in problemInfo.data.content.sections"
             :key="section.title"
           >
             <a-typography-title :level="2">
@@ -52,7 +52,7 @@
                     时间限制：
                   </a-typography-text>
                   <a-typography-text code>
-                    {{ problemInfo.data.problem.content.rules.runtime / 1e9 }}
+                    {{ problemInfo.data.content.rules.runtime / 1e9 }}
                   </a-typography-text>
                   s
                 </li>
@@ -61,9 +61,7 @@
                     空间限制：
                   </a-typography-text>
                   <a-typography-text code>
-                    {{
-                      problemInfo.data.problem.content.rules.memory / 1048576
-                    }}
+                    {{ problemInfo.data.content.rules.memory / 1048576 }}
                   </a-typography-text>
                   MB
                 </li>
@@ -75,13 +73,13 @@
           </div>
 
           <a-typography-title
-            v-if="problemInfo.data.problem.content.samples.length"
+            v-if="problemInfo.data.content.samples.length"
             :level="2"
           >
             测试样例
           </a-typography-title>
           <div
-            v-for="(sample, index) in problemInfo.data.problem.content.samples"
+            v-for="(sample, index) in problemInfo.data.content.samples"
             :key="sample.title"
           >
             <a-typography-title :level="2">
@@ -208,33 +206,31 @@ export default defineComponent({
 
     const problemInfo = reactive({
       data: {
-        problem: {
-          id: problemId.value,
-          like: 0,
-          dislike: 0,
-          visit: 0,
-          content: {
-            title: '',
-            type: '',
-            sections: [],
-            samples: [],
-            tags: [],
-            rules: {
-              runtime: 0,
-              memory: 0,
-              stack: 0,
-              source: 0,
-            },
-            meta: {
-              created: '',
-              updated: '',
-              checked: '',
-            },
-            misc: '',
+        id: problemId.value,
+        like: 0,
+        dislike: 0,
+        visit: 0,
+        content: {
+          title: '',
+          type: '',
+          sections: [],
+          samples: [],
+          tags: [],
+          rules: {
+            runtime: 0,
+            memory: 0,
+            stack: 0,
+            source: 0,
           },
-        } as Problem,
+          meta: {
+            created: '',
+            updated: '',
+            checked: '',
+          },
+          misc: '',
+        },
         favourite: false,
-      },
+      } as Problem,
       loading: false,
     });
 
@@ -260,9 +256,9 @@ export default defineComponent({
             }, 3000);
           } else {
             console.log('getProblem', resp);
-            problemInfo.data.problem = resp.problem;
-            problemInfo.data.favourite = resp.favourite;
-            document.title = `${problemId.value}. ${problemInfo.data.problem.content.title} - Problems - ${title}`;
+            problemInfo.data = resp.problem;
+            console.log(problemInfo.data.favourite);
+            document.title = `${problemId.value}. ${problemInfo.data.content.title} - Problems - ${title}`;
             problemInfo.loading = false;
           }
         })
@@ -315,7 +311,9 @@ export default defineComponent({
               `Failed to add favourite, user not logged in.`
             );
           } else {
+            console.log(resp);
             problemInfo.data.favourite = !problemInfo.data.favourite;
+            // console.log("collection: "+ problemInfo.data.favourite)
             collectionsModal.visible = false;
           }
         })
