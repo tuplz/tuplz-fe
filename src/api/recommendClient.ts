@@ -91,7 +91,7 @@ const getProblems = (
   new Promise((resolve, reject) => {
     axios
       .get<void, AxiosResponse<GetRecommendedProblemsResp>>(
-        `${recommendsApiUrl}/problems`,
+        `/api/recommendedproblems`,
         {
           params: req,
         }
