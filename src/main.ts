@@ -28,6 +28,7 @@ import {
   Row,
   Space,
   Table,
+  Tabs,
   Tag,
   Typography,
 } from 'ant-design-vue';
@@ -60,6 +61,7 @@ app
   .use(Row)
   .use(Space)
   .use(Table)
+  .use(Tabs)
   .use(Tag)
   .use(Typography);
 

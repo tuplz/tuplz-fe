@@ -1,33 +1,30 @@
 <template>
-  <a-carousel
-    dot-position="top"
-    effect="fade"
-  >
-    <div>
-      <a-page-header
-        title="Problemset"
-        :ghost="false"
-      >
+  <a-tabs>
+    <a-tab-pane
+      key="1"
+      tab="Problemset"
+    >
+      <a-page-header :ghost="false">
         <problem-table
           :problems="problems.data"
           :loading="problems.loading"
           style="margin-top: 12px"
         />
       </a-page-header>
-    </div>
-    <div>
-      <a-page-header
-        title="Recommendations"
-        :ghost="false"
-      >
+    </a-tab-pane>
+    <a-tab-pane
+      key="2"
+      tab="Recommendations"
+    >
+      <a-page-header :ghost="false">
         <problem-table
           :problems="recommendations.data"
           :loading="recommendations.loading"
           style="margin-top: 12px"
         />
       </a-page-header>
-    </div>
-  </a-carousel>
+    </a-tab-pane>
+  </a-tabs>
 </template>
 
 <script lang="ts">
