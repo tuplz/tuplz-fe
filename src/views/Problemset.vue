@@ -130,8 +130,11 @@ export default defineComponent({
 .ant-carousel {
   .slick-dots {
     > li {
-      background: #f01036;
+      background: #107dfa;
       opacity: 0.5;
+      > button {
+        width: 100px;
+      }
     }
   }
 }
