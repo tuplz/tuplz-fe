@@ -16,6 +16,7 @@
         <a-dropdown
           v-if="isLoggedIn"
           placement="bottomRight"
+          name="avatar_dropdown"
         >
           <div>
             <a-avatar
@@ -26,7 +27,7 @@
             </a-avatar>
           </div>
           <template #overlay>
-            <a-menu>
+            <a-menu name="personal_menu">
               <a-menu-item>
                 <router-link
                   class="router-link"
@@ -57,6 +58,7 @@
 
         <a-space v-else>
           <a-button
+            id="register"
             shape="round"
             @click="openSignUpModal"
           >
@@ -66,6 +68,7 @@
             </template>
           </a-button>
           <a-button
+            id="login"
             type="primary"
             shape="round"
             @click="openLoginModal"

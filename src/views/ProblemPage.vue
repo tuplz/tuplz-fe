@@ -16,7 +16,10 @@
       >
         <a-typography>
           <a-typography-title>
-            <span @click="openCollectionModal">
+            <span
+              id="collection"
+              @click="openCollectionModal"
+            >
               <StarOutlined
                 v-show="!problemInfo.data.favourite"
                 :style="{ color: '#FBC740' }"

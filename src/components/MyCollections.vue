@@ -5,6 +5,7 @@
   >
     <template #extra>
       <a-button
+        id="new_collections"
         type="primary"
         @click="openCreateModal"
       >

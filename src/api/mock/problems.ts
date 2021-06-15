@@ -11,7 +11,7 @@ export const mockProblemTemplate = {
   like: '@integer(1, 10000)',
   dislike: '@integer(1, 10000)',
   visit: '@integer(1, 10000)',
-  favourite: '@boolean',
+  favourite: false,
   content: {
     title: '@title(1, 6)',
     type: '@title(1, 6)',
