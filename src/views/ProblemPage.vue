@@ -16,6 +16,19 @@
       >
         <a-typography>
           <a-typography-title>
+            <span
+              id="collection"
+              @click="openCollectionModal"
+            >
+              <StarOutlined
+                v-show="!problemInfo.data.favourite"
+                :style="{ color: '#FBC740' }"
+              />
+              <StarFilled
+                v-show="problemInfo.data.favourite"
+                :style="{ color: '#FBC740' }"
+              />
+            </span>
             {{ problemId }}. {{ problemInfo.data.content.title }}
           </a-typography-title>
 
@@ -119,6 +132,35 @@
       :loading="recommendsInfo.loading"
       @submit="getRecommends()"
     />
+    <a-modal
+      v-model:visible="collectionsModal.visible"
+      :title="collectionsModal.title"
+      :confirm-loading="collectionsModal.loading"
+      width="500px"
+      :closable="false"
+      @ok="collectionsModal.callback"
+      @cancel="closeCollectionModal"
+    >
+      <a-list
+        item-layout="horizontal"
+        :data-source="collectionsModal.data"
+        row-key="collectionsId"
+      >
+        <template #renderItem="{ item }">
+          <a-radio-group
+            v-model:value="selectedCollection.data"
+            button-style="solid"
+          >
+            <a-list-item :key="item.collectionId">
+              <a-radio-button :value="item.collectionId">
+                {{ item.title }}
+              </a-radio-button>
+              <br>
+            </a-list-item>
+          </a-radio-group>
+        </template>
+      </a-list>
+    </a-modal>
   </a-space>
 </template>
 
@@ -129,6 +171,11 @@ import { useStore } from '@/store';
 import { AxiosError } from 'axios';
 
 import {
+  AddFavouriteReq,
+  AddFavouriteResp,
+  CollectionInfo,
+  GetCollectionsReq,
+  GetCollectionsResp,
   GetProblemRecommendsReq,
   GetProblemRecommendsResp,
   GetProblemReq,
@@ -137,12 +184,15 @@ import {
   Recommend,
 } from '@/components/types';
 import { RecommendList } from '@/components';
-import { problemClient, recommendClient } from '@/api';
+import { collectionClient, problemClient, recommendClient } from '@/api';
 import { openNotification, title } from '@/mixins';
+import { StarOutlined, StarFilled } from '@ant-design/icons-vue';
 
 export default defineComponent({
   components: {
     RecommendList,
+    StarOutlined,
+    StarFilled,
   },
   setup() {
     const route = useRoute();
@@ -182,8 +232,13 @@ export default defineComponent({
           },
           misc: '',
         },
+        favourite: false,
       } as Problem,
       loading: false,
+    });
+
+    const selectedCollection = reactive({
+      data: 0,
     });
 
     const getProblem = (): void => {
@@ -205,6 +260,7 @@ export default defineComponent({
           } else {
             console.log('getProblem', resp);
             problemInfo.data = resp.problem;
+            console.log(problemInfo.data.favourite);
             document.title = `${problemId.value}. ${problemInfo.data.content.title} - Problems - ${title}`;
             problemInfo.loading = false;
           }
@@ -242,17 +298,100 @@ export default defineComponent({
         });
     };
 
+    const handleFavourite = (): void => {
+      console.log('handle Favourite...');
+      problemClient
+        .addFavourite({
+          userId: store.state.id,
+          id: problemId.value,
+          collectionId: selectedCollection.data,
+        } as AddFavouriteReq)
+        .then((resp: AddFavouriteResp): void => {
+          console.log(resp);
+          if (resp.status !== 'success') {
+            openNotification(
+              'error',
+              `Failed to add favourite, user not logged in.`
+            );
+          } else {
+            console.log(resp);
+            problemInfo.data.favourite = !problemInfo.data.favourite;
+            // console.log("collection: "+ problemInfo.data.favourite)
+            collectionsModal.visible = false;
+          }
+        })
+        .catch((err: AxiosError): void => {
+          openNotification(
+            'error',
+            `Failed to upload recommendation, error: ${err.message}`
+          );
+        });
+    };
+
+    const collectionsModal = reactive({
+      visible: false,
+      loading: false,
+      title: '',
+      data: [] as CollectionInfo[],
+      callback: Function() as () => void,
+      layout: {
+        labelCol: { span: 4 },
+        wrapperCol: { span: 18 },
+      },
+    });
+
+    const getCollections = (): void => {
+      collectionsModal.loading = true;
+      collectionClient
+        .getCollections({
+          userId: userId.value,
+        } as GetCollectionsReq)
+        .then((resp: GetCollectionsResp) => {
+          console.log('getCollections', resp);
+          collectionsModal.data = resp.collections;
+          collectionsModal.loading = false;
+        })
+        .catch((err: AxiosError) => {
+          openNotification(
+            'error',
+            `Failed to load collections, error: ${err.message}`
+          );
+        });
+    };
+
+    const openCollectionModal = (): void => {
+      console.log('show collections');
+      if (problemInfo.data.favourite == true) {
+        handleFavourite();
+      } else {
+        collectionsModal.visible = true;
+        collectionsModal.title = 'My Collections';
+        getCollections();
+        collectionsModal.callback = handleFavourite;
+      }
+    };
+
+    const closeCollectionModal = (): void => {
+      collectionsModal.visible = false;
+      collectionsModal.loading = false;
+    };
+
     const refresh = (): void => {
       getProblem();
       getRecommends();
     };
 
     return {
+      collectionsModal,
       problemId,
       problemInfo,
       recommendsInfo,
       refresh,
       getRecommends,
+      handleFavourite,
+      openCollectionModal,
+      closeCollectionModal,
+      selectedCollection,
     };
   },
   created() {

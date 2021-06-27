@@ -10,6 +10,7 @@
     >
       <template #extra>
         <a-button
+          id="profile_edit"
           type="primary"
           @click="openEditUserModal"
         >
@@ -18,14 +19,16 @@
         </a-button>
       </template>
       <a-descriptions-item label="Username">
-        {{ userInfo.data.username }}
+        <span id="basic_info_username">
+          {{ userInfo.data.username }}
+        </span>
       </a-descriptions-item>
       <a-descriptions-item label="Email">
         <a-row
           type="flex"
           justify="space-between"
         >
-          <span>
+          <span id="basic_info_email">
             {{ userInfo.data.email }}
           </span>
           <a-button

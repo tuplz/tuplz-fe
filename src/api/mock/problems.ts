@@ -1,4 +1,8 @@
-import { GetProblemsResp, GetProblemResp } from '@/components/types';
+import {
+  GetProblemsResp,
+  GetProblemResp,
+  GetRecommendedProblemsResp,
+} from '@/components/types';
 import { mockStatusTemplate } from './status';
 import { mock } from 'mockjs';
 
@@ -7,6 +11,7 @@ export const mockProblemTemplate = {
   like: '@integer(1, 10000)',
   dislike: '@integer(1, 10000)',
   visit: '@integer(1, 10000)',
+  favourite: false,
   content: {
     title: '@title(1, 6)',
     type: '@title(1, 6)',
@@ -55,4 +60,14 @@ export const mockGetProblemsResp: GetProblemsResp = mock({
 export const mockGetProblemResp: GetProblemResp = mock({
   ...mockStatusTemplate,
   problem: mockProblemTemplate,
+});
+
+export const mockAddFavouriteResp: GetProblemResp = mock({
+  status: 'success',
+  problem: mockProblemTemplate,
+});
+
+export const mockGetRecommendedProblemsResp: GetRecommendedProblemsResp = mock({
+  ...mockStatusTemplate,
+  'problems|1-500': [mockProblemTemplate],
 });

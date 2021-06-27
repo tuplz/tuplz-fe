@@ -10,11 +10,20 @@ interface ReqHeader {
   userId: string;
 }
 
+export interface AddFavouriteReq extends ReqHeader {
+  id: number;
+  collectionId: number;
+}
+
 export interface GetProblemsReq {
   maxLength: number;
 }
 
-export interface GetProblemReq {
+export interface GetRecommendedProblemsReq extends ReqHeader {
+  maxLength: number;
+}
+
+export interface GetProblemReq extends ReqHeader {
   id: number;
 }
 
