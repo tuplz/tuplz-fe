@@ -36,4 +36,5 @@ export interface Problem {
     };
     misc: string;
   };
+  favourite: boolean;
 }

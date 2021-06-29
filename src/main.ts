@@ -9,6 +9,7 @@ import {
   BackTop,
   Button,
   Card,
+  Carousel,
   Col,
   Comment,
   Descriptions,
@@ -23,9 +24,11 @@ import {
   Modal,
   PageHeader,
   Popconfirm,
+  Radio,
   Row,
   Space,
   Table,
+  Tabs,
   Tag,
   Typography,
 } from 'ant-design-vue';
@@ -39,6 +42,7 @@ app
   .use(BackTop)
   .use(Button)
   .use(Card)
+  .use(Carousel)
   .use(Col)
   .use(Comment)
   .use(Descriptions)
@@ -53,9 +57,11 @@ app
   .use(Modal)
   .use(PageHeader)
   .use(Popconfirm)
+  .use(Radio)
   .use(Row)
   .use(Space)
   .use(Table)
+  .use(Tabs)
   .use(Tag)
   .use(Typography);
 

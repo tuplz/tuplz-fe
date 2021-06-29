@@ -4,6 +4,8 @@ import {
   GetProblemRecommendsResp,
   GetRecommendResp,
   GetRecommendsResp,
+  GetRecommendedProblemsReq,
+  GetRecommendedProblemsResp,
   UploadRecommendReq,
   UploadRecommendResp,
 } from '@/components/types';
@@ -13,6 +15,7 @@ import {
   mockGetRecommendResp,
   mockGetRecommendsResp,
   mockUploadRecommendResp,
+  mockGetRecommendedProblemsResp,
 } from '@/api/mock';
 
 const getRecommend = (req: GetRecommendReq): Promise<GetRecommendResp> =>
@@ -82,11 +85,33 @@ const uploadRecommend = (
       });
   });
 
+const getProblems = (
+  req: GetRecommendedProblemsReq
+): Promise<GetRecommendedProblemsResp> =>
+  new Promise((resolve, reject) => {
+    axios
+      .get<void, AxiosResponse<GetRecommendedProblemsResp>>(
+        `http://localhost:5000/api/recommendedproblems`,
+        {
+          params: req,
+        }
+      )
+      .then((resp) => {
+        resolve(resp.data);
+      })
+      .catch((err: AxiosError) => {
+        process.env.NODE_ENV === 'development'
+          ? resolve(mockGetRecommendedProblemsResp)
+          : reject(err);
+      });
+  });
+
 const recommendClient = {
   getRecommend,
   getRecommends,
   getProblemRecommends,
   uploadRecommend,
+  getProblems,
 };
 
 export default recommendClient;

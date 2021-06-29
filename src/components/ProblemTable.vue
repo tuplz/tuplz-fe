@@ -14,6 +14,7 @@
   >
     <template #name="{ text: title, record }">
       <router-link
+        class="problem_link"
         :to="{
           name: 'ProblemPage',
           params: { id: record.id },
